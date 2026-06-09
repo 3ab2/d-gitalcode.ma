@@ -8,6 +8,7 @@ import { buildGeneralContactMessage, buildWhatsAppUrl } from "@/lib/whatsapp";
 import { MessageCircle } from "lucide-react";
 import { Button } from "@/components/ui/Button";
 import { SocialConnect } from "@/components/social/SocialConnect";
+import { CONTACT_EMAIL } from "@/config/contact";
 import { getSocialLinks } from "@/lib/social-links";
 
 export const metadata: Metadata = {
@@ -49,6 +50,12 @@ export default async function ContactPage({
               {t("contact.whatsappTitle")}
             </h3>
             <p className="mt-2 text-white/50">{t("contact.whatsappDesc")}</p>
+            <a
+              href={`mailto:${CONTACT_EMAIL}`}
+              className="mt-4 block text-sm text-brand-green hover:underline"
+            >
+              {CONTACT_EMAIL}
+            </a>
             <a
               href={whatsappUrl}
               target="_blank"

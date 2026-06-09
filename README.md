@@ -299,7 +299,7 @@ Founder of [D-GITALCODE](https://d-gitalcode.ma)
 
 - Website: [d-gitalcode.ma](https://d-gitalcode.ma)
 - GitHub: [@3ab2](https://github.com/3ab2)
-- Email: contact@d-gitalcode.ma
+- Email: 3ab2uelkarch2006@gmail.com
 
 ---
 

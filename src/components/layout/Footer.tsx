@@ -5,6 +5,7 @@ import { Logo } from "@/components/brand/Logo";
 import { useTranslation } from "react-i18next";
 import { type Locale } from "@/lib/i18n/settings";
 import { SocialLinks } from "@/components/social/SocialLinks";
+import { CONTACT_EMAIL } from "@/config/contact";
 import { type SocialLinkConfig } from "@/config/social-links";
 
 export function Footer({
@@ -92,10 +93,10 @@ export function Footer({
             <ul className="mt-5 space-y-3 text-sm text-white/50">
               <li>
                 <a
-                  href="mailto:contact@d-gitalcode.ma"
+                  href={`mailto:${CONTACT_EMAIL}`}
                   className="transition-colors hover:text-brand-green"
                 >
-                  contact@d-gitalcode.ma
+                  {CONTACT_EMAIL}
                 </a>
               </li>
               <li>

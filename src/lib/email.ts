@@ -1,3 +1,4 @@
+import { CONTACT_EMAIL, EMAIL_FROM_DEFAULT } from "@/config/contact";
 import { Resend } from "resend";
 
 const resend = process.env.RESEND_API_KEY
@@ -14,7 +15,10 @@ interface ContactEmailData {
 }
 
 export async function sendContactNotification(data: ContactEmailData) {
-  const adminEmail = process.env.ADMIN_EMAIL_NOTIFY || process.env.ADMIN_EMAIL;
+  const adminEmail =
+    process.env.ADMIN_EMAIL_NOTIFY ||
+    process.env.ADMIN_EMAIL ||
+    CONTACT_EMAIL;
   if (!resend || !adminEmail) {
     console.warn("Email not configured — skipping notification");
     return { success: false, reason: "not_configured" };
@@ -36,7 +40,7 @@ export async function sendContactNotification(data: ContactEmailData) {
 
   try {
     await resend.emails.send({
-      from: process.env.EMAIL_FROM || "D-GITALCODE <noreply@d-gitalcode.ma>",
+      from: process.env.EMAIL_FROM || EMAIL_FROM_DEFAULT,
       to: adminEmail,
       replyTo: data.email,
       subject,
@@ -70,7 +74,7 @@ export async function sendReplyEmail(data: ReplyEmailData) {
 
   try {
     const result = await resend.emails.send({
-      from: process.env.EMAIL_FROM || "D-GITALCODE <noreply@d-gitalcode.ma>",
+      from: process.env.EMAIL_FROM || EMAIL_FROM_DEFAULT,
       to: data.to,
       subject: data.subject,
       html,

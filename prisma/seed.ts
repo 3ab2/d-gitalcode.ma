@@ -3,10 +3,25 @@ import bcrypt from "bcryptjs";
 
 const prisma = new PrismaClient();
 
+const DEFAULT_CONTACT_EMAIL = "3ab2uelkarch2006@gmail.com";
+const LEGACY_ADMIN_EMAIL = "admin@d-gitalcode.ma";
+
 async function main() {
-  const adminEmail = process.env.ADMIN_EMAIL || "admin@d-gitalcode.ma";
+  const adminEmail = process.env.ADMIN_EMAIL || DEFAULT_CONTACT_EMAIL;
   const adminPassword = process.env.ADMIN_PASSWORD || "ChangeMe123!";
   const hashedPassword = await bcrypt.hash(adminPassword, 12);
+
+  if (adminEmail !== LEGACY_ADMIN_EMAIL) {
+    const legacyAdmin = await prisma.user.findUnique({
+      where: { email: LEGACY_ADMIN_EMAIL },
+    });
+    if (legacyAdmin) {
+      await prisma.user.update({
+        where: { email: LEGACY_ADMIN_EMAIL },
+        data: { email: adminEmail },
+      });
+    }
+  }
 
   await prisma.user.upsert({
     where: { email: adminEmail },

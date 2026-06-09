@@ -7,6 +7,7 @@ import { SocialLinks } from "@/components/social/SocialLinks";
 import { GlassCard } from "@/components/ui/GlassCard";
 import { Button } from "@/components/ui/Button";
 import { buildGeneralContactMessage, buildWhatsAppUrl } from "@/lib/whatsapp";
+import { CONTACT_EMAIL } from "@/config/contact";
 import { type SocialLinkConfig } from "@/config/social-links";
 import { type Locale } from "@/lib/i18n/settings";
 
@@ -66,10 +67,10 @@ export function HomeContactSection({
                 <div>
                   <h3 className="font-semibold text-white">Email</h3>
                   <a
-                    href="mailto:contact@d-gitalcode.ma"
+                    href={`mailto:${CONTACT_EMAIL}`}
                     className="mt-2 block text-sm text-brand-green hover:underline"
                   >
-                    contact@d-gitalcode.ma
+                    {CONTACT_EMAIL}
                   </a>
                 </div>
               </div>
