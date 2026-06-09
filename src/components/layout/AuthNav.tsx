@@ -1,68 +1,84 @@
 "use client";
 
-import Link from "next/link";
 import { useSession, signOut } from "next-auth/react";
 import { useTranslation } from "react-i18next";
+import { usePathname } from "next/navigation";
+import { LogIn, UserPlus, MessageCircle, Inbox, LogOut, User } from "lucide-react";
 import { type Locale } from "@/lib/i18n/settings";
 import { isAdminRole, isClientRole } from "@/lib/roles";
+import { getLogoutPath, getSupportPath, resolveLocaleFromPathname } from "@/lib/auth-urls";
+import { IconButton } from "@/components/ui/IconButton";
 
 export function AuthNav({ locale }: { locale: Locale }) {
   const { data: session, status } = useSession();
   const { t } = useTranslation();
-  const basePath = `/${locale}`;
+  const pathname = usePathname();
+  const activeLocale = locale || resolveLocaleFromPathname(pathname);
+  const loginPath = `/${activeLocale}/login`;
+  const registerPath = `/${activeLocale}/register`;
 
-  if (status === "loading") return null;
+  if (status === "loading") {
+    return <div className="h-10 w-10" aria-hidden />;
+  }
 
   if (!session?.user) {
     return (
-      <div className="flex items-center gap-2">
-        <Link
-          href={`${basePath}/login`}
-          className="text-sm text-white/70 hover:text-brand-green transition-colors"
-        >
-          {t("auth.login")}
-        </Link>
-        <Link
-          href={`${basePath}/register`}
-          className="text-sm rounded-lg border border-white/15 px-3 py-1.5 text-white/80 hover:border-brand-green/40 hover:text-brand-green transition-colors"
-        >
-          {t("auth.register")}
-        </Link>
+      <div className="flex items-center gap-1.5">
+        <IconButton href={loginPath} label={t("auth.login")}>
+          <LogIn className="h-4 w-4" />
+        </IconButton>
+        <IconButton href={registerPath} label={t("auth.register")}>
+          <UserPlus className="h-4 w-4" />
+        </IconButton>
       </div>
     );
   }
 
   const role = session.user.role;
 
-  return (
-    <div className="flex items-center gap-3">
-      {isClientRole(role) && (
-        <Link
-          href={`${basePath}/messages`}
-          className="text-sm text-white/70 hover:text-brand-green transition-colors"
+  if (isAdminRole(role)) {
+    return (
+      <div className="flex items-center gap-1.5">
+        <IconButton href="/admin/messages" label={t("support.adminInbox")}>
+          <Inbox className="h-4 w-4" />
+        </IconButton>
+        <IconButton
+          href="/admin"
+          label={session.user.name || session.user.email || "Admin"}
         >
-          {t("messages.title")}
-        </Link>
-      )}
-      {isAdminRole(role) && (
-        <Link
-          href="/admin/messages"
-          className="text-sm text-white/70 hover:text-brand-green transition-colors"
+          <User className="h-4 w-4" />
+        </IconButton>
+        <IconButton
+          label={t("auth.logout")}
+          onClick={() => signOut({ callbackUrl: getLogoutPath(activeLocale) })}
         >
-          Admin
-        </Link>
-      )}
-      <button
-        type="button"
-        onClick={() =>
-          signOut({
-            callbackUrl: isAdminRole(role) ? "/admin/login" : `${basePath}/login`,
-          })
-        }
-        className="text-sm text-white/50 hover:text-red-400 transition-colors"
-      >
-        {t("auth.logout")}
-      </button>
-    </div>
-  );
+          <LogOut className="h-4 w-4" />
+        </IconButton>
+      </div>
+    );
+  }
+
+  if (isClientRole(role)) {
+    return (
+      <div className="flex items-center gap-1.5">
+        <IconButton href={getSupportPath(activeLocale)} label={t("support.title")}>
+          <MessageCircle className="h-4 w-4" />
+        </IconButton>
+        <IconButton
+          href={getSupportPath(activeLocale)}
+          label={session.user.name || session.user.email || t("auth.profile")}
+        >
+          <User className="h-4 w-4" />
+        </IconButton>
+        <IconButton
+          label={t("auth.logout")}
+          onClick={() => signOut({ callbackUrl: getLogoutPath(activeLocale) })}
+        >
+          <LogOut className="h-4 w-4" />
+        </IconButton>
+      </div>
+    );
+  }
+
+  return null;
 }

@@ -255,10 +255,19 @@
     "hasAccount": "Already have an account?",
     "emailExists": "This email is already registered",
     "registerFailed": "Registration failed",
-    "registerSuccessLogin": "Account created. Please sign in."
+    "registerSuccessLogin": "Account created. Please sign in.",
+    "profile": "My profile"
+  },
+  "support": {
+    "title": "Support",
+    "subtitle": "Chat with the D-GITALCODE team",
+    "empty": "Send your first message — we'll reply here.",
+    "placeholder": "Type your message…",
+    "send": "Send",
+    "adminInbox": "Inbox"
   },
   "messages": {
-    "title": "My messages",
+    "title": "Support",
     "subtitle": "Chat with our team — no external email",
     "new": "New message",
     "newTitle": "New message",

@@ -8,16 +8,17 @@ import { useTranslation } from "react-i18next";
 import { Logo } from "@/components/brand/Logo";
 import { Input } from "@/components/ui/Input";
 import { Button } from "@/components/ui/Button";
-import { isAdminRole } from "@/lib/roles";
+import { getPostLoginPath, getSupportPath } from "@/lib/auth-urls";
 import { type Locale } from "@/lib/i18n/settings";
 
-export default function ClientLoginPage() {
+export default function LoginPage() {
   const { t } = useTranslation();
   const params = useParams();
   const searchParams = useSearchParams();
   const locale = (params.locale as Locale) || "fr";
   const basePath = `/${locale}`;
-  const callbackUrl = searchParams.get("callbackUrl") || `${basePath}/messages`;
+  const defaultCallback = getSupportPath(locale);
+  const callbackUrl = searchParams.get("callbackUrl") || defaultCallback;
 
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
@@ -42,12 +43,16 @@ export default function ClientLoginPage() {
     }
 
     const session = await getSession();
-    if (isAdminRole(session?.user?.role)) {
-      window.location.assign("/admin");
+    const destination = getPostLoginPath(session?.user?.role, locale);
+
+    if (destination.startsWith("/admin")) {
+      window.location.assign(destination);
       return;
     }
 
-    window.location.assign(callbackUrl);
+    window.location.assign(
+      callbackUrl.startsWith("/admin") ? defaultCallback : callbackUrl
+    );
   };
 
   return (
@@ -70,6 +75,7 @@ export default function ClientLoginPage() {
             value={email}
             onChange={(e) => setEmail(e.target.value)}
             required
+            autoComplete="email"
           />
           <Input
             id="password"
@@ -78,6 +84,7 @@ export default function ClientLoginPage() {
             value={password}
             onChange={(e) => setPassword(e.target.value)}
             required
+            autoComplete="current-password"
           />
 
           {error && <p className="text-red-400 text-sm">{error}</p>}

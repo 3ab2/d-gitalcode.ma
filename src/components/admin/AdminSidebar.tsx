@@ -15,6 +15,7 @@ import {
 } from "lucide-react";
 import { signOut } from "next-auth/react";
 import { cn } from "@/lib/utils";
+import { getLogoutPath } from "@/lib/auth-urls";
 
 const links = [
   { href: "/admin", label: "Dashboard", icon: LayoutDashboard },
@@ -64,7 +65,7 @@ export function AdminSidebar() {
 
       <div className="p-4 border-t border-white/10">
         <button
-          onClick={() => signOut({ callbackUrl: "/admin/login" })}
+          onClick={() => signOut({ callbackUrl: getLogoutPath() })}
           className="flex w-full items-center gap-3 px-4 py-3 rounded-xl text-sm text-white/60 hover:text-red-400 hover:bg-red-400/5 transition-colors"
         >
           <LogOut className="h-5 w-5" />

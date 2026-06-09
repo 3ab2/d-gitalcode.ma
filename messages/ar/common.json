@@ -255,10 +255,19 @@
     "hasAccount": "لديك حساب بالفعل؟",
     "emailExists": "هذا البريد مستخدم بالفعل",
     "registerFailed": "فشل التسجيل",
-    "registerSuccessLogin": "تم إنشاء الحساب. يرجى تسجيل الدخول."
+    "registerSuccessLogin": "تم إنشاء الحساب. يرجى تسجيل الدخول.",
+    "profile": "ملفي"
+  },
+  "support": {
+    "title": "الدعم",
+    "subtitle": "تحدث مع فريق D-GITALCODE",
+    "empty": "أرسل رسالتك الأولى — سنرد هنا.",
+    "placeholder": "اكتب رسالتك…",
+    "send": "إرسال",
+    "adminInbox": "صندوق الوارد"
   },
   "messages": {
-    "title": "رسائلي",
+    "title": "الدعم",
     "subtitle": "تواصل مع فريقنا — بدون بريد خارجي",
     "new": "رسالة جديدة",
     "newTitle": "رسالة جديدة",

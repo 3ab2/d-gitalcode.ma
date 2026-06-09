@@ -8,6 +8,7 @@ import { useTranslation } from "react-i18next";
 import { Logo } from "@/components/brand/Logo";
 import { Input } from "@/components/ui/Input";
 import { Button } from "@/components/ui/Button";
+import { getSupportPath } from "@/lib/auth-urls";
 import { type Locale } from "@/lib/i18n/settings";
 
 export default function RegisterPage() {
@@ -56,7 +57,7 @@ export default function RegisterPage() {
       return;
     }
 
-    window.location.assign(`${basePath}/messages`);
+    window.location.assign(getSupportPath(locale));
   };
 
   return (

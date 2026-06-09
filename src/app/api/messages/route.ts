@@ -5,7 +5,7 @@ import { requireClient } from "@/lib/auth";
 
 const createMessageSchema = z.object({
   subject: z.string().min(2).max(200).optional(),
-  content: z.string().min(5).max(10000),
+  content: z.string().min(1).max(10000),
 });
 
 export async function GET() {

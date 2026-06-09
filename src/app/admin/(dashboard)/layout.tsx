@@ -1,6 +1,7 @@
 import { redirect } from "next/navigation";
 import { AdminSidebar } from "@/components/admin/AdminSidebar";
-import { auth } from "@/lib/auth";
+import { auth, isAdminRole } from "@/lib/auth";
+import { getLoginPath } from "@/lib/auth-urls";
 
 export default async function DashboardLayout({
   children,
@@ -8,8 +9,8 @@ export default async function DashboardLayout({
   children: React.ReactNode;
 }) {
   const session = await auth();
-  if (!session?.user || (session.user as { role?: string }).role !== "ADMIN") {
-    redirect("/admin/login");
+  if (!session?.user || !isAdminRole(session.user.role)) {
+    redirect(getLoginPath());
   }
 
   return (
