@@ -1,7 +1,12 @@
-import type { Metadata } from "next";
+import type { Metadata, Viewport } from "next";
 import { Geist, Geist_Mono } from "next/font/google";
 import { SessionProvider } from "@/components/providers/SessionProvider";
+import { SerwistProvider } from "@/components/providers/SerwistProvider";
 import "./globals.css";
+
+const APP_NAME = "D-GITALCODE";
+const APP_DESCRIPTION =
+  "Professional web development and digital solutions platform.";
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -14,6 +19,7 @@ const geistMono = Geist_Mono({
 });
 
 export const metadata: Metadata = {
+  applicationName: APP_NAME,
   title: {
     default: "D-GITALCODE — Agence Digitale & Solutions WooCommerce",
     template: "%s | D-GITALCODE",
@@ -27,16 +33,38 @@ export const metadata: Metadata = {
     "WordPress plugins",
     "agence digitale Maroc",
   ],
-  authors: [{ name: "D-GITALCODE" }],
+  authors: [{ name: APP_NAME }],
+  manifest: "/manifest.webmanifest",
+  appleWebApp: {
+    capable: true,
+    statusBarStyle: "black-translucent",
+    title: APP_NAME,
+  },
+  formatDetection: {
+    telephone: false,
+  },
   openGraph: {
     type: "website",
     locale: "fr_FR",
-    siteName: "D-GITALCODE",
+    siteName: APP_NAME,
+    description: APP_DESCRIPTION,
   },
   icons: {
-    icon: "/logo-mobile.png",
-    apple: "/logo-mobile.png",
+    icon: [
+      { url: "/favicon.ico", sizes: "any" },
+      { url: "/icons/favicon-32x32.png", sizes: "32x32", type: "image/png" },
+      { url: "/icons/icon-192x192.png", sizes: "192x192", type: "image/png" },
+    ],
+    apple: [{ url: "/icons/apple-touch-icon.png", sizes: "180x180" }],
   },
+};
+
+export const viewport: Viewport = {
+  themeColor: "#0a0f14",
+  width: "device-width",
+  initialScale: 1,
+  maximumScale: 5,
+  viewportFit: "cover",
 };
 
 export default function RootLayout({
@@ -50,7 +78,9 @@ export default function RootLayout({
       data-scroll-behavior="smooth"
     >
       <body className="min-h-full flex flex-col antialiased">
-        <SessionProvider>{children}</SessionProvider>
+        <SerwistProvider>
+          <SessionProvider>{children}</SessionProvider>
+        </SerwistProvider>
       </body>
     </html>
   );

@@ -277,5 +277,9 @@
     "sendHint": "Enter = سطر جديد · Ctrl+Enter = إرسال",
     "loading": "جاري تحميل المحادثة…",
     "adminInbox": "الدعم"
+  },
+  "pwa": {
+    "install": "تثبيت التطبيق",
+    "installed": "تم تثبيت التطبيق"
   }
 }

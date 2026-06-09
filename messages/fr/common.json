@@ -277,5 +277,9 @@
     "sendHint": "Entrée = nouvelle ligne · Ctrl+Entrée = envoyer",
     "loading": "Chargement de la conversation…",
     "adminInbox": "Support"
+  },
+  "pwa": {
+    "install": "Installer l'application",
+    "installed": "Application installée"
   }
 }

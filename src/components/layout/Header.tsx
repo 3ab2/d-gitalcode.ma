@@ -12,6 +12,7 @@ import { type Locale, localeNames, locales } from "@/lib/i18n/settings";
 import { Button } from "@/components/ui/Button";
 import { useHeaderHeight } from "@/hooks/useHeaderHeight";
 import { AuthNav } from "@/components/layout/AuthNav";
+import { PwaInstallButton } from "@/components/pwa/PwaInstallButton";
 
 export function Header({ locale }: { locale: Locale }) {
   const { t } = useTranslation();
@@ -142,7 +143,8 @@ export function Header({ locale }: { locale: Locale }) {
               </Link>
             ))}
           </div>
-          <div className="mt-4 border-t border-white/10 pt-4">
+          <div className="mt-4 space-y-1 border-t border-white/10 pt-4">
+            <PwaInstallButton variant="menu" onInstalled={closeMenu} />
             <AuthNav locale={locale} />
           </div>
           <Link href={`${basePath}/contact`} onClick={closeMenu} className="mt-4 block">
@@ -256,6 +258,7 @@ export function Header({ locale }: { locale: Locale }) {
               ))}
             </div>
 
+            <PwaInstallButton variant="pill" />
             <AuthNav locale={locale} />
             <Link href={`${basePath}/contact`}>
               <Button size="sm">{t("nav.contact")}</Button>

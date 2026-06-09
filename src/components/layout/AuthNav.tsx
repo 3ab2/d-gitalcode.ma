@@ -9,6 +9,7 @@ import { type Locale } from "@/lib/i18n/settings";
 import { isAdminRole, isClientRole } from "@/lib/roles";
 import { getSupportPath, resolveLocaleFromPathname } from "@/lib/auth-urls";
 import { IconButton } from "@/components/ui/IconButton";
+import { PwaInstallButton } from "@/components/pwa/PwaInstallButton";
 
 export function AuthNav({ locale }: { locale: Locale }) {
   const { data: session, status } = useSession();
@@ -25,6 +26,7 @@ export function AuthNav({ locale }: { locale: Locale }) {
   if (!session?.user) {
     return (
       <div className="flex items-center gap-1.5">
+        <PwaInstallButton variant="icon" />
         <IconButton href={loginPath} label={t("auth.login")}>
           <LogIn className="h-4 w-4" />
         </IconButton>
@@ -40,6 +42,7 @@ export function AuthNav({ locale }: { locale: Locale }) {
   if (isAdminRole(role)) {
     return (
       <div className="flex items-center gap-1.5">
+        <PwaInstallButton variant="icon" />
         <IconButton href="/admin/messages" label={t("support.adminInbox")}>
           <Inbox className="h-4 w-4" />
         </IconButton>
@@ -62,6 +65,7 @@ export function AuthNav({ locale }: { locale: Locale }) {
   if (isClientRole(role)) {
     return (
       <div className="flex items-center gap-1.5">
+        <PwaInstallButton variant="icon" />
         <IconButton href={getSupportPath(activeLocale)} label={t("support.title")}>
           <MessageCircle className="h-4 w-4" />
         </IconButton>

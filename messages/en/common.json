@@ -277,5 +277,9 @@
     "sendHint": "Enter = new line · Ctrl+Enter = send",
     "loading": "Loading conversation…",
     "adminInbox": "Support"
+  },
+  "pwa": {
+    "install": "Install App",
+    "installed": "App installed"
   }
 }

@@ -1,6 +1,8 @@
 import type { NextConfig } from "next";
+import { withSerwist } from "@serwist/turbopack";
 
 const nextConfig: NextConfig = {
+  serverExternalPackages: ["esbuild"],
   // Allow iPhone / LAN devices to connect to dev HMR (webpack-hmr WebSocket)
   allowedDevOrigins: [
     "localhost",
@@ -20,4 +22,4 @@ const nextConfig: NextConfig = {
   },
 };
 
-export default nextConfig;
+export default withSerwist(nextConfig);
