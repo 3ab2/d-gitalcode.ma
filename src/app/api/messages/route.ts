@@ -8,29 +8,6 @@ const createMessageSchema = z.object({
   content: z.string().min(1).max(10000),
 });
 
-export async function GET() {
-  const session = await requireClient();
-  if (!session) {
-    return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
-  }
-
-  const messages = await prisma.clientMessage.findMany({
-    where: { userId: session.user.id },
-    orderBy: { createdAt: "desc" },
-    include: {
-      replies: {
-        orderBy: { createdAt: "asc" },
-        include: {
-          admin: { select: { id: true, name: true, email: true } },
-        },
-      },
-      _count: { select: { replies: true } },
-    },
-  });
-
-  return NextResponse.json(messages);
-}
-
 export async function POST(request: NextRequest) {
   const session = await requireClient();
   if (!session) {

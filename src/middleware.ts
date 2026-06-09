@@ -5,6 +5,13 @@ import { defaultLocale, isValidLocale, locales } from "@/lib/i18n/settings";
 export function middleware(request: NextRequest) {
   const { pathname } = request.nextUrl;
 
+  const legacyMessages = pathname.match(/^\/(fr|en|ar)\/messages(\/.*)?$/);
+  if (legacyMessages) {
+    return NextResponse.redirect(
+      new URL(`/${legacyMessages[1]}/support`, request.url)
+    );
+  }
+
   if (
     pathname.startsWith("/api") ||
     pathname.startsWith("/_next") ||

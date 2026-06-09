@@ -8,7 +8,7 @@ import { useTranslation } from "react-i18next";
 import { Logo } from "@/components/brand/Logo";
 import { Input } from "@/components/ui/Input";
 import { Button } from "@/components/ui/Button";
-import { getPostLoginPath, getSupportPath } from "@/lib/auth-urls";
+import { getHomePath, getPostLoginPath } from "@/lib/auth-urls";
 import { type Locale } from "@/lib/i18n/settings";
 
 export default function LoginPage() {
@@ -17,8 +17,7 @@ export default function LoginPage() {
   const searchParams = useSearchParams();
   const locale = (params.locale as Locale) || "fr";
   const basePath = `/${locale}`;
-  const defaultCallback = getSupportPath(locale);
-  const callbackUrl = searchParams.get("callbackUrl") || defaultCallback;
+  const callbackUrl = searchParams.get("callbackUrl");
 
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
@@ -50,9 +49,12 @@ export default function LoginPage() {
       return;
     }
 
-    window.location.assign(
-      callbackUrl.startsWith("/admin") ? defaultCallback : callbackUrl
-    );
+    if (callbackUrl && callbackUrl.startsWith("/") && !callbackUrl.startsWith("/admin")) {
+      window.location.assign(callbackUrl);
+      return;
+    }
+
+    window.location.assign(getHomePath(locale));
   };
 
   return (

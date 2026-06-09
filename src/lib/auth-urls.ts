@@ -26,6 +26,11 @@ export function getLoginPath(locale: string = defaultLocale): string {
   return `/${resolved}/login`;
 }
 
+export function getHomePath(locale: string = defaultLocale): string {
+  const resolved = isValidLocale(locale) ? locale : defaultLocale;
+  return `/${resolved}`;
+}
+
 export function getSupportPath(locale: string = defaultLocale): string {
   const resolved = isValidLocale(locale) ? locale : defaultLocale;
   return `/${resolved}/support`;
@@ -33,7 +38,11 @@ export function getSupportPath(locale: string = defaultLocale): string {
 
 export function getPostLoginPath(role: string | undefined | null, locale: string = defaultLocale): string {
   if (isAdminRole(role)) return "/admin";
-  return getSupportPath(locale);
+  return getHomePath(locale);
+}
+
+export function resolveLocaleFromCookie(cookieValue?: string | null): Locale {
+  return isValidLocale(cookieValue ?? "") ? (cookieValue as Locale) : defaultLocale;
 }
 
 export function getLogoutPath(locale: string = defaultLocale): string {

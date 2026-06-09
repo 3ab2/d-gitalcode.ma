@@ -92,8 +92,7 @@ export async function getHomepageServiceCategories(locale: Locale) {
 }
 
 export function mapService(
-  service: Awaited<ReturnType<typeof getServicesByType>>[0],
-  locale: Locale
+  service: Awaited<ReturnType<typeof getServicesByType>>[0]
 ) {
   const translation = service.translations[0];
   return {

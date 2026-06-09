@@ -9,10 +9,7 @@ import { SectionHeading } from "@/components/ui/SectionHeading";
 import { GlassCard } from "@/components/ui/GlassCard";
 import { Badge } from "@/components/ui/Badge";
 import { cn } from "@/lib/utils";
-import {
-  inferPortfolioCategory,
-  type PortfolioCategory,
-} from "@/lib/portfolio-category";
+import { type PortfolioCategory } from "@/lib/portfolio-category";
 import { type Locale } from "@/lib/i18n/settings";
 
 export interface PortfolioItem {

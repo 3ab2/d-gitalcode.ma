@@ -1,6 +1,5 @@
 import type { Metadata } from "next";
 import Image from "next/image";
-import Link from "next/link";
 import { ExternalLink } from "lucide-react";
 import { GitHubIcon } from "@/components/social/GitHubIcon";
 import { prisma } from "@/lib/prisma";

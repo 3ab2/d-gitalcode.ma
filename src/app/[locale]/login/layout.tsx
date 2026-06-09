@@ -17,7 +17,7 @@ async function LoginGuard({
       redirect("/admin");
     }
     if (isClientRole(session.user.role) && isValidLocale(locale)) {
-      redirect(`/${locale}/support`);
+      redirect(`/${locale}`);
     }
   }
 

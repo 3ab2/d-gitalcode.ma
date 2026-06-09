@@ -66,7 +66,7 @@ export default async function ServicePage({
 
   const { t } = await getTranslation(locale as Locale);
   const rawServices = await getServicesByType(type, locale as Locale);
-  const services = rawServices.map((s) => mapService(s, locale as Locale));
+  const services = rawServices.map((s) => mapService(s));
   const meta = pageMeta[slug]?.[locale as Locale];
 
   return (
