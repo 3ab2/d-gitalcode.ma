@@ -1,7 +1,7 @@
 import { AdminInbox } from "@/components/messages/AdminInbox";
 
 export const metadata = {
-  title: "Messages",
+  title: "Support",
 };
 
 export default function AdminMessagesPage() {

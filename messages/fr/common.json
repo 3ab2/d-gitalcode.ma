@@ -245,10 +245,10 @@
     "login": "Connexion",
     "logout": "Déconnexion",
     "register": "Créer un compte",
-    "loginTitle": "Espace client",
-    "loginSubtitle": "Connectez-vous pour voir vos messages",
+    "loginTitle": "Support",
+    "loginSubtitle": "Connectez-vous pour accéder au support",
     "registerTitle": "Créer un compte",
-    "registerSubtitle": "Accédez à la messagerie interne D-GITALCODE",
+    "registerSubtitle": "Créez un compte pour accéder au support D-GITALCODE",
     "password": "Mot de passe",
     "invalidCredentials": "Identifiants invalides",
     "noAccount": "Pas encore de compte ?",
@@ -264,26 +264,6 @@
     "empty": "Envoyez votre premier message — nous vous répondrons ici.",
     "placeholder": "Écrivez votre message…",
     "send": "Envoyer",
-    "adminInbox": "Boîte de réception"
-  },
-  "messages": {
-    "title": "Support",
-    "subtitle": "Communiquez avec notre équipe — sans email externe",
-    "new": "Nouveau message",
-    "newTitle": "Nouveau message",
-    "newSubtitle": "Décrivez votre demande — nous répondrons ici",
-    "subject": "Sujet",
-    "subjectPlaceholder": "Ex. Question sur un projet web",
-    "content": "Message",
-    "send": "Envoyer",
-    "cancel": "Annuler",
-    "back": "Retour",
-    "empty": "Aucun message pour le moment",
-    "you": "Vous",
-    "adminReply": "Réponse de l'équipe",
-    "awaitingReply": "En attente de réponse…",
-    "statusOpen": "Ouvert",
-    "statusReplied": "Répondu",
-    "sendFailed": "Échec de l'envoi"
+    "adminInbox": "Support"
   }
 }

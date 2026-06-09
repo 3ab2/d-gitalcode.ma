@@ -245,10 +245,10 @@
     "login": "تسجيل الدخول",
     "logout": "تسجيل الخروج",
     "register": "إنشاء حساب",
-    "loginTitle": "منطقة العميل",
-    "loginSubtitle": "سجّل الدخول لعرض رسائلك",
+    "loginTitle": "الدعم",
+    "loginSubtitle": "سجّل الدخول للوصول إلى الدعم",
     "registerTitle": "إنشاء حساب",
-    "registerSubtitle": "الوصول إلى المراسلة الداخلية لـ D-GITALCODE",
+    "registerSubtitle": "أنشئ حسابًا للوصول إلى دعم D-GITALCODE",
     "password": "كلمة المرور",
     "invalidCredentials": "بيانات اعتماد غير صالحة",
     "noAccount": "ليس لديك حساب؟",
@@ -264,26 +264,6 @@
     "empty": "أرسل رسالتك الأولى — سنرد هنا.",
     "placeholder": "اكتب رسالتك…",
     "send": "إرسال",
-    "adminInbox": "صندوق الوارد"
-  },
-  "messages": {
-    "title": "الدعم",
-    "subtitle": "تواصل مع فريقنا — بدون بريد خارجي",
-    "new": "رسالة جديدة",
-    "newTitle": "رسالة جديدة",
-    "newSubtitle": "صف طلبك — سنرد هنا",
-    "subject": "الموضوع",
-    "subjectPlaceholder": "مثال: سؤال عن مشروع ويب",
-    "content": "الرسالة",
-    "send": "إرسال",
-    "cancel": "إلغاء",
-    "back": "رجوع",
-    "empty": "لا توجد رسائل بعد",
-    "you": "أنت",
-    "adminReply": "رد الفريق",
-    "awaitingReply": "في انتظار الرد…",
-    "statusOpen": "مفتوح",
-    "statusReplied": "تم الرد",
-    "sendFailed": "فشل الإرسال"
+    "adminInbox": "الدعم"
   }
 }

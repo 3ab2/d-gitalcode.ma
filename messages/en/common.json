@@ -245,10 +245,10 @@
     "login": "Login",
     "logout": "Logout",
     "register": "Sign up",
-    "loginTitle": "Client area",
-    "loginSubtitle": "Sign in to view your messages",
+    "loginTitle": "Support",
+    "loginSubtitle": "Sign in to access support",
     "registerTitle": "Create account",
-    "registerSubtitle": "Access D-GITALCODE internal messaging",
+    "registerSubtitle": "Create an account to access D-GITALCODE support",
     "password": "Password",
     "invalidCredentials": "Invalid credentials",
     "noAccount": "No account yet?",
@@ -264,26 +264,6 @@
     "empty": "Send your first message — we'll reply here.",
     "placeholder": "Type your message…",
     "send": "Send",
-    "adminInbox": "Inbox"
-  },
-  "messages": {
-    "title": "Support",
-    "subtitle": "Chat with our team — no external email",
-    "new": "New message",
-    "newTitle": "New message",
-    "newSubtitle": "Describe your request — we'll reply here",
-    "subject": "Subject",
-    "subjectPlaceholder": "e.g. Web project question",
-    "content": "Message",
-    "send": "Send",
-    "cancel": "Cancel",
-    "back": "Back",
-    "empty": "No messages yet",
-    "you": "You",
-    "adminReply": "Team reply",
-    "awaitingReply": "Awaiting reply…",
-    "statusOpen": "Open",
-    "statusReplied": "Replied",
-    "sendFailed": "Failed to send"
+    "adminInbox": "Support"
   }
 }

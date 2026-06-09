@@ -1,12 +1,13 @@
 "use client";
 
-import { useSession, signOut } from "next-auth/react";
+import { useSession } from "next-auth/react";
+import { logoutToLogin } from "@/lib/auth-client";
 import { useTranslation } from "react-i18next";
 import { usePathname } from "next/navigation";
 import { LogIn, UserPlus, MessageCircle, Inbox, LogOut, User } from "lucide-react";
 import { type Locale } from "@/lib/i18n/settings";
 import { isAdminRole, isClientRole } from "@/lib/roles";
-import { getLogoutPath, getSupportPath, resolveLocaleFromPathname } from "@/lib/auth-urls";
+import { getSupportPath, resolveLocaleFromPathname } from "@/lib/auth-urls";
 import { IconButton } from "@/components/ui/IconButton";
 
 export function AuthNav({ locale }: { locale: Locale }) {
@@ -50,7 +51,7 @@ export function AuthNav({ locale }: { locale: Locale }) {
         </IconButton>
         <IconButton
           label={t("auth.logout")}
-          onClick={() => signOut({ callbackUrl: getLogoutPath(activeLocale) })}
+          onClick={() => logoutToLogin(activeLocale)}
         >
           <LogOut className="h-4 w-4" />
         </IconButton>
@@ -72,7 +73,7 @@ export function AuthNav({ locale }: { locale: Locale }) {
         </IconButton>
         <IconButton
           label={t("auth.logout")}
-          onClick={() => signOut({ callbackUrl: getLogoutPath(activeLocale) })}
+          onClick={() => logoutToLogin(activeLocale)}
         >
           <LogOut className="h-4 w-4" />
         </IconButton>
