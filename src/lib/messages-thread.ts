@@ -56,7 +56,21 @@ export function buildThreadFromMessages(
   return items.sort((a, b) => a.createdAt.getTime() - b.createdAt.getTime());
 }
 
+export type ClientConversationStatus = "open" | "waiting" | "replied";
+
+export interface ClientThreadMeta {
+  status: ClientConversationStatus;
+  lastActivityAt: string | null;
+  lastSupportReplyAt: string | null;
+  unreadCount: number;
+}
+
 export async function getClientThread(userId: string) {
+  const { thread } = await getClientThreadWithMeta(userId);
+  return thread;
+}
+
+export async function getClientThreadWithMeta(userId: string) {
   const messages = await prisma.clientMessage.findMany({
     where: { userId },
     orderBy: { createdAt: "asc" },
@@ -68,7 +82,30 @@ export async function getClientThread(userId: string) {
     },
   });
 
-  return buildThreadFromMessages(messages);
+  const thread = buildThreadFromMessages(messages);
+  const lastItem = thread.at(-1) ?? null;
+  const lastAdmin = [...thread].reverse().find((item) => item.type === "admin") ?? null;
+
+  let status: ClientConversationStatus = "open";
+  if (thread.length > 0) {
+    status = lastItem?.type === "admin" ? "replied" : "waiting";
+  }
+
+  const unreadCount = messages.filter(
+    (message) => message.status === "OPEN" && message.replies.length > 0
+  ).length;
+
+  return {
+    thread,
+    meta: {
+      status,
+      lastActivityAt: lastItem ? new Date(lastItem.createdAt).toISOString() : null,
+      lastSupportReplyAt: lastAdmin
+        ? new Date(lastAdmin.createdAt).toISOString()
+        : null,
+      unreadCount,
+    } satisfies ClientThreadMeta,
+  };
 }
 
 export interface ConversationSummary {

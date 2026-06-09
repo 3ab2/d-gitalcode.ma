@@ -1,6 +1,6 @@
 import { NextResponse } from "next/server";
 import { requireClient } from "@/lib/auth";
-import { getClientThread } from "@/lib/messages-thread";
+import { getClientThreadWithMeta } from "@/lib/messages-thread";
 
 export async function GET() {
   const session = await requireClient();
@@ -8,6 +8,6 @@ export async function GET() {
     return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
   }
 
-  const thread = await getClientThread(session.user.id);
-  return NextResponse.json({ thread });
+  const { thread, meta } = await getClientThreadWithMeta(session.user.id);
+  return NextResponse.json({ thread, meta });
 }

@@ -6,8 +6,8 @@ export const metadata = {
 
 export default function SupportPage() {
   return (
-    <section className="py-6 pb-8 md:py-8">
-      <div className="mx-auto max-w-2xl px-4 sm:px-6">
+    <section className="flex min-h-[calc(100dvh-var(--header-height))] flex-col">
+      <div className="mx-auto flex w-full max-w-2xl min-h-0 flex-1 flex-col px-0 pb-[env(safe-area-inset-bottom)] sm:px-4 sm:py-4">
         <SupportChat />
       </div>
     </section>

@@ -125,6 +125,41 @@ body {
   padding-top: var(--header-height);
 }
 
+@keyframes support-message-in {
+  from {
+    opacity: 0;
+    transform: translateY(6px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.support-message-animate {
+  animation: support-message-in 0.28s ease-out forwards;
+}
+
+.support-chat-shell {
+  min-height: calc(100dvh - var(--header-height) - env(safe-area-inset-bottom, 0px));
+}
+
+@media (min-width: 640px) {
+  .support-chat-shell {
+    min-height: calc(100dvh - var(--header-height) - 2rem);
+    max-height: 820px;
+  }
+}
+
+.support-chat-composer {
+  padding-bottom: max(0.75rem, env(safe-area-inset-bottom, 0.75rem));
+}
+
+.support-chat-scroll {
+  scroll-behavior: smooth;
+  -webkit-overflow-scrolling: touch;
+}
+
 .site-header {
   position: fixed;
   inset-inline: 0;

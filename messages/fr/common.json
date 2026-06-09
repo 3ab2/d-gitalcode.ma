@@ -260,10 +260,22 @@
   },
   "support": {
     "title": "Support",
+    "brandTitle": "Support D-GITALCODE",
     "subtitle": "Discutez avec l'équipe D-GITALCODE",
+    "online": "En ligne",
+    "responseTime": "Délai de réponse moyen : moins de 24 h",
+    "lastReply": "Dernière réponse :",
+    "statusOpen": "Ouvert",
+    "statusWaiting": "En attente du support",
+    "statusReplied": "Répondu",
+    "emptyTitle": "Comment pouvons-nous vous aider ?",
+    "emptySubtitle": "Notre équipe support est prête à vous accompagner.",
+    "startConversation": "Démarrer une conversation",
     "empty": "Envoyez votre premier message — nous vous répondrons ici.",
     "placeholder": "Écrivez votre message…",
     "send": "Envoyer",
+    "sendHint": "Entrée = nouvelle ligne · Ctrl+Entrée = envoyer",
+    "loading": "Chargement de la conversation…",
     "adminInbox": "Support"
   }
 }

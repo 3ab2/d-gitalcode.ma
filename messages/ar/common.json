@@ -260,10 +260,22 @@
   },
   "support": {
     "title": "الدعم",
+    "brandTitle": "دعم D-GITALCODE",
     "subtitle": "تحدث مع فريق D-GITALCODE",
+    "online": "متصل",
+    "responseTime": "متوسط وقت الرد: أقل من 24 ساعة",
+    "lastReply": "آخر رد:",
+    "statusOpen": "مفتوح",
+    "statusWaiting": "في انتظار الدعم",
+    "statusReplied": "تم الرد",
+    "emptyTitle": "كيف يمكننا مساعدتك؟",
+    "emptySubtitle": "فريق الدعم جاهز لمساعدتك.",
+    "startConversation": "بدء محادثة",
     "empty": "أرسل رسالتك الأولى — سنرد هنا.",
     "placeholder": "اكتب رسالتك…",
     "send": "إرسال",
+    "sendHint": "Enter = سطر جديد · Ctrl+Enter = إرسال",
+    "loading": "جاري تحميل المحادثة…",
     "adminInbox": "الدعم"
   }
 }

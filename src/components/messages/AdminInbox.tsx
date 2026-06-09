@@ -216,9 +216,15 @@ export function AdminInbox() {
                     content={item.content}
                     createdAt={item.createdAt}
                     author={
+                      item.type === "client" ? selectedUser?.name || "Client" : undefined
+                    }
+                    supportLabel={
+                      item.type === "admin" ? item.adminName || "You" : undefined
+                    }
+                    avatarLabel={
                       item.type === "client"
-                        ? selectedUser?.name || "Client"
-                        : item.adminName || "You"
+                        ? (selectedUser?.name || selectedUser?.email || "CL").slice(0, 2)
+                        : undefined
                     }
                   />
                 ))
