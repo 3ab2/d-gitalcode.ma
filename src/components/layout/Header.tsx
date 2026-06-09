@@ -11,6 +11,7 @@ import { cn } from "@/lib/utils";
 import { type Locale, localeNames, locales } from "@/lib/i18n/settings";
 import { Button } from "@/components/ui/Button";
 import { useHeaderHeight } from "@/hooks/useHeaderHeight";
+import { AuthNav } from "@/components/layout/AuthNav";
 
 export function Header({ locale }: { locale: Locale }) {
   const { t } = useTranslation();
@@ -141,7 +142,10 @@ export function Header({ locale }: { locale: Locale }) {
               </Link>
             ))}
           </div>
-          <Link href={`${basePath}/contact`} onClick={closeMenu} className="mt-2 block">
+          <div className="mt-4 border-t border-white/10 pt-4">
+            <AuthNav locale={locale} />
+          </div>
+          <Link href={`${basePath}/contact`} onClick={closeMenu} className="mt-4 block">
             <Button className="w-full">{t("nav.contact")}</Button>
           </Link>
         </div>
@@ -252,6 +256,7 @@ export function Header({ locale }: { locale: Locale }) {
               ))}
             </div>
 
+            <AuthNav locale={locale} />
             <Link href={`${basePath}/contact`}>
               <Button size="sm">{t("nav.contact")}</Button>
             </Link>

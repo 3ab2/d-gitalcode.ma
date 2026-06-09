@@ -14,12 +14,14 @@ model User {
   emailVerified DateTime?
   password      String?
   image         String?
-  role          UserRole        @default(USER)
+  role          UserRole        @default(CLIENT)
   createdAt     DateTime        @default(now())
   updatedAt     DateTime        @updatedAt
   accounts      Account[]
   auditLogs     AdminAuditLog[]
   sessions      Session[]
+  messages      ClientMessage[]
+  messageReplies MessageReply[]
 }
 
 model Account {
@@ -242,6 +244,34 @@ model AnalyticsEvent {
   createdAt DateTime @default(now())
 }
 
+model ClientMessage {
+  id        String         @id @default(cuid())
+  userId    String
+  subject   String         @default("Support request")
+  content   String
+  status    MessageStatus  @default(OPEN)
+  createdAt DateTime       @default(now())
+  updatedAt DateTime       @updatedAt
+  user      User           @relation(fields: [userId], references: [id], onDelete: Cascade)
+  replies   MessageReply[]
+
+  @@index([userId])
+  @@index([status])
+  @@index([createdAt])
+}
+
+model MessageReply {
+  id        String        @id @default(cuid())
+  messageId String
+  adminId   String
+  content   String
+  createdAt DateTime      @default(now())
+  message   ClientMessage @relation(fields: [messageId], references: [id], onDelete: Cascade)
+  admin     User          @relation(fields: [adminId], references: [id], onDelete: Cascade)
+
+  @@index([messageId])
+}
+
 model SocialLink {
   id        String   @id @default(cuid())
   platform  String   @unique
@@ -255,7 +285,13 @@ model SocialLink {
 
 enum UserRole {
   ADMIN
+  CLIENT
   USER
+}
+
+enum MessageStatus {
+  OPEN
+  REPLIED
 }
 
 enum ServiceType {

@@ -240,5 +240,41 @@
   "notFound": {
     "title": "Page non trouvée",
     "back": "Retour à l'accueil"
+  },
+  "auth": {
+    "login": "Connexion",
+    "logout": "Déconnexion",
+    "register": "Créer un compte",
+    "loginTitle": "Espace client",
+    "loginSubtitle": "Connectez-vous pour voir vos messages",
+    "registerTitle": "Créer un compte",
+    "registerSubtitle": "Accédez à la messagerie interne D-GITALCODE",
+    "password": "Mot de passe",
+    "invalidCredentials": "Identifiants invalides",
+    "noAccount": "Pas encore de compte ?",
+    "hasAccount": "Déjà un compte ?",
+    "emailExists": "Cet email est déjà utilisé",
+    "registerFailed": "Inscription échouée",
+    "registerSuccessLogin": "Compte créé. Connectez-vous."
+  },
+  "messages": {
+    "title": "Mes messages",
+    "subtitle": "Communiquez avec notre équipe — sans email externe",
+    "new": "Nouveau message",
+    "newTitle": "Nouveau message",
+    "newSubtitle": "Décrivez votre demande — nous répondrons ici",
+    "subject": "Sujet",
+    "subjectPlaceholder": "Ex. Question sur un projet web",
+    "content": "Message",
+    "send": "Envoyer",
+    "cancel": "Annuler",
+    "back": "Retour",
+    "empty": "Aucun message pour le moment",
+    "you": "Vous",
+    "adminReply": "Réponse de l'équipe",
+    "awaitingReply": "En attente de réponse…",
+    "statusOpen": "Ouvert",
+    "statusReplied": "Répondu",
+    "sendFailed": "Échec de l'envoi"
   }
 }

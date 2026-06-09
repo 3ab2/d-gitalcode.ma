@@ -240,5 +240,41 @@
   "notFound": {
     "title": "Page not found",
     "back": "Back to home"
+  },
+  "auth": {
+    "login": "Login",
+    "logout": "Logout",
+    "register": "Sign up",
+    "loginTitle": "Client area",
+    "loginSubtitle": "Sign in to view your messages",
+    "registerTitle": "Create account",
+    "registerSubtitle": "Access D-GITALCODE internal messaging",
+    "password": "Password",
+    "invalidCredentials": "Invalid credentials",
+    "noAccount": "No account yet?",
+    "hasAccount": "Already have an account?",
+    "emailExists": "This email is already registered",
+    "registerFailed": "Registration failed",
+    "registerSuccessLogin": "Account created. Please sign in."
+  },
+  "messages": {
+    "title": "My messages",
+    "subtitle": "Chat with our team — no external email",
+    "new": "New message",
+    "newTitle": "New message",
+    "newSubtitle": "Describe your request — we'll reply here",
+    "subject": "Subject",
+    "subjectPlaceholder": "e.g. Web project question",
+    "content": "Message",
+    "send": "Send",
+    "cancel": "Cancel",
+    "back": "Back",
+    "empty": "No messages yet",
+    "you": "You",
+    "adminReply": "Team reply",
+    "awaitingReply": "Awaiting reply…",
+    "statusOpen": "Open",
+    "statusReplied": "Replied",
+    "sendFailed": "Failed to send"
   }
 }

@@ -48,6 +48,7 @@ export default function SubmissionsPage() {
   const [selected, setSelected] = useState<Submission | null>(null);
   const [replyForm, setReplyForm] = useState({ subject: "", message: "" });
   const [sending, setSending] = useState(false);
+  const [replyError, setReplyError] = useState<string | null>(null);
 
   const fetchSubmissions = useCallback(async () => {
     const params = new URLSearchParams();
@@ -91,16 +92,33 @@ export default function SubmissionsPage() {
     e.preventDefault();
     if (!selected) return;
     setSending(true);
+    setReplyError(null);
+
     const res = await fetch(`/api/admin/submissions/${selected.id}/reply`, {
-      method: "POST", headers: { "Content-Type": "application/json" },
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
       body: JSON.stringify(replyForm),
     });
+
+    const data = await res.json().catch(() => null);
+
     if (res.ok) {
       const detailRes = await fetch(`/api/admin/submissions/${selected.id}`);
       setSelected(await detailRes.json());
       setReplyForm({ ...replyForm, message: "" });
       fetchSubmissions();
+    } else {
+      setReplyError(
+        data?.message ||
+          data?.error ||
+          "Failed to send reply. Check server logs for details."
+      );
+      if (selected) {
+        const detailRes = await fetch(`/api/admin/submissions/${selected.id}`);
+        setSelected(await detailRes.json());
+      }
     }
+
     setSending(false);
   };
 
@@ -191,6 +209,9 @@ export default function SubmissionsPage() {
                       <Badge variant={reply.status === "SENT" ? "green" : "default"}>{reply.status}</Badge>
                     </div>
                     <p className="text-sm text-white/60">{reply.message}</p>
+                    {reply.error && (
+                      <p className="text-xs text-red-400 mt-2">{reply.error}</p>
+                    )}
                     <p className="text-xs text-white/30 mt-2">{formatDate(reply.createdAt)}</p>
                   </div>
                 ))}
@@ -199,6 +220,11 @@ export default function SubmissionsPage() {
 
             <form onSubmit={sendReply} className="space-y-3 border-t border-white/10 pt-4">
               <h4 className="text-sm font-medium text-white">Reply by email</h4>
+              {replyError && (
+                <p className="rounded-lg border border-red-500/30 bg-red-500/10 px-3 py-2 text-sm text-red-300">
+                  {replyError}
+                </p>
+              )}
               <Input id="subject" label="Subject" value={replyForm.subject} onChange={(e) => setReplyForm({ ...replyForm, subject: e.target.value })} required />
               <Textarea id="message" label="Message" rows={4} value={replyForm.message} onChange={(e) => setReplyForm({ ...replyForm, message: e.target.value })} required />
               <Button type="submit" isLoading={sending} size="sm"><Send className="h-4 w-4" /> Send Reply</Button>

@@ -240,5 +240,41 @@
   "notFound": {
     "title": "الصفحة غير موجودة",
     "back": "العودة للرئيسية"
+  },
+  "auth": {
+    "login": "تسجيل الدخول",
+    "logout": "تسجيل الخروج",
+    "register": "إنشاء حساب",
+    "loginTitle": "منطقة العميل",
+    "loginSubtitle": "سجّل الدخول لعرض رسائلك",
+    "registerTitle": "إنشاء حساب",
+    "registerSubtitle": "الوصول إلى المراسلة الداخلية لـ D-GITALCODE",
+    "password": "كلمة المرور",
+    "invalidCredentials": "بيانات اعتماد غير صالحة",
+    "noAccount": "ليس لديك حساب؟",
+    "hasAccount": "لديك حساب بالفعل؟",
+    "emailExists": "هذا البريد مستخدم بالفعل",
+    "registerFailed": "فشل التسجيل",
+    "registerSuccessLogin": "تم إنشاء الحساب. يرجى تسجيل الدخول."
+  },
+  "messages": {
+    "title": "رسائلي",
+    "subtitle": "تواصل مع فريقنا — بدون بريد خارجي",
+    "new": "رسالة جديدة",
+    "newTitle": "رسالة جديدة",
+    "newSubtitle": "صف طلبك — سنرد هنا",
+    "subject": "الموضوع",
+    "subjectPlaceholder": "مثال: سؤال عن مشروع ويب",
+    "content": "الرسالة",
+    "send": "إرسال",
+    "cancel": "إلغاء",
+    "back": "رجوع",
+    "empty": "لا توجد رسائل بعد",
+    "you": "أنت",
+    "adminReply": "رد الفريق",
+    "awaitingReply": "في انتظار الرد…",
+    "statusOpen": "مفتوح",
+    "statusReplied": "تم الرد",
+    "sendFailed": "فشل الإرسال"
   }
 }

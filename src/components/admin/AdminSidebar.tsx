@@ -9,6 +9,7 @@ import {
   FileText,
   FolderOpen,
   MessageSquare,
+  Inbox,
   Share2,
   LogOut,
 } from "lucide-react";
@@ -21,6 +22,7 @@ const links = [
   { href: "/admin/portfolio", label: "Portfolio", icon: FolderOpen },
   { href: "/admin/blog", label: "Blog", icon: FileText },
   { href: "/admin/submissions", label: "Submissions", icon: MessageSquare },
+  { href: "/admin/messages", label: "Messages", icon: Inbox },
   { href: "/admin/social", label: "Social Media", icon: Share2 },
 ];
 

@@ -42,8 +42,13 @@ export async function POST(request: NextRequest) {
       },
     });
 
+    let emailNotification: { sent: boolean; reason?: string; error?: string } = {
+      sent: false,
+      reason: "skipped",
+    };
+
     if (data.method === "FORM") {
-      await sendContactNotification({
+      const emailResult = await sendContactNotification({
         name: data.name,
         email: data.email,
         phone: data.phone,
@@ -51,9 +56,25 @@ export async function POST(request: NextRequest) {
         serviceName: data.serviceName,
         type: data.type,
       });
+
+      emailNotification = emailResult.success
+        ? { sent: true }
+        : {
+            sent: false,
+            reason: emailResult.reason,
+            error: emailResult.error,
+          };
+
+      if (!emailResult.success) {
+        console.warn("[contact] Submission saved but email failed:", emailNotification);
+      }
     }
 
-    return NextResponse.json({ success: true, id: submission.id });
+    return NextResponse.json({
+      success: true,
+      id: submission.id,
+      emailNotification,
+    });
   } catch (error) {
     if (error instanceof z.ZodError) {
       return NextResponse.json(

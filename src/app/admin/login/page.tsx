@@ -1,7 +1,8 @@
 "use client";
 
 import { useState } from "react";
-import { signIn } from "next-auth/react";
+import { signIn, getSession } from "next-auth/react";
+import { isAdminRole } from "@/lib/roles";
 import { Logo } from "@/components/brand/Logo";
 import { Input } from "@/components/ui/Input";
 import { Button } from "@/components/ui/Button";
@@ -26,9 +27,17 @@ export default function AdminLoginPage() {
     if (result?.error) {
       setError("Invalid credentials");
       setLoading(false);
-    } else {
-      window.location.assign("/admin");
+      return;
     }
+
+    const session = await getSession();
+    if (!isAdminRole(session?.user?.role)) {
+      setError("Admin access only. Use client login on the website.");
+      setLoading(false);
+      return;
+    }
+
+    window.location.assign("/admin");
   };
 
   return (

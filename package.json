@@ -30,6 +30,9 @@
     "db:push": "prisma db push",
     "db:migrate": "prisma migrate dev",
     "db:seed": "tsx prisma/seed.ts",
+    "email:test": "tsx scripts/test-resend.ts",
+    "email:test-reply": "tsx scripts/test-reply-email.ts",
+    "email:test-errors": "tsx scripts/test-resend-errors.ts",
     "db:studio": "prisma studio",
     "assets:optimize": "node scripts/optimize-brand-assets.mjs",
     "postinstall": "prisma generate"
