@@ -1,0 +1,16 @@
+services:
+  postgres:
+    image: postgres:16-alpine
+    container_name: dgitalcode-db
+    restart: unless-stopped
+    environment:
+      POSTGRES_USER: dgitalcode
+      POSTGRES_PASSWORD: dgitalcode
+      POSTGRES_DB: dgitalcode
+    ports:
+      - "5433:5432"
+    volumes:
+      - dgitalcode_postgres:/var/lib/postgresql/data
+
+volumes:
+  dgitalcode_postgres:

@@ -1,0 +1,244 @@
+{
+  "nav": {
+    "home": "Home",
+    "services": "Services",
+    "webDev": "Web Development",
+    "mobileApps": "Mobile Apps",
+    "wpPlugins": "WordPress Plugins",
+    "wpTemplates": "WordPress Templates",
+    "portfolio": "Portfolio",
+    "about": "About",
+    "blog": "Blog",
+    "contact": "Contact"
+  },
+  "hero": {
+    "badge": "Premium Digital Agency",
+    "brand": "D-GITALCODE",
+    "headline": "Build Websites, Mobile Apps & WordPress Solutions That Grow Your Business",
+    "title": "Transform your business with",
+    "titleHighlight": "D-GITALCODE",
+    "subtitle": "We craft high-performance digital experiences — from landing pages to eCommerce platforms — with a focus on conversion, SEO and expert support.",
+    "cta": "Request a Free Quote",
+    "ctaSecondary": "View Portfolio",
+    "trust": ["Response within 24h", "Senior dedicated team", "Support & maintenance"],
+    "stats": {
+      "projects": "Projects completed",
+      "clients": "Happy clients",
+      "technologies": "Technologies mastered",
+      "support": "Support availability",
+      "plugins": "Plugins sold",
+      "experience": "Years of experience"
+    }
+  },
+  "home": {
+    "services": {
+      "title": "Services built for growth",
+      "subtitle": "From web development to WooCommerce plugins — premium solutions delivered with excellence.",
+      "viewAll": "Discuss your project",
+      "custom": "Custom quote"
+    },
+    "portfolio": {
+      "title": "Work that builds trust",
+      "subtitle": "Explore a selection of web, mobile and WordPress projects delivered for our clients.",
+      "viewAll": "View full portfolio",
+      "details": "Learn more",
+      "filters": {
+        "all": "All",
+        "websites": "Websites",
+        "mobile": "Mobile Apps",
+        "wordpress": "WordPress",
+        "other": "Other"
+      }
+    },
+    "blog": {
+      "title": "Insights & digital expertise",
+      "subtitle": "Articles, guides and news to stay ahead in digital.",
+      "featured": "Featured article",
+      "viewAll": "Read the blog"
+    },
+    "about": {
+      "title": "Why D-GITALCODE?",
+      "subtitle": "A Moroccan digital agency powering your ambition.",
+      "intro": "D-GITALCODE helps entrepreneurs, SMBs and eCommerce brands with result-driven web, mobile and WordPress solutions.",
+      "cta": "Discover our story",
+      "mission": {
+        "title": "Our mission",
+        "desc": "Turn your ideas into high-performing digital products that generate leads, sales and growth."
+      },
+      "vision": {
+        "title": "Our vision",
+        "desc": "Become the go-to technology partner for businesses that want to excel online in Africa and beyond."
+      },
+      "why": {
+        "title": "Why choose us",
+        "desc": "Technical expertise, premium design, fast delivery and human support at every step."
+      }
+    },
+    "contact": {
+      "title": "Let's Build Your Next Project",
+      "subtitle": "Tell us about your vision. We respond within 24h with a clear proposal."
+    }
+  },
+  "about": {
+    "meta": {
+      "title": "About",
+      "description": "Discover D-GITALCODE — digital agency specialized in web, mobile and WordPress development in Morocco."
+    },
+    "hero": {
+      "badge": "Our story",
+      "title": "We build digital products that perform",
+      "subtitle": "D-GITALCODE is a software and digital development agency built on technical excellence, design and conversion."
+    },
+    "intro": {
+      "title": "Who we are",
+      "desc": "D-GITALCODE is a passionate team of developers, designers and WordPress experts based in Morocco. We help businesses launch, scale and optimize their digital presence."
+    },
+    "story": {
+      "title": "Our journey",
+      "p1": "Born from the belief that every business deserves a professional online presence, D-GITALCODE started with high-impact WooCommerce projects and WordPress plugins.",
+      "p2": "Today we deliver custom websites, mobile applications and complete eCommerce solutions for clients in Morocco and internationally."
+    },
+    "mission": {
+      "title": "Mission",
+      "desc": "Create reliable, elegant and profitable digital solutions that help our clients achieve their business goals."
+    },
+    "vision": {
+      "title": "Vision",
+      "desc": "Drive digital transformation with modern technologies and flawless execution."
+    },
+    "values": {
+      "title": "Our values",
+      "quality": { "title": "Excellence", "desc": "Clean code, polished design, optimal performance." },
+      "innovation": { "title": "Innovation", "desc": "Modern technologies and creative solutions." },
+      "partnership": { "title": "Partnership", "desc": "We work with you, not just for you." },
+      "transparency": { "title": "Transparency", "desc": "Clear communication, on-time delivery, no surprises." }
+    },
+    "tech": {
+      "title": "Technologies we use",
+      "subtitle": "A modern stack for scalable, secure and performant products."
+    },
+    "why": {
+      "title": "Why choose D-GITALCODE",
+      "expertise": { "title": "Full-stack expertise", "desc": "Web, mobile, WordPress and eCommerce — one complete team." },
+      "support": { "title": "Responsive support", "desc": "Available assistance and post-delivery follow-up." },
+      "delivery": { "title": "Reliable delivery", "desc": "Agile methodology, deadlines and quality respected." },
+      "pricing": { "title": "Transparent pricing", "desc": "Clear quotes adapted to your budget and goals." }
+    },
+    "cta": {
+      "title": "Ready to launch your project?",
+      "subtitle": "Contact us for a free quote and strategic consultation.",
+      "button": "Request a quote"
+    }
+  },
+  "services": {
+    "title": "Our Services",
+    "subtitle": "Tailored digital solutions to fuel your growth",
+    "viewAll": "View all services",
+    "from": "Starting from",
+    "request": "Request Service",
+    "learnMore": "Learn more",
+    "webDev": {
+      "title": "Web Development",
+      "desc": "Modern websites, SaaS applications and high-performance eCommerce platforms.",
+      "b1": "Responsive design & premium UX",
+      "b2": "Technical SEO & performance",
+      "b3": "Scalable architecture"
+    },
+    "mobileApps": {
+      "title": "Mobile Applications",
+      "desc": "Native and cross-platform iOS & Android apps with premium UX.",
+      "b1": "iOS & Android",
+      "b2": "Polished UI/UX",
+      "b3": "App store publishing"
+    },
+    "wpPlugins": {
+      "title": "WordPress Plugins",
+      "desc": "Professional WooCommerce extensions like WhatsFlow Pro to boost your sales.",
+      "b1": "WooCommerce & WordPress",
+      "b2": "Secure & documented code",
+      "b3": "Support & updates"
+    },
+    "wpTemplates": {
+      "title": "WordPress Templates",
+      "desc": "Premium themes optimized for conversion and SEO.",
+      "b1": "Conversion optimized",
+      "b2": "Mobile-first",
+      "b3": "Setup & customization"
+    }
+  },
+  "cta": {
+    "title": "Ready to transform your business?",
+    "subtitle": "Contact us via WhatsApp or form. Response within 24h.",
+    "button": "Contact us",
+    "whatsapp": "WhatsApp"
+  },
+  "portfolio": {
+    "title": "Portfolio",
+    "subtitle": "Discover our recent work",
+    "viewProject": "View project",
+    "technologies": "Technologies"
+  },
+  "blog": {
+    "title": "Blog",
+    "subtitle": "News, tutorials and digital insights",
+    "readMore": "Read more",
+    "categories": "Categories",
+    "tags": "Tags",
+    "related": "Related articles",
+    "minRead": "min read"
+  },
+  "contact": {
+    "title": "Contact Us",
+    "subtitle": "Let's talk about your project",
+    "name": "Full name",
+    "email": "Email",
+    "phone": "Phone",
+    "message": "Message",
+    "send": "Send message",
+    "sending": "Sending...",
+    "success": "Message sent successfully!",
+    "error": "An error occurred. Please try again.",
+    "whatsappTitle": "Quick WhatsApp Contact",
+    "whatsappDesc": "Chat directly with our team",
+    "whatsappBtn": "Open WhatsApp",
+    "connectTitle": "Connect with us",
+    "connectDesc": "Follow our updates, open-source projects and support D-GITALCODE."
+  },
+  "request": {
+    "title": "Request this service",
+    "choose": "Choose your contact method",
+    "form": "Contact form",
+    "formDesc": "Send us your project details",
+    "whatsapp": "WhatsApp",
+    "whatsappDesc": "Contact us directly via WhatsApp",
+    "price": "Price",
+    "demo": "View demo"
+  },
+  "footer": {
+    "description": "Premium digital agency — web development, mobile apps and WordPress solutions to grow your business.",
+    "quickLinks": "Quick links",
+    "services": "Services",
+    "contact": "Contact",
+    "rights": "All rights reserved.",
+    "demo": "Demo Store",
+    "followUs": "Follow Us"
+  },
+  "social": {
+    "instagram": "Instagram",
+    "linkedin": "LinkedIn",
+    "github": "GitHub",
+    "kofi": "Ko-fi"
+  },
+  "whatsapp": {
+    "float": "WhatsApp"
+  },
+  "validation": {
+    "required": "This field is required",
+    "email": "Invalid email",
+    "minLength": "Minimum {{count}} characters"
+  },
+  "notFound": {
+    "title": "Page not found",
+    "back": "Back to home"
+  }
+}
