@@ -276,7 +276,17 @@
     "send": "إرسال",
     "sendHint": "Enter = سطر جديد · Ctrl+Enter = إرسال",
     "loading": "جاري تحميل المحادثة…",
-    "adminInbox": "الدعم"
+    "adminInbox": "الدعم",
+    "attachments": {
+      "add": "إرفاق ملف",
+      "camera": "التقاط صورة",
+      "remove": "إزالة المرفق",
+      "dropHere": "أسقط الملفات هنا",
+      "tooMany": "الحد الأقصى {{max}} ملفات لكل رسالة",
+      "tooLarge": "الحد الأقصى: {{max}} ميغابايت لكل ملف",
+      "uploadedBy": "أُرسل بواسطة",
+      "uploading": "جاري الرفع…"
+    }
   },
   "pwa": {
     "install": "تثبيت التطبيق",

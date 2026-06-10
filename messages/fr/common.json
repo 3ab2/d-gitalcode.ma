@@ -276,7 +276,17 @@
     "send": "Envoyer",
     "sendHint": "Entrée = nouvelle ligne · Ctrl+Entrée = envoyer",
     "loading": "Chargement de la conversation…",
-    "adminInbox": "Support"
+    "adminInbox": "Support",
+    "attachments": {
+      "add": "Joindre un fichier",
+      "camera": "Prendre une photo",
+      "remove": "Retirer la pièce jointe",
+      "dropHere": "Déposez vos fichiers ici",
+      "tooMany": "Maximum {{max}} fichiers par message",
+      "tooLarge": "Taille maximale : {{max}} Mo par fichier",
+      "uploadedBy": "Envoyé par",
+      "uploading": "Envoi en cours…"
+    }
   },
   "pwa": {
     "install": "Installer l'application",

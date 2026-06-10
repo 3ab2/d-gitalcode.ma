@@ -1,7 +1,7 @@
 import { NextResponse } from "next/server";
 import { prisma } from "@/lib/prisma";
 import { requireAdmin } from "@/lib/auth";
-import { getClientThread } from "@/lib/messages-thread";
+import { getClientThread, serializeThread } from "@/lib/messages-thread";
 
 export async function GET(
   _request: Request,
@@ -25,5 +25,5 @@ export async function GET(
 
   const thread = await getClientThread(userId);
 
-  return NextResponse.json({ user, thread });
+  return NextResponse.json({ user, thread: serializeThread(thread) });
 }

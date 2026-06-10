@@ -1,6 +1,9 @@
 import { NextResponse } from "next/server";
 import { requireClient } from "@/lib/auth";
-import { getClientThreadWithMeta } from "@/lib/messages-thread";
+import {
+  getClientThreadWithMeta,
+  serializeThread,
+} from "@/lib/messages-thread";
 
 export async function GET() {
   const session = await requireClient();
@@ -9,5 +12,5 @@ export async function GET() {
   }
 
   const { thread, meta } = await getClientThreadWithMeta(session.user.id);
-  return NextResponse.json({ thread, meta });
+  return NextResponse.json({ thread: serializeThread(thread), meta });
 }

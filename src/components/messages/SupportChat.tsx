@@ -11,6 +11,14 @@ import {
   Sparkles,
 } from "lucide-react";
 import { ChatBubble } from "@/components/messages/ChatBubble";
+import {
+  AttachmentComposer,
+  AttachmentPickerButtons,
+  uploadMessageWithAttachments,
+  useAttachmentDropZone,
+  type PendingAttachment,
+} from "@/components/messages/AttachmentComposer";
+import type { MessageAttachment } from "@/components/messages/MessageAttachments";
 import { usePolling } from "@/hooks/usePolling";
 import { cn, formatChatTime } from "@/lib/utils";
 import { type Locale } from "@/lib/i18n/settings";
@@ -22,6 +30,7 @@ interface ThreadItem {
   content: string;
   createdAt: string;
   adminName?: string | null;
+  attachments?: MessageAttachment[];
 }
 
 interface ThreadMeta {
@@ -84,7 +93,9 @@ export function SupportChat() {
   });
   const [loading, setLoading] = useState(true);
   const [draft, setDraft] = useState("");
+  const [pendingFiles, setPendingFiles] = useState<PendingAttachment[]>([]);
   const [sending, setSending] = useState(false);
+  const [uploadProgress, setUploadProgress] = useState<number | null>(null);
   const [lastSeenId, setLastSeenId] = useState<string | null>(null);
   const [newMessageIds, setNewMessageIds] = useState<Set<string>>(new Set());
 
@@ -92,8 +103,31 @@ export function SupportChat() {
   const textareaRef = useRef<HTMLTextAreaElement>(null);
   const prevThreadLengthRef = useRef(0);
   const composerRef = useRef<HTMLFormElement>(null);
+  const fileInputRef = useRef<HTMLInputElement>(null);
+  const cameraInputRef = useRef<HTMLInputElement>(null);
 
   const userInitials = getInitials(session?.user?.name, session?.user?.email);
+
+  const addPendingFromDrop = useCallback((incoming: FileList | File[]) => {
+    const list = Array.from(incoming);
+    setPendingFiles((prev) => {
+      const next = [...prev];
+      for (const file of list) {
+        if (next.length >= 5) break;
+        const previewUrl = file.type.startsWith("image/")
+          ? URL.createObjectURL(file)
+          : null;
+        next.push({
+          id: `${file.name}-${file.size}-${file.lastModified}-${crypto.randomUUID()}`,
+          file,
+          previewUrl,
+        });
+      }
+      return next;
+    });
+  }, []);
+
+  const dropZone = useAttachmentDropZone(addPendingFromDrop, sending);
 
   useEffect(() => {
     const stored = localStorage.getItem(SEEN_STORAGE_KEY);
@@ -161,23 +195,44 @@ export function SupportChat() {
 
   const displayUnread = Math.max(meta.unreadCount, unreadFromThread);
 
+  const canSend =
+    (draft.trim().length > 0 || pendingFiles.length > 0) && !sending;
+
+  const clearPendingFiles = () => {
+    pendingFiles.forEach((f) => {
+      if (f.previewUrl) URL.revokeObjectURL(f.previewUrl);
+    });
+    setPendingFiles([]);
+  };
+
   const sendMessage = async () => {
     const text = draft.trim();
-    if (!text || sending) return;
+    if ((!text && pendingFiles.length === 0) || sending) return;
 
     setSending(true);
-    const res = await fetch("/api/messages", {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ content: text }),
-    });
+    setUploadProgress(0);
 
-    if (res.ok) {
-      setDraft("");
-      if (textareaRef.current) textareaRef.current.style.height = "auto";
-      await fetchThread();
+    try {
+      const files = pendingFiles.map((p) => p.file);
+      const res =
+        files.length > 0
+          ? await uploadMessageWithAttachments(text, files, setUploadProgress)
+          : await fetch("/api/messages", {
+              method: "POST",
+              headers: { "Content-Type": "application/json" },
+              body: JSON.stringify({ content: text }),
+            });
+
+      if (res.ok) {
+        setDraft("");
+        clearPendingFiles();
+        if (textareaRef.current) textareaRef.current.style.height = "auto";
+        await fetchThread();
+      }
+    } finally {
+      setSending(false);
+      setUploadProgress(null);
     }
-    setSending(false);
   };
 
   const handleSubmit = (e: React.FormEvent) => {
@@ -213,7 +268,6 @@ export function SupportChat() {
 
   return (
     <div className="support-chat-shell flex min-h-0 flex-1 flex-col overflow-hidden rounded-none border-0 bg-brand-dark/40 shadow-2xl shadow-black/30 sm:rounded-2xl sm:border sm:border-white/10">
-      {/* Fixed header */}
       <header className="z-10 shrink-0 border-b border-white/10 bg-brand-dark/95 px-4 py-4 backdrop-blur-xl sm:px-5">
         <div className="flex items-start justify-between gap-3">
           <div className="min-w-0 flex-1">
@@ -254,7 +308,6 @@ export function SupportChat() {
         )}
       </header>
 
-      {/* Scrollable messages */}
       <div
         ref={scrollRef}
         className="support-chat-scroll min-h-0 flex-1 overflow-y-auto overscroll-contain px-4 py-5 sm:px-5"
@@ -286,6 +339,7 @@ export function SupportChat() {
                 variant={item.type === "client" ? "client" : "support"}
                 content={item.content}
                 createdAt={item.createdAt}
+                attachments={item.attachments ?? []}
                 avatarLabel={item.type === "client" ? userInitials : undefined}
                 locale={locale}
                 animate={newMessageIds.has(item.id)}
@@ -295,13 +349,45 @@ export function SupportChat() {
         )}
       </div>
 
-      {/* Fixed composer */}
       <form
         ref={composerRef}
         onSubmit={handleSubmit}
-        className="support-chat-composer z-10 shrink-0 border-t border-white/10 bg-brand-dark/95 p-3 backdrop-blur-xl sm:p-4"
+        className="support-chat-composer relative z-10 shrink-0 border-t border-white/10 bg-brand-dark/95 p-3 backdrop-blur-xl sm:p-4"
+        {...dropZone.handlers}
       >
-        <div className="flex items-end gap-2 rounded-2xl border border-white/10 bg-white/[0.03] p-2 shadow-inner shadow-black/20 transition-colors focus-within:border-brand-green/30 focus-within:ring-1 focus-within:ring-brand-green/20">
+        {dropZone.dragOver && (
+          <div className="pointer-events-none absolute inset-3 z-20 flex items-center justify-center rounded-2xl border-2 border-dashed border-brand-green/50 bg-brand-green/10 sm:inset-4">
+            <p className="text-sm font-medium text-brand-green">
+              {t("support.attachments.dropHere")}
+            </p>
+          </div>
+        )}
+
+        <AttachmentComposer
+          files={pendingFiles}
+          onChange={setPendingFiles}
+          disabled={sending}
+          fileInputRef={fileInputRef}
+          cameraInputRef={cameraInputRef}
+          hideButtons
+        />
+
+        {uploadProgress !== null && uploadProgress < 100 && (
+          <div className="mb-2 h-1 overflow-hidden rounded-full bg-white/10">
+            <div
+              className="h-full rounded-full bg-brand-green transition-all duration-200"
+              style={{ width: `${uploadProgress}%` }}
+            />
+          </div>
+        )}
+
+        <div className="flex items-end gap-1 rounded-2xl border border-white/10 bg-white/[0.03] p-2 shadow-inner shadow-black/20 transition-colors focus-within:border-brand-green/30 focus-within:ring-1 focus-within:ring-brand-green/20">
+          <AttachmentPickerButtons
+            disabled={sending}
+            fileCount={pendingFiles.length}
+            onPickFiles={() => fileInputRef.current?.click()}
+            onPickCamera={() => cameraInputRef.current?.click()}
+          />
           <textarea
             ref={textareaRef}
             value={draft}
@@ -314,10 +400,10 @@ export function SupportChat() {
           />
           <button
             type="submit"
-            disabled={!draft.trim() || sending}
+            disabled={!canSend}
             className={cn(
               "flex h-11 w-11 shrink-0 items-center justify-center rounded-xl transition-all",
-              draft.trim() && !sending
+              canSend
                 ? "bg-brand-green text-brand-dark shadow-md shadow-brand-green/25 hover:bg-brand-green/90 active:scale-95"
                 : "bg-white/5 text-white/25"
             )}

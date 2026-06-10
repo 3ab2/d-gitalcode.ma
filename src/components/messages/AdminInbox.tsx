@@ -17,12 +17,23 @@ interface Conversation {
   messageCount: number;
 }
 
+interface ThreadAttachment {
+  id: string;
+  originalName: string;
+  mimeType: string;
+  fileSize: number;
+  createdAt: string;
+  uploadedById: string;
+  uploadedByName?: string | null;
+}
+
 interface ThreadItem {
   type: "client" | "admin";
   id: string;
   content: string;
   createdAt: string;
   adminName?: string | null;
+  attachments?: ThreadAttachment[];
 }
 
 export function AdminInbox() {
@@ -215,6 +226,8 @@ export function AdminInbox() {
                     variant={item.type === "client" ? "client" : "support"}
                     content={item.content}
                     createdAt={item.createdAt}
+                    attachments={item.attachments ?? []}
+                    showAttachmentMeta={item.type === "client"}
                     author={
                       item.type === "client" ? selectedUser?.name || "Client" : undefined
                     }

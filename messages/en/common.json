@@ -276,7 +276,17 @@
     "send": "Send",
     "sendHint": "Enter = new line · Ctrl+Enter = send",
     "loading": "Loading conversation…",
-    "adminInbox": "Support"
+    "adminInbox": "Support",
+    "attachments": {
+      "add": "Attach file",
+      "camera": "Take photo",
+      "remove": "Remove attachment",
+      "dropHere": "Drop files here",
+      "tooMany": "Maximum {{max}} files per message",
+      "tooLarge": "Maximum size: {{max}} MB per file",
+      "uploadedBy": "Uploaded by",
+      "uploading": "Uploading…"
+    }
   },
   "pwa": {
     "install": "Install App",

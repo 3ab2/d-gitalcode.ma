@@ -1,4 +1,5 @@
 import { prisma } from "@/lib/prisma";
+import { serializeAttachment, type SerializedAttachment } from "@/lib/attachments/serialize";
 
 export type ThreadItem =
   | {
@@ -7,6 +8,7 @@ export type ThreadItem =
       content: string;
       createdAt: Date;
       messageId: string;
+      attachments: SerializedAttachment[];
     }
   | {
       type: "admin";
@@ -15,18 +17,38 @@ export type ThreadItem =
       createdAt: Date;
       messageId: string;
       adminName: string | null;
+      attachments: SerializedAttachment[];
     };
+
+type AttachmentRow = {
+  id: string;
+  originalName: string;
+  mimeType: string;
+  fileSize: number;
+  createdAt: Date;
+  uploadedById: string;
+  uploadedBy?: { name: string | null } | null;
+};
+
+const attachmentInclude = {
+  attachments: {
+    orderBy: { createdAt: "asc" as const },
+    include: { uploadedBy: { select: { name: true } } },
+  },
+};
 
 export function buildThreadFromMessages(
   messages: Array<{
     id: string;
     content: string;
     createdAt: Date;
+    attachments?: AttachmentRow[];
     replies: Array<{
       id: string;
       content: string;
       createdAt: Date;
       admin: { name: string | null };
+      attachments?: AttachmentRow[];
     }>;
   }>
 ): ThreadItem[] {
@@ -39,6 +61,7 @@ export function buildThreadFromMessages(
       content: message.content,
       createdAt: message.createdAt,
       messageId: message.id,
+      attachments: (message.attachments ?? []).map(serializeAttachment),
     });
 
     for (const reply of message.replies) {
@@ -49,11 +72,19 @@ export function buildThreadFromMessages(
         createdAt: reply.createdAt,
         messageId: message.id,
         adminName: reply.admin.name,
+        attachments: (reply.attachments ?? []).map(serializeAttachment),
       });
     }
   }
 
   return items.sort((a, b) => a.createdAt.getTime() - b.createdAt.getTime());
+}
+
+export function serializeThread(items: ThreadItem[]) {
+  return items.map((item) => ({
+    ...item,
+    createdAt: new Date(item.createdAt).toISOString(),
+  }));
 }
 
 export type ClientConversationStatus = "open" | "waiting" | "replied";
@@ -75,9 +106,13 @@ export async function getClientThreadWithMeta(userId: string) {
     where: { userId },
     orderBy: { createdAt: "asc" },
     include: {
+      ...attachmentInclude,
       replies: {
         orderBy: { createdAt: "asc" },
-        include: { admin: { select: { name: true } } },
+        include: {
+          admin: { select: { name: true } },
+          ...attachmentInclude,
+        },
       },
     },
   });
@@ -123,6 +158,7 @@ export async function getAdminConversations(): Promise<ConversationSummary[]> {
     include: {
       user: { select: { id: true, name: true, email: true } },
       replies: { orderBy: { createdAt: "desc" }, take: 1 },
+      attachments: { take: 1, select: { originalName: true } },
     },
   });
 
@@ -130,7 +166,12 @@ export async function getAdminConversations(): Promise<ConversationSummary[]> {
 
   for (const message of messages) {
     const existing = map.get(message.userId);
-    const preview = message.content.slice(0, 120);
+    const attachmentHint =
+      message.attachments[0]?.originalName &&
+      !message.content.trim()
+        ? `📎 ${message.attachments[0].originalName}`
+        : null;
+    const preview = (message.content.trim() || attachmentHint || "").slice(0, 120);
     const activityAt = message.replies[0]?.createdAt ?? message.createdAt;
     const isUnread = message.status === "OPEN";
 

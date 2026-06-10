@@ -20,8 +20,9 @@ model User {
   accounts      Account[]
   auditLogs     AdminAuditLog[]
   sessions      Session[]
-  messages      ClientMessage[]
-  messageReplies MessageReply[]
+  messages           ClientMessage[]
+  messageReplies     MessageReply[]
+  supportAttachments SupportAttachment[]
 }
 
 model Account {
@@ -252,8 +253,9 @@ model ClientMessage {
   status    MessageStatus  @default(OPEN)
   createdAt DateTime       @default(now())
   updatedAt DateTime       @updatedAt
-  user      User           @relation(fields: [userId], references: [id], onDelete: Cascade)
-  replies   MessageReply[]
+  user        User                 @relation(fields: [userId], references: [id], onDelete: Cascade)
+  replies     MessageReply[]
+  attachments SupportAttachment[]
 
   @@index([userId])
   @@index([status])
@@ -266,10 +268,30 @@ model MessageReply {
   adminId   String
   content   String
   createdAt DateTime      @default(now())
-  message   ClientMessage @relation(fields: [messageId], references: [id], onDelete: Cascade)
-  admin     User          @relation(fields: [adminId], references: [id], onDelete: Cascade)
+  message     ClientMessage        @relation(fields: [messageId], references: [id], onDelete: Cascade)
+  admin       User                 @relation(fields: [adminId], references: [id], onDelete: Cascade)
+  attachments SupportAttachment[]
 
   @@index([messageId])
+}
+
+model SupportAttachment {
+  id           String         @id @default(cuid())
+  messageId    String?
+  replyId      String?
+  originalName String
+  mimeType     String
+  fileSize     Int
+  storageKey   String         @unique
+  uploadedById String
+  createdAt    DateTime       @default(now())
+  message      ClientMessage? @relation(fields: [messageId], references: [id], onDelete: Cascade)
+  reply        MessageReply?  @relation(fields: [replyId], references: [id], onDelete: Cascade)
+  uploadedBy   User           @relation(fields: [uploadedById], references: [id], onDelete: Cascade)
+
+  @@index([messageId])
+  @@index([replyId])
+  @@index([uploadedById])
 }
 
 model SocialLink {

@@ -1,6 +1,10 @@
 import Image from "next/image";
 import { Headphones, User } from "lucide-react";
 import { cn, formatChatTime } from "@/lib/utils";
+import {
+  MessageAttachments,
+  type MessageAttachment,
+} from "@/components/messages/MessageAttachments";
 
 const SUPPORT_BRAND = "Support D-GITALCODE";
 
@@ -14,22 +18,26 @@ export function ChatBubble({
   avatarLabel,
   locale = "fr",
   animate = false,
+  attachments = [],
+  showAttachmentMeta = false,
 }: {
   content: string;
   createdAt: string | Date;
   align: "left" | "right";
   variant: "client" | "support";
   author?: string;
-  /** Client-facing support identity; defaults to Support D-GITALCODE */
   supportLabel?: string;
   avatarLabel?: string;
   locale?: string;
   animate?: boolean;
+  attachments?: MessageAttachment[];
+  showAttachmentMeta?: boolean;
 }) {
   const isRight = align === "right";
   const isSupport = variant === "support";
   const displayAuthor = isSupport ? (supportLabel ?? SUPPORT_BRAND) : author;
   const localeTag = locale === "ar" ? "ar-MA" : locale === "en" ? "en-US" : "fr-FR";
+  const hasContent = content.trim().length > 0 && content.trim() !== " ";
 
   return (
     <div
@@ -94,7 +102,16 @@ export function ChatBubble({
               : "border border-brand-green/25 bg-gradient-to-br from-brand-green/25 to-brand-green/10 text-white shadow-brand-green/10"
           )}
         >
-          <p className="text-sm leading-relaxed whitespace-pre-wrap break-words">{content}</p>
+          {hasContent && (
+            <p className="text-sm leading-relaxed whitespace-pre-wrap break-words">
+              {content}
+            </p>
+          )}
+          <MessageAttachments
+            attachments={attachments}
+            variant={variant}
+            showMeta={showAttachmentMeta}
+          />
         </div>
 
         <time
