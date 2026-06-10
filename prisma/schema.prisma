@@ -23,6 +23,7 @@ model User {
   messages           ClientMessage[]
   messageReplies     MessageReply[]
   supportAttachments SupportAttachment[]
+  notifications      Notification[]
 }
 
 model Account {
@@ -294,6 +295,22 @@ model SupportAttachment {
   @@index([uploadedById])
 }
 
+model Notification {
+  id        String           @id @default(cuid())
+  userId    String
+  type      NotificationType
+  title     String
+  message   String
+  isRead    Boolean          @default(false)
+  metadata  Json?
+  createdAt DateTime         @default(now())
+  user      User             @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@index([userId, isRead])
+  @@index([userId, createdAt])
+  @@index([type])
+}
+
 model SocialLink {
   id        String   @id @default(cuid())
   platform  String   @unique
@@ -314,6 +331,14 @@ enum UserRole {
 enum MessageStatus {
   OPEN
   REPLIED
+}
+
+enum NotificationType {
+  SUPPORT_REPLY
+  NEW_MESSAGE
+  SYSTEM
+  ACCOUNT
+  PROJECT_UPDATE
 }
 
 enum ServiceType {

@@ -3,6 +3,7 @@ import { z } from "zod";
 import { prisma } from "@/lib/prisma";
 import { requireAdmin } from "@/lib/auth";
 import { logAdminAction } from "@/lib/audit";
+import { notifyClientSupportReply } from "@/lib/notifications/events";
 
 const replySchema = z.object({
   content: z.string().min(1).max(10000),
@@ -56,6 +57,12 @@ export async function POST(
       entity: "client_message",
       entityId: latestMessage.id,
       metadata: { clientUserId: userId },
+    });
+
+    void notifyClientSupportReply({
+      clientUserId: userId,
+      messageId: latestMessage.id,
+      replyId: reply.id,
     });
 
     return NextResponse.json(reply, { status: 201 });

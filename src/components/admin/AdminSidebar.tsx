@@ -18,6 +18,7 @@ import {
 } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { logoutToLogin } from "@/lib/auth-client";
+import { NotificationBell } from "@/components/notifications/NotificationBell";
 
 const links = [
   { href: "/admin", label: "Dashboard", icon: LayoutDashboard },
@@ -84,14 +85,17 @@ export function AdminSidebar() {
           <Menu className="h-5 w-5" />
         </button>
         <Logo size="sm" />
-        <button
-          type="button"
-          onClick={() => logoutToLogin()}
-          className="flex h-10 w-10 items-center justify-center rounded-xl text-white/60 hover:bg-red-400/5 hover:text-red-400"
-          aria-label="Logout"
-        >
-          <LogOut className="h-5 w-5" />
-        </button>
+        <div className="flex items-center gap-1">
+          <NotificationBell localeTag="en-US" />
+          <button
+            type="button"
+            onClick={() => logoutToLogin()}
+            className="flex h-10 w-10 items-center justify-center rounded-xl text-white/60 hover:bg-red-400/5 hover:text-red-400"
+            aria-label="Logout"
+          >
+            <LogOut className="h-5 w-5" />
+          </button>
+        </div>
       </header>
 
       {mobileOpen && (
@@ -114,14 +118,19 @@ export function AdminSidebar() {
             <Logo size="sm" />
             <span className="text-sm font-bold tracking-wider text-brand-green">ADMIN</span>
           </div>
-          <button
-            type="button"
-            onClick={closeMobile}
-            className="flex h-8 w-8 items-center justify-center rounded-lg text-white/60 hover:bg-white/5 lg:hidden"
-            aria-label="Close menu"
-          >
-            <X className="h-5 w-5" />
-          </button>
+          <div className="flex items-center gap-1">
+            <div className="hidden lg:block">
+              <NotificationBell localeTag="en-US" />
+            </div>
+            <button
+              type="button"
+              onClick={closeMobile}
+              className="flex h-8 w-8 items-center justify-center rounded-lg text-white/60 hover:bg-white/5 lg:hidden"
+              aria-label="Close menu"
+            >
+              <X className="h-5 w-5" />
+            </button>
+          </div>
         </div>
 
         <SidebarNav pathname={pathname} onNavigate={closeMobile} />

@@ -1,6 +1,7 @@
 "use client";
 
 import { useCallback, useEffect, useRef, useState } from "react";
+import { useSearchParams } from "next/navigation";
 import { ArrowLeft, Send, Search } from "lucide-react";
 import { ChatBubble } from "@/components/messages/ChatBubble";
 import { usePolling } from "@/hooks/usePolling";
@@ -37,6 +38,7 @@ interface ThreadItem {
 }
 
 export function AdminInbox() {
+  const searchParams = useSearchParams();
   const [conversations, setConversations] = useState<Conversation[]>([]);
   const [selectedId, setSelectedId] = useState<string | null>(null);
   const [thread, setThread] = useState<ThreadItem[]>([]);
@@ -58,10 +60,16 @@ export function AdminInbox() {
   }, []);
 
   useEffect(() => {
+    const userFromQuery = searchParams.get("user");
+    if (userFromQuery) {
+      setSelectedId(userFromQuery);
+      setShowThread(true);
+      return;
+    }
     if (!selectedId && conversations.length > 0) {
       setSelectedId(conversations[0].userId);
     }
-  }, [conversations, selectedId]);
+  }, [conversations, selectedId, searchParams]);
 
   const fetchThread = useCallback(async (userId: string) => {
     setLoadingThread(true);

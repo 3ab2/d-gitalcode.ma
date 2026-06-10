@@ -7,6 +7,7 @@ import {
   saveMessageAttachments,
 } from "@/lib/attachments/service";
 import { validateAttachmentCount } from "@/lib/attachments/validation";
+import { notifyAdminsNewMessage } from "@/lib/notifications/events";
 
 const createMessageSchema = z.object({
   subject: z.string().min(2).max(200).optional(),
@@ -83,6 +84,12 @@ export async function POST(request: NextRequest) {
       session.user.id,
       files
     );
+
+    void notifyAdminsNewMessage({
+      messageId: message.id,
+      clientUserId: session.user.id,
+      clientName: session.user.name,
+    });
 
     const result = await prisma.clientMessage.findUnique({
       where: { id: message.id },

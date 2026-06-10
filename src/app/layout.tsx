@@ -1,6 +1,7 @@
 import type { Metadata, Viewport } from "next";
 import { Geist, Geist_Mono } from "next/font/google";
 import { SessionProvider } from "@/components/providers/SessionProvider";
+import { NotificationProvider } from "@/components/notifications/NotificationProvider";
 import { SerwistProvider } from "@/components/providers/SerwistProvider";
 import "./globals.css";
 
@@ -96,7 +97,9 @@ export default function RootLayout({
     >
       <body className="min-h-full flex flex-col antialiased">
         <SerwistProvider>
-          <SessionProvider>{children}</SessionProvider>
+          <SessionProvider>
+            <NotificationProvider>{children}</NotificationProvider>
+          </SessionProvider>
         </SerwistProvider>
       </body>
     </html>

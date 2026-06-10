@@ -21,6 +21,40 @@ export function formatDate(date: Date | string, locale = "fr-FR"): string {
   }).format(new Date(date));
 }
 
+export function formatRelativeTime(
+  date: Date | string,
+  locale = "fr-FR"
+): string {
+  const value = new Date(date);
+  const now = Date.now();
+  const diffSec = Math.floor((now - value.getTime()) / 1000);
+
+  if (diffSec < 60) return locale.startsWith("ar") ? "الآن" : locale.startsWith("en") ? "Just now" : "À l'instant";
+  const diffMin = Math.floor(diffSec / 60);
+  if (diffMin < 60) {
+    if (locale.startsWith("ar")) return `منذ ${diffMin} د`;
+    if (locale.startsWith("en")) return `${diffMin}m ago`;
+    return `il y a ${diffMin} min`;
+  }
+  const diffHour = Math.floor(diffMin / 60);
+  if (diffHour < 24) {
+    if (locale.startsWith("ar")) return `منذ ${diffHour} س`;
+    if (locale.startsWith("en")) return `${diffHour}h ago`;
+    return `il y a ${diffHour} h`;
+  }
+  const diffDay = Math.floor(diffHour / 24);
+  if (diffDay < 7) {
+    if (locale.startsWith("ar")) return `منذ ${diffDay} ي`;
+    if (locale.startsWith("en")) return `${diffDay}d ago`;
+    return `il y a ${diffDay} j`;
+  }
+
+  return new Intl.DateTimeFormat(locale, {
+    month: "short",
+    day: "numeric",
+  }).format(value);
+}
+
 export function formatFileSize(bytes: number): string {
   if (bytes < 1024) return `${bytes} B`;
   if (bytes < 1024 * 1024) return `${(bytes / 1024).toFixed(1)} KB`;

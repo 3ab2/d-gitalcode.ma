@@ -10,6 +10,7 @@ import { isAdminRole, isClientRole } from "@/lib/roles";
 import { getSupportPath, resolveLocaleFromPathname } from "@/lib/auth-urls";
 import { IconButton } from "@/components/ui/IconButton";
 import { PwaInstallButton } from "@/components/pwa/PwaInstallButton";
+import { NotificationBell } from "@/components/notifications/NotificationBell";
 
 export function AuthNav({ locale }: { locale: Locale }) {
   const { data: session, status } = useSession();
@@ -18,6 +19,8 @@ export function AuthNav({ locale }: { locale: Locale }) {
   const activeLocale = locale || resolveLocaleFromPathname(pathname);
   const loginPath = `/${activeLocale}/login`;
   const registerPath = `/${activeLocale}/register`;
+  const localeTag =
+    activeLocale === "ar" ? "ar-MA" : activeLocale === "en" ? "en-US" : "fr-FR";
 
   if (status === "loading") {
     return <div className="h-10 w-10" aria-hidden />;
@@ -43,6 +46,7 @@ export function AuthNav({ locale }: { locale: Locale }) {
     return (
       <div className="flex items-center gap-1.5">
         <PwaInstallButton variant="icon" />
+        <NotificationBell localeTag={localeTag} />
         <IconButton href="/admin/messages" label={t("support.adminInbox")}>
           <Inbox className="h-4 w-4" />
         </IconButton>
@@ -66,6 +70,7 @@ export function AuthNav({ locale }: { locale: Locale }) {
     return (
       <div className="flex items-center gap-1.5">
         <PwaInstallButton variant="icon" />
+        <NotificationBell localeTag={localeTag} />
         <IconButton href={getSupportPath(activeLocale)} label={t("support.title")}>
           <MessageCircle className="h-4 w-4" />
         </IconButton>

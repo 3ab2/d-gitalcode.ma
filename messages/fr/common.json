@@ -288,6 +288,16 @@
       "uploading": "Envoi en cours…"
     }
   },
+  "notifications": {
+    "title": "Notifications",
+    "empty": "Aucune notification pour le moment",
+    "markAllRead": "Tout marquer lu",
+    "close": "Fermer",
+    "today": "Aujourd'hui",
+    "yesterday": "Hier",
+    "earlier": "Plus tôt",
+    "loadMore": "Charger plus…"
+  },
   "pwa": {
     "install": "Installer l'application",
     "installed": "Application installée"

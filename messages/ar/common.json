@@ -288,6 +288,16 @@
       "uploading": "جاري الرفع…"
     }
   },
+  "notifications": {
+    "title": "الإشعارات",
+    "empty": "لا توجد إشعارات بعد",
+    "markAllRead": "تعليم الكل كمقروء",
+    "close": "إغلاق",
+    "today": "اليوم",
+    "yesterday": "أمس",
+    "earlier": "سابقاً",
+    "loadMore": "تحميل المزيد…"
+  },
   "pwa": {
     "install": "تثبيت التطبيق",
     "installed": "تم تثبيت التطبيق"

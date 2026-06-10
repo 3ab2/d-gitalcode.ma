@@ -288,6 +288,16 @@
       "uploading": "Uploading…"
     }
   },
+  "notifications": {
+    "title": "Notifications",
+    "empty": "No notifications yet",
+    "markAllRead": "Mark all read",
+    "close": "Close",
+    "today": "Today",
+    "yesterday": "Yesterday",
+    "earlier": "Earlier",
+    "loadMore": "Load more…"
+  },
   "pwa": {
     "install": "Install App",
     "installed": "App installed"

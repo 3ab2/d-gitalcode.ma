@@ -140,6 +140,21 @@ body {
   animation: support-message-in 0.28s ease-out forwards;
 }
 
+@keyframes notification-panel-in {
+  from {
+    opacity: 0;
+    transform: translateY(-6px) scale(0.98);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+  }
+}
+
+.notification-panel-animate {
+  animation: notification-panel-in 0.2s ease-out forwards;
+}
+
 .support-chat-shell {
   min-height: calc(100dvh - var(--header-height) - env(safe-area-inset-bottom, 0px));
 }
