@@ -1,7 +1,8 @@
 export type PwaInstallEventName =
   | "popup_shown"
   | "install_accepted"
-  | "install_dismissed";
+  | "install_dismissed"
+  | "install_acknowledged";
 
 export type PwaInstallEvent = {
   event: PwaInstallEventName;

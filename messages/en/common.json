@@ -305,6 +305,15 @@
     "modalMessage": "Install D-GITALCODE on your device for faster access, notifications, and a better experience.",
     "installNow": "Install Now",
     "maybeLater": "Maybe Later",
-    "menuInstall": "Install app"
+    "menuInstall": "Install app",
+    "iosModalTitle": "📱 Install D-GITALCODE",
+    "iosModalIntro": "To install D-GITALCODE on your iPhone:",
+    "iosStep1Title": "Share button",
+    "iosStep1Detail": "Tap the Share icon at the bottom of Safari.",
+    "iosStep2Title": "Add to Home Screen",
+    "iosStep2Detail": "Scroll down and select \"Add to Home Screen\".",
+    "iosStep3Title": "Add",
+    "iosStep3Detail": "Tap \"Add\" to finish installing the app.",
+    "gotIt": "Got it"
   }
 }

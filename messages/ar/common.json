@@ -305,6 +305,15 @@
     "modalMessage": "ثبّت D-GITALCODE على جهازك للوصول الأسرع والإشعارات وتجربة أفضل.",
     "installNow": "تثبيت الآن",
     "maybeLater": "لاحقاً",
-    "menuInstall": "تثبيت التطبيق"
+    "menuInstall": "تثبيت التطبيق",
+    "iosModalTitle": "📱 تثبيت D-GITALCODE",
+    "iosModalIntro": "لتثبيت D-GITALCODE على iPhone:",
+    "iosStep1Title": "زر المشاركة",
+    "iosStep1Detail": "اضغط على أيقونة المشاركة أسفل Safari.",
+    "iosStep2Title": "إضافة إلى الشاشة الرئيسية",
+    "iosStep2Detail": "مرّر للأسفل واختر «إضافة إلى الشاشة الرئيسية».",
+    "iosStep3Title": "إضافة",
+    "iosStep3Detail": "اضغط «إضافة» لإكمال التثبيت.",
+    "gotIt": "فهمت"
   }
 }

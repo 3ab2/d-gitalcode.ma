@@ -19,7 +19,7 @@ export function UserMenu({
   className?: string;
 }) {
   const { t } = useTranslation();
-  const { canInstall, openInstallModal, install } = usePwaInstall();
+  const { canInstall, installMode, openInstallModal, install } = usePwaInstall();
   const [open, setOpen] = useState(false);
   const ref = useRef<HTMLDivElement>(null);
 
@@ -34,6 +34,10 @@ export function UserMenu({
 
   const handleInstall = async () => {
     setOpen(false);
+    if (installMode === "ios") {
+      openInstallModal();
+      return;
+    }
     const ok = await install();
     if (!ok) openInstallModal();
   };
