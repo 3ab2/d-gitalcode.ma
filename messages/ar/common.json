@@ -185,7 +185,14 @@
     "categories": "التصنيفات",
     "tags": "الوسوم",
     "related": "مقالات ذات صلة",
-    "minRead": "دقيقة قراءة"
+    "minRead": "دقيقة قراءة",
+    "search": "ابحث في المقالات…",
+    "allTags": "الكل",
+    "featuredArticle": "مقال مميز",
+    "noResults": "لا توجد مقالات مطابقة.",
+    "articleCount": "مقالات",
+    "toc": "جدول المحتويات",
+    "share": "مشاركة"
   },
   "contact": {
     "title": "اتصل بنا",

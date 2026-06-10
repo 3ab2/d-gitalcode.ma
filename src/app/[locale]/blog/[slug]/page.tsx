@@ -2,40 +2,45 @@ import { notFound } from "next/navigation";
 import type { Metadata } from "next";
 import Image from "next/image";
 import Link from "next/link";
-import { prisma } from "@/lib/prisma";
+import { Clock, User } from "lucide-react";
 import { getTranslation } from "@/lib/i18n/server";
-import { type Locale } from "@/lib/i18n/settings";
+import { locales, type Locale } from "@/lib/i18n/settings";
 import { Badge } from "@/components/ui/Badge";
 import { formatDate } from "@/lib/utils";
+import {
+  extractHeadings,
+  getPublishedPostBySlug,
+  getPublishedPostSlugs,
+  getPostTranslation,
+  getReadTimeMinutes,
+  getRelatedPosts,
+  incrementPostViews,
+  injectHeadingIds,
+} from "@/lib/blog";
+import { TableOfContents } from "@/components/blog/TableOfContents";
+import { BlogShare } from "@/components/blog/BlogShare";
+import { RelatedArticles } from "@/components/blog/RelatedArticles";
+import { BlogJsonLd } from "@/components/blog/BlogJsonLd";
 
-async function getPost(slug: string, locale: Locale) {
-  try {
-    const post = await prisma.blogPost.findUnique({
-      where: { slug, published: true },
-      include: {
-        translations: { where: { locale } },
-        categories: {
-          include: {
-            category: {
-              include: { translations: { where: { locale } } },
-            },
-          },
-        },
-        tags: { include: { tag: true } },
-      },
-    });
+export const revalidate = 3600;
 
-    if (post) {
-      await prisma.blogPost.update({
-        where: { id: post.id },
-        data: { views: { increment: 1 } },
-      });
-    }
+const AUTHOR = "D-GITALCODE";
 
-    return post;
-  } catch {
-    return null;
-  }
+async function getPostForPage(slug: string, locale: Locale) {
+  const post = await getPublishedPostBySlug(slug, locale);
+  if (post) await incrementPostViews(post.id);
+  return post;
+}
+
+async function getPostForMeta(slug: string, locale: Locale) {
+  return getPublishedPostBySlug(slug, locale);
+}
+
+export async function generateStaticParams() {
+  const posts = await getPublishedPostSlugs();
+  return locales.flatMap((locale) =>
+    posts.map((post) => ({ locale, slug: post.slug }))
+  );
 }
 
 export async function generateMetadata({
@@ -44,17 +49,32 @@ export async function generateMetadata({
   params: Promise<{ locale: string; slug: string }>;
 }): Promise<Metadata> {
   const { locale, slug } = await params;
-  const post = await getPost(slug, locale as Locale);
-  const translation = post?.translations[0];
+  const post = await getPostForMeta(slug, locale as Locale);
+  const translation = post ? getPostTranslation(post, locale as Locale) : null;
+  const siteUrl = process.env.NEXT_PUBLIC_SITE_URL || "https://d-gitalcode.ma";
+  const url = `${siteUrl}/${locale}/blog/${slug}`;
 
   return {
     title: translation?.metaTitle || translation?.title || slug,
     description: translation?.metaDescription || translation?.excerpt,
+    keywords: translation?.excerpt?.split(" ").slice(0, 8),
+    authors: [{ name: AUTHOR }],
     openGraph: {
+      type: "article",
+      title: translation?.metaTitle || translation?.title,
+      description: translation?.metaDescription || translation?.excerpt || undefined,
+      images: post?.image ? [{ url: post.image, alt: translation?.title || "" }] : undefined,
+      publishedTime: post?.publishedAt?.toISOString(),
+      authors: [AUTHOR],
+      url,
+    },
+    twitter: {
+      card: "summary_large_image",
       title: translation?.metaTitle || translation?.title,
       description: translation?.metaDescription || translation?.excerpt || undefined,
       images: post?.image ? [post.image] : undefined,
     },
+    alternates: { canonical: url },
   };
 }
 
@@ -64,74 +84,154 @@ export default async function BlogPostPage({
   params: Promise<{ locale: string; slug: string }>;
 }) {
   const { locale, slug } = await params;
-  const { t } = await getTranslation(locale as Locale);
-  const post = await getPost(slug, locale as Locale);
+  const loc = locale as Locale;
+  const { t } = await getTranslation(loc);
+  const post = await getPostForPage(slug, loc);
 
   if (!post) notFound();
 
-  const translation = post.translations[0];
+  const translation = getPostTranslation(post, loc);
   const basePath = `/${locale}`;
+  const siteUrl = process.env.NEXT_PUBLIC_SITE_URL || "https://d-gitalcode.ma";
+  const articleUrl = `${siteUrl}/${locale}/blog/${slug}`;
+
+  const rawContent = translation?.content || "";
+  const contentWithIds = injectHeadingIds(rawContent);
+  const headings = extractHeadings(contentWithIds);
+  const readTime = getReadTimeMinutes(rawContent);
+
+  const categoryIds = post.categories.map((c) => c.categoryId);
+  const related = await getRelatedPosts(post.id, categoryIds, loc);
+
+  const relatedSerialized = related.map((r) => {
+    const tr = getPostTranslation(r, loc);
+    return {
+      id: r.id,
+      slug: r.slug,
+      image: r.image,
+      featured: r.featured,
+      publishedAt: r.publishedAt,
+      translation: tr
+        ? { title: tr.title, excerpt: tr.excerpt, content: tr.content }
+        : undefined,
+      categories: r.categories,
+      tags: r.tags,
+    };
+  });
 
   return (
-    <article className="pt-10 pb-16 md:pt-12">
-      <div className="mx-auto max-w-3xl px-4 sm:px-6 lg:px-8">
-        <Link
-          href={`${basePath}/blog`}
-          className="text-sm text-brand-green hover:underline"
-        >
-          ← {t("blog.title")}
-        </Link>
+    <>
+      <BlogJsonLd
+        title={translation?.title || slug}
+        description={translation?.metaDescription || translation?.excerpt}
+        url={articleUrl}
+        image={post.image ? `${siteUrl}${post.image}` : null}
+        datePublished={post.publishedAt?.toISOString()}
+        author={AUTHOR}
+      />
 
-        <header className="mt-8">
-          <div className="flex flex-wrap gap-2 mb-4">
-            {post.categories.map(({ category }) => (
-              <Badge key={category.id} variant="purple">
-                {category.translations[0]?.name || category.slug}
-              </Badge>
-            ))}
-          </div>
+      <article className="pt-10 pb-16 md:pt-12">
+        <div className="mx-auto max-w-6xl px-4 sm:px-6 lg:px-8">
+          <Link
+            href={`${basePath}/blog`}
+            className="text-sm text-brand-green hover:underline"
+          >
+            ← {t("blog.title")}
+          </Link>
 
-          <h1 className="text-3xl md:text-4xl font-bold text-white">
-            {translation?.title}
-          </h1>
+          <div className="mt-8 lg:grid lg:grid-cols-[minmax(0,1fr)_240px] lg:gap-10">
+            <div className="min-w-0">
+              <header>
+                <div className="mb-4 flex flex-wrap gap-2">
+                  {post.categories.map(({ category }) => (
+                    <Badge key={category.id} variant="purple">
+                      {category.translations[0]?.name || category.slug}
+                    </Badge>
+                  ))}
+                </div>
 
-          {post.publishedAt && (
-            <time className="mt-4 block text-sm text-white/40">
-              {formatDate(post.publishedAt, locale)}
-            </time>
-          )}
-        </header>
+                <h1 className="text-3xl font-bold tracking-tight text-white md:text-4xl lg:text-5xl">
+                  {translation?.title}
+                </h1>
 
-        {post.image && (
-          <div className="relative mt-8 h-64 md:h-96 rounded-2xl overflow-hidden">
-            <Image
-              src={post.image}
-              alt={translation?.title || ""}
-              fill
-              className="object-cover"
-              priority
-            />
-          </div>
-        )}
+                <div className="mt-4 flex flex-wrap items-center gap-4 text-sm text-white/40">
+                  <span className="inline-flex items-center gap-1.5">
+                    <User className="h-4 w-4" />
+                    {AUTHOR}
+                  </span>
+                  {post.publishedAt && (
+                    <time>{formatDate(post.publishedAt, locale)}</time>
+                  )}
+                  <span className="inline-flex items-center gap-1">
+                    <Clock className="h-4 w-4" />
+                    {readTime} {t("blog.minRead")}
+                  </span>
+                </div>
 
-        <div
-          className="prose-blog mt-10"
-          dangerouslySetInnerHTML={{ __html: translation?.content || "" }}
-        />
+                <div className="mt-6">
+                  <BlogShare
+                    url={articleUrl}
+                    title={translation?.title || ""}
+                    label={t("blog.share")}
+                  />
+                </div>
+              </header>
 
-        {post.tags.length > 0 && (
-          <div className="mt-12 pt-8 border-t border-white/10">
-            <h3 className="text-sm font-medium text-white/50 mb-3">
-              {t("blog.tags")}
-            </h3>
-            <div className="flex flex-wrap gap-2">
-              {post.tags.map(({ tag }) => (
-                <Badge key={tag.id}>{tag.name}</Badge>
-              ))}
+              {post.image && (
+                <div className="relative mt-8 h-64 overflow-hidden rounded-2xl md:h-96">
+                  <Image
+                    src={post.image}
+                    alt={translation?.title || ""}
+                    fill
+                    className="object-cover"
+                    priority
+                    sizes="(max-width: 1024px) 100vw, 768px"
+                  />
+                </div>
+              )}
+
+              <div
+                className="prose-blog mt-10"
+                dangerouslySetInnerHTML={{ __html: contentWithIds }}
+              />
+
+              {post.tags.length > 0 && (
+                <div className="mt-12 border-t border-white/10 pt-8">
+                  <h3 className="mb-3 text-sm font-medium text-white/50">
+                    {t("blog.tags")}
+                  </h3>
+                  <div className="flex flex-wrap gap-2">
+                    {post.tags.map(({ tag }) => (
+                      <Badge key={tag.id}>{tag.name}</Badge>
+                    ))}
+                  </div>
+                </div>
+              )}
+
+              <RelatedArticles
+                posts={relatedSerialized}
+                basePath={basePath}
+                locale={locale}
+                title={t("blog.related")}
+                readMoreLabel={t("blog.readMore")}
+                minReadLabel={t("blog.minRead")}
+              />
             </div>
+
+            <aside className="mt-10 hidden lg:block">
+              <div className="sticky top-24">
+                <TableOfContents headings={headings} title={t("blog.toc")} />
+              </div>
+            </aside>
           </div>
-        )}
-      </div>
-    </article>
+
+          {headings.length > 0 && (
+            <div className="mt-8 lg:hidden">
+              <TableOfContents headings={headings} title={t("blog.toc")} />
+            </div>
+          )}
+        </div>
+      </article>
+    </>
   );
 }

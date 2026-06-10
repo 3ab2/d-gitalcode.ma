@@ -30,6 +30,7 @@
     "db:push": "prisma db push",
     "db:migrate": "prisma migrate dev",
     "db:seed": "tsx prisma/seed.ts",
+    "db:seed-blog": "tsx prisma/seed-blog.ts",
     "email:test": "tsx scripts/test-resend.ts",
     "email:test-reply": "tsx scripts/test-reply-email.ts",
     "email:test-errors": "tsx scripts/test-resend-errors.ts",

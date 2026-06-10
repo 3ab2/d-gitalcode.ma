@@ -185,7 +185,14 @@
     "categories": "Categories",
     "tags": "Tags",
     "related": "Related articles",
-    "minRead": "min read"
+    "minRead": "min read",
+    "search": "Search articles…",
+    "allTags": "All",
+    "featuredArticle": "Featured article",
+    "noResults": "No articles match your search.",
+    "articleCount": "articles",
+    "toc": "Table of contents",
+    "share": "Share"
   },
   "contact": {
     "title": "Contact Us",
