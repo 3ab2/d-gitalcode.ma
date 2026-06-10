@@ -300,6 +300,11 @@
   },
   "pwa": {
     "install": "Installer l'application",
-    "installed": "Application installée"
+    "installed": "Application installée",
+    "modalTitle": "📱 Installer D-GITALCODE",
+    "modalMessage": "Installez D-GITALCODE sur votre appareil pour un accès plus rapide, des notifications et une meilleure expérience.",
+    "installNow": "Installer maintenant",
+    "maybeLater": "Plus tard",
+    "menuInstall": "Installer l'application"
   }
 }

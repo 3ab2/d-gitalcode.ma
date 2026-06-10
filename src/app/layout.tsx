@@ -3,6 +3,7 @@ import { Geist, Geist_Mono } from "next/font/google";
 import { SessionProvider } from "@/components/providers/SessionProvider";
 import { NotificationProvider } from "@/components/notifications/NotificationProvider";
 import { SerwistProvider } from "@/components/providers/SerwistProvider";
+import { PwaInstallProvider } from "@/components/pwa/PwaInstallProvider";
 import "./globals.css";
 
 const APP_NAME = "D-GITALCODE";
@@ -97,9 +98,11 @@ export default function RootLayout({
     >
       <body className="min-h-full flex flex-col antialiased">
         <SerwistProvider>
-          <SessionProvider>
-            <NotificationProvider>{children}</NotificationProvider>
-          </SessionProvider>
+          <PwaInstallProvider>
+            <SessionProvider>
+              <NotificationProvider>{children}</NotificationProvider>
+            </SessionProvider>
+          </PwaInstallProvider>
         </SerwistProvider>
       </body>
     </html>

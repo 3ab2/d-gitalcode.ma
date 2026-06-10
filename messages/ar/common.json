@@ -300,6 +300,11 @@
   },
   "pwa": {
     "install": "تثبيت التطبيق",
-    "installed": "تم تثبيت التطبيق"
+    "installed": "تم تثبيت التطبيق",
+    "modalTitle": "📱 تثبيت D-GITALCODE",
+    "modalMessage": "ثبّت D-GITALCODE على جهازك للوصول الأسرع والإشعارات وتجربة أفضل.",
+    "installNow": "تثبيت الآن",
+    "maybeLater": "لاحقاً",
+    "menuInstall": "تثبيت التطبيق"
   }
 }
