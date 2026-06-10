@@ -4,6 +4,7 @@ import {
   BLOG_CATEGORIES,
   type BlogArticleSeed,
 } from "./data/blog-articles";
+import { getBlogImage } from "../src/lib/blog-images";
 
 const prisma = new PrismaClient();
 
@@ -104,19 +105,26 @@ async function seedArticle(
   const publishedAt = new Date();
   publishedAt.setDate(publishedAt.getDate() - article.daysAgo);
 
+  const cover = getBlogImage(
+    article.slug,
+    article.category,
+    article.titles.en
+  ).image;
+
   const post = await prisma.blogPost.upsert({
     where: { slug: article.slug },
     update: {
       published: true,
       featured: article.featured ?? false,
       publishedAt,
+      image: cover,
     },
     create: {
       slug: article.slug,
       published: true,
       featured: article.featured ?? false,
       publishedAt,
-      image: article.featured ? "/hero.png" : null,
+      image: cover,
       translations: {
         create: (["fr", "en", "ar"] as const).map((locale) => ({
           locale,

@@ -1,6 +1,11 @@
 import { prisma } from "@/lib/prisma";
 import { type Locale } from "@/lib/i18n/settings";
 import { estimateReadTime } from "@/lib/portfolio-category";
+import {
+  getPrimaryCategorySlug,
+  resolveBlogPostImage,
+  type BlogImageMapping,
+} from "@/lib/blog-images";
 
 export const BLOG_POSTS_PER_PAGE = 12;
 export const BLOG_REVALIDATE_SECONDS = 3600;
@@ -99,6 +104,22 @@ export type BlogTranslationFields = {
   metaTitle: string | null;
   metaDescription: string | null;
 };
+
+export function resolvePostImage(
+  post: {
+    slug: string;
+    image: string | null;
+    categories: Array<{ category: { slug: string } }>;
+  },
+  title: string
+): BlogImageMapping {
+  return resolveBlogPostImage({
+    slug: post.slug,
+    category: getPrimaryCategorySlug(post.categories),
+    title,
+    dbImage: post.image,
+  });
+}
 
 export function getPostTranslation<
   T extends { translations: BlogTranslationFields[] },

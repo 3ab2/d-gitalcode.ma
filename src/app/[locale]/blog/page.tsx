@@ -3,7 +3,7 @@ import { getTranslation } from "@/lib/i18n/server";
 import { type Locale } from "@/lib/i18n/settings";
 import { SectionHeading } from "@/components/ui/SectionHeading";
 import { BlogListClient } from "@/components/blog/BlogListClient";
-import { getPublishedPosts, getPostTranslation } from "@/lib/blog";
+import { getPublishedPosts, getPostTranslation, resolvePostImage } from "@/lib/blog";
 
 export const revalidate = 3600;
 
@@ -38,10 +38,11 @@ export default async function BlogPage({
 
   const serialized = posts.map((post) => {
     const translation = getPostTranslation(post, loc);
+    const title = translation?.title || post.slug;
     return {
       id: post.id,
       slug: post.slug,
-      image: post.image,
+      image: resolvePostImage(post, title).image,
       featured: post.featured,
       publishedAt: post.publishedAt,
       translation: translation

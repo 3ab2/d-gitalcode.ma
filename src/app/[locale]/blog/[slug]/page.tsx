@@ -16,7 +16,9 @@ import {
   getRelatedPosts,
   incrementPostViews,
   injectHeadingIds,
+  resolvePostImage,
 } from "@/lib/blog";
+import { getBlogImageAbsoluteUrl } from "@/lib/blog-images";
 import { TableOfContents } from "@/components/blog/TableOfContents";
 import { BlogShare } from "@/components/blog/BlogShare";
 import { RelatedArticles } from "@/components/blog/RelatedArticles";
@@ -53,6 +55,11 @@ export async function generateMetadata({
   const translation = post ? getPostTranslation(post, locale as Locale) : null;
   const siteUrl = process.env.NEXT_PUBLIC_SITE_URL || "https://d-gitalcode.ma";
   const url = `${siteUrl}/${locale}/blog/${slug}`;
+  const cover =
+    post && translation
+      ? resolvePostImage(post, translation.title).image
+      : null;
+  const ogImage = cover ? getBlogImageAbsoluteUrl(cover, siteUrl) : undefined;
 
   return {
     title: translation?.metaTitle || translation?.title || slug,
@@ -63,7 +70,7 @@ export async function generateMetadata({
       type: "article",
       title: translation?.metaTitle || translation?.title,
       description: translation?.metaDescription || translation?.excerpt || undefined,
-      images: post?.image ? [{ url: post.image, alt: translation?.title || "" }] : undefined,
+      images: ogImage ? [{ url: ogImage, alt: translation?.title || "" }] : undefined,
       publishedTime: post?.publishedAt?.toISOString(),
       authors: [AUTHOR],
       url,
@@ -72,7 +79,7 @@ export async function generateMetadata({
       card: "summary_large_image",
       title: translation?.metaTitle || translation?.title,
       description: translation?.metaDescription || translation?.excerpt || undefined,
-      images: post?.image ? [post.image] : undefined,
+      images: ogImage ? [ogImage] : undefined,
     },
     alternates: { canonical: url },
   };
@@ -94,6 +101,7 @@ export default async function BlogPostPage({
   const basePath = `/${locale}`;
   const siteUrl = process.env.NEXT_PUBLIC_SITE_URL || "https://d-gitalcode.ma";
   const articleUrl = `${siteUrl}/${locale}/blog/${slug}`;
+  const cover = resolvePostImage(post, translation?.title || slug);
 
   const rawContent = translation?.content || "";
   const contentWithIds = injectHeadingIds(rawContent);
@@ -108,7 +116,7 @@ export default async function BlogPostPage({
     return {
       id: r.id,
       slug: r.slug,
-      image: r.image,
+      image: resolvePostImage(r, tr?.title || r.slug).image,
       featured: r.featured,
       publishedAt: r.publishedAt,
       translation: tr
@@ -125,7 +133,7 @@ export default async function BlogPostPage({
         title={translation?.title || slug}
         description={translation?.metaDescription || translation?.excerpt}
         url={articleUrl}
-        image={post.image ? `${siteUrl}${post.image}` : null}
+        image={getBlogImageAbsoluteUrl(cover.image, siteUrl)}
         datePublished={post.publishedAt?.toISOString()}
         author={AUTHOR}
       />
@@ -177,11 +185,11 @@ export default async function BlogPostPage({
                 </div>
               </header>
 
-              {post.image && (
+              {cover.image && (
                 <div className="relative mt-8 h-64 overflow-hidden rounded-2xl md:h-96">
                   <Image
-                    src={post.image}
-                    alt={translation?.title || ""}
+                    src={cover.image}
+                    alt={cover.alt}
                     fill
                     className="object-cover"
                     priority

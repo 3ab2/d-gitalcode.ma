@@ -9,7 +9,7 @@
 </p>
 
 <p align="center">
-  <a href="https://d-gitalcodema.vercel.app/fr">Website</a> ·
+  <a href="https://d-gitalcode.ma">Website</a> ·
   <a href="https://github.com/3ab2/d-gitalcode.ma">Repository</a> ·
   <a href="#installation">Installation</a> ·
   <a href="#deployment">Deployment</a>
@@ -295,9 +295,9 @@ This project is licensed under the [MIT License](./LICENSE).
 ## Author
 
 **Abdelhamid**  
-Founder of [D-GITALCODE](https://d-gitalcodema.vercel.app/fr)
+Founder of [D-GITALCODE](https://d-gitalcode.ma)
 
-- Website: [d-gitalcode.ma](https://d-gitalcodema.vercel.app/fr)
+- Website: [d-gitalcode.ma](https://d-gitalcode.ma)
 - GitHub: [@3ab2](https://github.com/3ab2)
 - Email: 3ab2uelkarch2006@gmail.com
 
