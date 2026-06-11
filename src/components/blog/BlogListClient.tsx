@@ -3,6 +3,7 @@
 import { useMemo, useState } from "react";
 import { Search } from "lucide-react";
 import { BlogCard, type BlogCardPost } from "@/components/blog/BlogCard";
+import { diversifyGridOrder, pickFeaturedPost } from "@/lib/blog-grid";
 import { cn } from "@/lib/utils";
 
 export function BlogListClient({
@@ -46,8 +47,10 @@ export function BlogListClient({
     });
   }, [posts, query, activeTag]);
 
-  const featured = filtered.find((p) => p.featured) ?? filtered[0];
-  const gridPosts = filtered.filter((p) => p.id !== featured?.id);
+  const featured = pickFeaturedPost(filtered);
+  const gridPosts = diversifyGridOrder(
+    filtered.filter((p) => p.id !== featured?.id)
+  );
 
   return (
     <div className="mt-12 space-y-10">

@@ -6,7 +6,7 @@ import { Clock } from "lucide-react";
 import { Badge } from "@/components/ui/Badge";
 import { Card } from "@/components/ui/Card";
 import { getReadTimeMinutes } from "@/lib/blog";
-import { formatDate } from "@/lib/utils";
+import { cn, formatDate } from "@/lib/utils";
 
 export type BlogCardPost = {
   id: string;
@@ -51,24 +51,39 @@ export function BlogCard({
   return (
     <Link href={`${basePath}/blog/${post.slug}`} className="group block h-full">
       <Card
-        className={`h-full overflow-hidden p-0 transition-all duration-300 hover:border-brand-green/30 hover:shadow-lg hover:shadow-brand-green/5 ${
-          featured ? "md:grid md:grid-cols-2" : ""
-        }`}
+        className={cn(
+          "h-full overflow-hidden p-0 transition-all duration-300 hover:border-brand-green/30 hover:shadow-lg hover:shadow-brand-green/5",
+          featured && "md:grid md:grid-cols-2 ring-1 ring-brand-green/25 shadow-lg shadow-brand-green/10"
+        )}
       >
         <div
-          className={`relative bg-brand-card/50 ${
-            featured ? "min-h-[220px] md:min-h-full" : "h-48"
-          }`}
+          className={cn(
+            "relative overflow-hidden bg-brand-card/50",
+            featured ? "min-h-[240px] md:min-h-[320px]" : "h-48"
+          )}
         >
           {post.image ? (
-            <Image
-              src={post.image}
-              alt={translation?.title || post.slug}
-              fill
-              className="object-cover transition-transform duration-500 group-hover:scale-105"
-              sizes={featured ? "(max-width: 768px) 100vw, 50vw" : "(max-width: 768px) 100vw, 33vw"}
-              loading="lazy"
-            />
+            <>
+              <Image
+                src={post.image}
+                alt={translation?.title || post.slug}
+                fill
+                className={cn(
+                  "object-cover transition-transform duration-500 group-hover:scale-105",
+                  featured ? "object-center brightness-[0.92] saturate-[1.05]" : "object-center brightness-[0.88] saturate-[0.95]"
+                )}
+                sizes={featured ? "(max-width: 768px) 100vw, 50vw" : "(max-width: 768px) 100vw, 33vw"}
+                loading={featured ? "eager" : "lazy"}
+                priority={featured}
+              />
+              <div
+                className={cn(
+                  "pointer-events-none absolute inset-0 bg-gradient-to-t from-brand-dark/70 via-brand-dark/15 to-transparent",
+                  featured && "from-brand-dark/80 via-brand-dark/25"
+                )}
+                aria-hidden
+              />
+            </>
           ) : (
             <div className="absolute inset-0 bg-gradient-to-br from-brand-green/20 via-brand-purple/10 to-brand-dark" />
           )}

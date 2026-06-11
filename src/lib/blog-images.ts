@@ -8,7 +8,15 @@ export const BLOG_IMAGE_DEFAULT = "/images/blog-default.jpg";
 
 const UNSPLASH_BASE = "https://images.unsplash.com";
 
-/** Category keyword pools for dynamic Unsplash selection */
+/** Featured articles use premium hero crops (slightly larger, higher quality). */
+export const FEATURED_BLOG_SLUGS = new Set([
+  "nextjs-vs-traditional-cms-2026",
+  "flutter-vs-react-native-2026",
+  "build-saas-mvp-90-days",
+  "nextjs-app-router-patterns",
+]);
+
+/** Category keyword pools for unknown / future articles */
 export const CATEGORY_IMAGE_KEYWORDS: Record<string, string> = {
   "web-development": "programming,code,laptop",
   "mobile-apps": "mobile,app,smartphone",
@@ -23,118 +31,96 @@ export const CATEGORY_IMAGE_KEYWORDS: Record<string, string> = {
   woocommerce: "ecommerce,online,shopping",
 };
 
-/** Curated stable Unsplash photo IDs per category (no API key required) */
-const CATEGORY_PHOTO_POOLS: Record<string, string[]> = {
-  "web-development": [
-    "photo-1498050108023-c5249f4df085",
-    "photo-1461749280684-dccba630e2f6",
-    "photo-1517694712202-14dd9538d97c",
-    "photo-1555066931-4365d14bab8c",
-    "photo-1531486319856-e966f65f0b39",
-  ],
-  "mobile-apps": [
-    "photo-1512941937669-90a1b58e7e9c",
-    "photo-1551650975-87deeed944c3",
-    "photo-1555774698-56c412f8949b",
-    "photo-1563986768605-319daed8313d",
-    "photo-1512428559080-fdca8d1e602b",
-  ],
-  "ui-ux": [
-    "photo-1561070791-2526d30994b5",
-    "photo-1586717791821-4075082a3c9f",
-    "photo-1558655146-d09347e92766",
-    "photo-1559028012-481d77242b97",
-    "photo-1547658719-da2b51169166",
-  ],
-  saas: [
-    "photo-1551288049-bebda4e38f71",
-    "photo-1460925895917-afdab827c52f",
-    "photo-1504868584819-f8e8b4b6d7e3",
-    "photo-1551434678-e076c223a692",
-    "photo-1543286386-713bdd548da4",
-  ],
-  seo: [
-    "photo-1562577302-2592b9b9bfad",
-    "photo-1526621235311-2b951c60d654",
-    "photo-1573164713714-d95e4360578e",
-    "photo-1600880292203-757bb62b4baf",
-    "photo-1432888496226-cefdf01c3b77",
-  ],
-  cybersecurity: [
-    "photo-1555949963-aa79dcee981c",
-    "photo-1614064641938-3bbee5293b8e",
-    "photo-1633265486064-086b219458ec",
-    "photo-1550751827-4bd374c3f58b",
-    "photo-1563986768605-319daed8313d",
-  ],
-  "javascript-typescript": [
-    "photo-1627398242454-45a1465c2479",
-    "photo-1605372952655-a8cba6b6a5b8",
-    "photo-1593720213428-6a751b1bdd42",
-    "photo-1516116216624-53e697fedbea",
-    "photo-1555066931-4365d14bab8c",
-  ],
-  "react-nextjs": [
-    "photo-1633356122544-f134324a6cee",
-    "photo-1618477247222-acf0bb5acb25",
-    "photo-1555098862-66919ba87bff",
-    "photo-1587620962725-abab7fe55159",
-    "photo-1599508616912-dfd0de67ab58",
-  ],
-  "business-digital": [
-    "photo-1556761175-b413da4baf72",
-    "photo-1553877522-43269d4ea984",
-    "photo-1521737718192-f9499790479e",
-    "photo-1542744173-8e7e53415bb0",
-    "photo-1460925895917-afdab827c52f",
-  ],
-  freelancing: [
-    "photo-1522071820081-009f0129c71c",
-    "photo-1497215728101-856f4ea42174",
-    "photo-1519389950473-47ba0277781c",
-    "photo-1573496359142-b8d87734a5a9",
-    "photo-1600880292089-90a7e086ee0c",
-  ],
-  woocommerce: [
-    "photo-1556742049-0cfed4f6a45d",
-    "photo-1472851294608-062f824d1829",
-    "photo-1563013544-824ae1b704d3",
-  ],
+/**
+ * Explicit 1:1 cover mapping — 50 unique verified Unsplash photos.
+ * Each ID is category-themed and never reused across articles.
+ */
+const ARTICLE_COVER_PHOTOS: Record<string, string> = {
+  // Web Development (code, architecture, workspace)
+  "nextjs-vs-traditional-cms-2026": "photo-1498050108023-c5249f4df085",
+  "headless-commerce-architecture-guide": "photo-1461749280684-dccba630e2f6",
+  "web-performance-core-vitals-checklist": "photo-1555066931-4365d14bab8c",
+  "api-first-web-development-strategy": "photo-1451187580459-43490279c0fa",
+  "choosing-tech-stack-startup-website": "photo-1504384308090-c894fdcc538d",
+
+  // Mobile Apps (devices, screens, app development)
+  "flutter-vs-react-native-2026": "photo-1512941937669-90a1b58e7e9c",
+  "mobile-app-mvp-launch-checklist": "photo-1511707171634-5f897ff02aa9",
+  "app-store-optimization-basics": "photo-1526498460520-4c246339dccb",
+  "offline-first-mobile-architecture": "photo-1563986768494-4dee2763ff3f",
+  "push-notifications-mobile-retention": "photo-1556656793-08538906a9f8",
+
+  // UI/UX (design, wireframes, interfaces)
+  "saas-dashboard-ux-patterns": "photo-1561070791-2526d30994b5",
+  "design-systems-scale-products": "photo-1558655146-d09347e92766",
+  "conversion-focused-landing-pages": "photo-1547658719-da2b51169166",
+  "accessibility-wcag-product-teams": "photo-1542831371-d531d36971e6",
+  "micro-interactions-ux-impact": "photo-1486312338219-ce68d2c6f44d",
+
+  // SaaS (dashboards, analytics, business software)
+  "build-saas-mvp-90-days": "photo-1551288049-bebda4e38f71",
+  "subscription-billing-stripe-architecture": "photo-1460925895917-afdab827c52f",
+  "multi-tenant-saas-database-design": "photo-1504868584819-f8e8b4b6d7e3",
+  "saas-onboarding-reduce-churn": "photo-1551434678-e076c223a692",
+  "saas-pricing-models-guide": "photo-1543286386-713bdd548da4",
+
+  // SEO (search, analytics, growth metrics)
+  "technical-seo-nextjs-checklist": "photo-1600880292203-757bb62b4baf",
+  "content-cluster-strategy-agencies": "photo-1504639725590-34d0984388bd",
+  "local-seo-morocco-businesses": "photo-1556761175-b413da4baf72",
+  "seo-audit-framework-2026": "photo-1552664730-d307ca884978",
+  "structured-data-rich-results": "photo-1557804506-669a67965ba0",
+
+  // Cybersecurity (locks, networks, authentication)
+  "web-app-security-owasp-basics": "photo-1555949963-aa79dcee981c",
+  "authentication-jwt-vs-sessions": "photo-1633265486064-086b219458ec",
+  "secure-api-design-practices": "photo-1550751827-4bd374c3f58b",
+  "gdpr-compliance-web-projects": "photo-1558494949-ef010cbdcc31",
+  "ssl-https-deployment-guide": "photo-1571171637578-41bc2dd41cd2",
+
+  // JavaScript / TypeScript (code, dev environments)
+  "typescript-best-practices-2026": "photo-1627398242454-45a1465c2479",
+  "javascript-performance-patterns": "photo-1516116216624-53e697fedbea",
+  "nodejs-production-deployment": "photo-1516321318423-f06f85e504b3",
+  "esm-vs-commonjs-modern-node": "photo-1517180102446-f3ece451e9d8",
+  "testing-strategies-typescript-apps": "photo-1587620962725-abab7fe55159",
+
+  // React / Next.js (frontend, components, performance)
+  "nextjs-app-router-patterns": "photo-1633356122544-f134324a6cee",
+  "react-server-components-explained": "photo-1556742049-0cfed4f6a45d",
+  "state-management-react-2026": "photo-1580915411954-282cb1b0d780",
+  "nextjs-seo-metadata-api": "photo-1581291518857-4e27b48ff24e",
+  "react-performance-optimization": "photo-1601784551446-20c9e07cdbdb",
+
+  // Business & Digital Transformation (teams, strategy, productivity)
+  "digital-transformation-smes-morocco": "photo-1454165804606-c3d57bc86b40",
+  "roi-measuring-web-projects": "photo-1553877522-43269d4ea984",
+  "ecommerce-growth-strategy-2026": "photo-1563013544-824ae1b704d3",
+  "crm-integration-sales-pipelines": "photo-1542744173-8e7e53415bb0",
+  "automation-workflows-business": "photo-1507679799987-c73779587ccf",
+
+  // Freelancing (remote work, clients, workspace)
+  "win-high-value-dev-clients": "photo-1600880292089-90a7e086ee0c",
+  "freelance-proposal-templates-work": "photo-1497215728101-856f4ea42174",
+  "pricing-freelance-web-projects": "photo-1519389950473-47ba0277781c",
+  "portfolio-case-studies-convert": "photo-1522071820081-009f0129c71c",
+  "agency-vs-freelancer-hiring-guide": "photo-1522202176988-66273c2fd55f",
 };
 
-function hashSlug(slug: string): number {
-  let hash = 0;
-  for (let i = 0; i < slug.length; i++) {
-    hash = (hash << 5) - hash + slug.charCodeAt(i);
-    hash |= 0;
-  }
-  return Math.abs(hash);
-}
-
-export function buildUnsplashUrl(
-  photoId: string,
-  width = 1200,
-  height = 630
-): string {
-  return `${UNSPLASH_BASE}/${photoId}?auto=format&fit=crop&w=${width}&h=${height}&q=80`;
-}
-
-function pickCategoryPhoto(slug: string, category: string): string {
-  const pool =
-    CATEGORY_PHOTO_POOLS[category] ?? CATEGORY_PHOTO_POOLS["web-development"];
-  const photoId = pool[hashSlug(slug) % pool.length];
-  return buildUnsplashUrl(photoId);
-}
-
-function isLocalOrTrustedImage(src: string): boolean {
-  if (!src || src.trim() === "") return false;
-  if (src.startsWith("/")) return true;
-  return (
-    src.includes("cloudinary.com") ||
-    src.includes("images.unsplash.com") ||
-    src.includes("res.cloudinary.com")
-  );
-}
+/** Fallback pool per category for articles outside the curated 50 */
+const CATEGORY_FALLBACK_PHOTOS: Record<string, string[]> = {
+  "web-development": ["photo-1498050108023-c5249f4df085"],
+  "mobile-apps": ["photo-1512941937669-90a1b58e7e9c"],
+  "ui-ux": ["photo-1561070791-2526d30994b5"],
+  saas: ["photo-1551288049-bebda4e38f71"],
+  seo: ["photo-1600880292203-757bb62b4baf"],
+  cybersecurity: ["photo-1555949963-aa79dcee981c"],
+  "javascript-typescript": ["photo-1627398242454-45a1465c2479"],
+  "react-nextjs": ["photo-1633356122544-f134324a6cee"],
+  "business-digital": ["photo-1556761175-b413da4baf72"],
+  freelancing: ["photo-1522071820081-009f0129c71c"],
+  woocommerce: ["photo-1556742049-0cfed4f6a45d"],
+};
 
 /** Slug metadata for all 50 blog articles */
 const BLOG_SLUG_METADATA: Array<{ slug: string; category: string; alt: string }> = [
@@ -190,11 +176,40 @@ const BLOG_SLUG_METADATA: Array<{ slug: string; category: string; alt: string }>
   { slug: "agency-vs-freelancer-hiring-guide", category: "freelancing", alt: "Agency vs Freelancer Hiring Guide 2026" },
 ];
 
+export function buildUnsplashUrl(
+  photoId: string,
+  slug?: string,
+  width = 1200,
+  height = 630
+): string {
+  const isFeatured = slug ? FEATURED_BLOG_SLUGS.has(slug) : false;
+  const w = isFeatured ? 1400 : width;
+  const h = isFeatured ? 735 : height;
+  const q = isFeatured ? 85 : 80;
+  return `${UNSPLASH_BASE}/${photoId}?auto=format&fit=crop&crop=entropy&w=${w}&h=${h}&q=${q}`;
+}
+
+function resolvePhotoId(slug: string, category: string): string {
+  const explicit = ARTICLE_COVER_PHOTOS[slug];
+  if (explicit) return explicit;
+
+  const pool =
+    CATEGORY_FALLBACK_PHOTOS[category] ??
+    CATEGORY_FALLBACK_PHOTOS["web-development"];
+  return pool[0];
+}
+
+function isPersistedImage(src: string): boolean {
+  if (!src || src.trim() === "") return false;
+  if (src.startsWith("/")) return true;
+  return src.includes("cloudinary.com") || src.includes("res.cloudinary.com");
+}
+
 /** Centralized slug → image map for all seeded blog articles */
 export const BLOG_IMAGE_MAPPINGS: BlogImageMapping[] = BLOG_SLUG_METADATA.map(
   ({ slug, category, alt }) => ({
     slug,
-    image: pickCategoryPhoto(slug, category),
+    image: buildUnsplashUrl(resolvePhotoId(slug, category), slug),
     alt,
   })
 );
@@ -203,10 +218,6 @@ const BLOG_IMAGE_MAP = new Map(
   BLOG_IMAGE_MAPPINGS.map((entry) => [entry.slug, entry])
 );
 
-/**
- * Resolve image for a blog post by slug and category.
- * Uses explicit slug mapping first, then category-based Unsplash pool.
- */
 export function getBlogImage(
   slug: string,
   category: string,
@@ -221,19 +232,14 @@ export function getBlogImage(
     };
   }
 
-  const keywords = CATEGORY_IMAGE_KEYWORDS[category] ?? "technology,digital";
-  const fallbackImage = pickCategoryPhoto(slug || keywords, category);
-
+  const photoId = resolvePhotoId(slug, category);
   return {
     slug,
-    image: fallbackImage || BLOG_IMAGE_DEFAULT,
+    image: buildUnsplashUrl(photoId, slug) || BLOG_IMAGE_DEFAULT,
     alt: title?.trim() || `D-GITALCODE blog — ${category.replace(/-/g, " ")}`,
   };
 }
 
-/**
- * Prefer a valid DB/uploaded image; otherwise resolve via mapping system.
- */
 export function resolveBlogPostImage(options: {
   slug: string;
   category: string;
@@ -242,7 +248,7 @@ export function resolveBlogPostImage(options: {
 }): BlogImageMapping {
   const { slug, category, title, dbImage } = options;
 
-  if (dbImage && isLocalOrTrustedImage(dbImage)) {
+  if (dbImage && isPersistedImage(dbImage)) {
     return { slug, image: dbImage, alt: title };
   }
 
@@ -267,4 +273,33 @@ export function getPrimaryCategorySlug(
   categories: Array<{ category: { slug: string } }>
 ): string {
   return categories[0]?.category.slug ?? "web-development";
+}
+
+/** Audit helper: returns duplicate groups among curated article covers */
+export function auditBlogImageDiversity(): {
+  totalArticles: number;
+  uniqueImages: number;
+  duplicateGroups: Array<{ photoId: string; slugs: string[] }>;
+  byCategory: Record<string, number>;
+} {
+  const byImage = new Map<string, string[]>();
+  const byCategory: Record<string, number> = {};
+
+  for (const { slug, category } of BLOG_SLUG_METADATA) {
+    byCategory[category] = (byCategory[category] ?? 0) + 1;
+    const photoId = ARTICLE_COVER_PHOTOS[slug] ?? "unknown";
+    if (!byImage.has(photoId)) byImage.set(photoId, []);
+    byImage.get(photoId)!.push(slug);
+  }
+
+  const duplicateGroups = [...byImage.entries()]
+    .filter(([, slugs]) => slugs.length > 1)
+    .map(([photoId, slugs]) => ({ photoId, slugs }));
+
+  return {
+    totalArticles: BLOG_SLUG_METADATA.length,
+    uniqueImages: byImage.size,
+    duplicateGroups,
+    byCategory,
+  };
 }
