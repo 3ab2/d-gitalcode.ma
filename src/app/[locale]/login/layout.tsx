@@ -1,7 +1,14 @@
+import type { Metadata } from "next";
 import { Suspense } from "react";
 import { redirect } from "next/navigation";
 import { auth, isAdminRole, isClientRole } from "@/lib/auth";
 import { isValidLocale } from "@/lib/i18n/settings";
+import { NOINDEX_ROBOTS } from "@/lib/seo/metadata";
+
+export const metadata: Metadata = {
+  title: "Login | D-GITALCODE",
+  robots: NOINDEX_ROBOTS,
+};
 
 async function LoginGuard({
   children,

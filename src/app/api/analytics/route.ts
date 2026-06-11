@@ -1,6 +1,7 @@
 import { NextRequest, NextResponse } from "next/server";
 import { prisma } from "@/lib/prisma";
 import { requireAdmin } from "@/lib/auth";
+import { aggregateBlogAnalytics } from "@/lib/analytics/aggregate-blog";
 
 export async function GET() {
   const session = await requireAdmin();
@@ -74,6 +75,8 @@ export async function GET() {
       submissionsByDay[day] = (submissionsByDay[day] || 0) + 1;
     });
 
+    const blog = await aggregateBlogAnalytics(30);
+
     return NextResponse.json({
       totalSubmissions,
       newSubmissions,
@@ -99,6 +102,7 @@ export async function GET() {
       eventsByDay,
       submissionsByDay,
       recentEvents: recentEvents.slice(0, 10),
+      blog,
     });
   } catch (error) {
     console.error("Analytics error:", error);

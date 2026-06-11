@@ -192,7 +192,14 @@
     "noResults": "No articles match your search.",
     "articleCount": "articles",
     "toc": "Table of contents",
-    "share": "Share"
+    "share": "Share",
+    "cta": {
+      "badge": "Premium digital agency",
+      "title": "Ready to take the next step?",
+      "subtitle": "D-GITALCODE turns your ideas into high-performing digital products — websites, mobile apps and SaaS solutions delivered with technical excellence and business-focused support.",
+      "quote": "Request a Quote",
+      "support": "Contact Support"
+    }
   },
   "contact": {
     "title": "Contact Us",

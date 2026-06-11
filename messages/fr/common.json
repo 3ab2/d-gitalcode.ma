@@ -192,7 +192,14 @@
     "noResults": "Aucun article ne correspond à votre recherche.",
     "articleCount": "articles",
     "toc": "Sommaire",
-    "share": "Partager"
+    "share": "Partager",
+    "cta": {
+      "badge": "Agence digitale premium",
+      "title": "Prêt à passer à l'action ?",
+      "subtitle": "D-GITALCODE transforme vos idées en produits digitaux performants — sites web, apps mobiles et solutions SaaS livrés avec excellence technique et un accompagnement orienté business.",
+      "quote": "Demander un devis",
+      "support": "Contacter le support"
+    }
   },
   "contact": {
     "title": "Contactez-nous",

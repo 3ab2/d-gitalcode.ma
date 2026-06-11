@@ -6,6 +6,8 @@ import {
 } from "lucide-react";
 import { StatCard } from "@/components/admin/StatCard";
 import { SimpleBarChart } from "@/components/admin/SimpleBarChart";
+import { BlogAnalyticsWidget } from "@/components/admin/BlogAnalyticsWidget";
+import type { BlogAnalyticsSummary } from "@/lib/analytics/aggregate-blog";
 
 interface Analytics {
   totalSubmissions: number;
@@ -22,6 +24,7 @@ interface Analytics {
   eventsByDay: Record<string, number>;
   mostRequestedServices: { name: string; count: number }[];
   submissionsByStatus: { status: string; count: number }[];
+  blog?: BlogAnalyticsSummary;
 }
 
 interface AuditLog {
@@ -68,10 +71,17 @@ export default function AdminDashboard() {
         <StatCard title="Services" value={data?.totalServices ?? 0} icon={Briefcase} color="purple" />
         <StatCard title="Blog Posts" value={`${data?.publishedBlogPosts ?? 0}/${data?.totalBlogPosts ?? 0}`} icon={FileText} trend="published/total" />
         <StatCard title="Portfolio Projects" value={data?.totalProjects ?? 0} icon={FolderOpen} />
-        <StatCard title="Blog Views" value={data?.blogViews ?? 0} icon={Eye} />
+        <StatCard
+          title="Blog Views"
+          value={data?.blog?.totalViews ?? data?.blogViews ?? 0}
+          icon={Eye}
+          trend="analytics (30d)"
+        />
         <StatCard title="WhatsApp Clicks" value={data?.whatsappClicks ?? 0} icon={TrendingUp} color="green" />
         <StatCard title="Form Submissions" value={data?.formSubmissions ?? 0} icon={MessageSquare} color="purple" />
       </div>
+
+      {data?.blog && <BlogAnalyticsWidget blog={data.blog} />}
 
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 mb-8">
         <SimpleBarChart data={data?.submissionsByDay ?? {}} title="Submissions (last 30 days)" color="bg-brand-green" />

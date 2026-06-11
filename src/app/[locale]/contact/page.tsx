@@ -10,10 +10,23 @@ import { Button } from "@/components/ui/Button";
 import { SocialConnect } from "@/components/social/SocialConnect";
 import { CONTACT_EMAIL } from "@/config/contact";
 import { getSocialLinks } from "@/lib/social-links";
+import { buildPublicPageMetadata } from "@/lib/seo/metadata";
 
-export const metadata: Metadata = {
-  title: "Contact",
-};
+export async function generateMetadata({
+  params,
+}: {
+  params: Promise<{ locale: string }>;
+}): Promise<Metadata> {
+  const { locale } = await params;
+  const loc = locale as Locale;
+  const { t } = await getTranslation(loc);
+  return buildPublicPageMetadata({
+    locale: loc,
+    path: "contact",
+    title: `${t("contact.title")} | D-GITALCODE`,
+    description: t("contact.subtitle"),
+  });
+}
 
 export default async function ContactPage({
   params,

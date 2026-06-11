@@ -16,6 +16,7 @@ import { type Locale } from "@/lib/i18n/settings";
 import { Button } from "@/components/ui/Button";
 import { GlassCard } from "@/components/ui/GlassCard";
 import { Badge } from "@/components/ui/Badge";
+import { buildPublicPageMetadata } from "@/lib/seo/metadata";
 
 export function generateStaticParams() {
   return [{ locale: "fr" }, { locale: "en" }, { locale: "ar" }];
@@ -27,11 +28,14 @@ export async function generateMetadata({
   params: Promise<{ locale: string }>;
 }): Promise<Metadata> {
   const { locale } = await params;
-  const { t } = await getTranslation(locale as Locale);
-  return {
+  const loc = locale as Locale;
+  const { t } = await getTranslation(loc);
+  return buildPublicPageMetadata({
+    locale: loc,
+    path: "about",
     title: t("about.meta.title"),
     description: t("about.meta.description"),
-  };
+  });
 }
 
 const valueIcons = [Heart, Zap, Users, CheckCircle2];

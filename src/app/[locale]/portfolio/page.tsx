@@ -8,10 +8,23 @@ import { type Locale } from "@/lib/i18n/settings";
 import { SectionHeading } from "@/components/ui/SectionHeading";
 import { Card } from "@/components/ui/Card";
 import { Badge } from "@/components/ui/Badge";
+import { buildPublicPageMetadata } from "@/lib/seo/metadata";
 
-export const metadata: Metadata = {
-  title: "Portfolio",
-};
+export async function generateMetadata({
+  params,
+}: {
+  params: Promise<{ locale: string }>;
+}): Promise<Metadata> {
+  const { locale } = await params;
+  const loc = locale as Locale;
+  const { t } = await getTranslation(loc);
+  return buildPublicPageMetadata({
+    locale: loc,
+    path: "portfolio",
+    title: `${t("portfolio.title")} | D-GITALCODE`,
+    description: t("portfolio.subtitle"),
+  });
+}
 
 async function getProjects(locale: Locale) {
   try {

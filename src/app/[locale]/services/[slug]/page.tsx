@@ -9,6 +9,7 @@ import {
 } from "@/lib/services";
 import { SectionHeading } from "@/components/ui/SectionHeading";
 import { ServiceCard } from "@/components/services/ServiceCard";
+import { buildPublicPageMetadata } from "@/lib/seo/metadata";
 
 const pageMeta: Record<string, Record<Locale, { title: string; desc: string }>> = {
   "web-development": {
@@ -39,11 +40,14 @@ export async function generateMetadata({
   params: Promise<{ locale: string; slug: string }>;
 }): Promise<Metadata> {
   const { locale, slug } = await params;
-  const meta = pageMeta[slug]?.[locale as Locale];
-  return {
-    title: meta?.title || slug,
+  const loc = locale as Locale;
+  const meta = pageMeta[slug]?.[loc];
+  return buildPublicPageMetadata({
+    locale: loc,
+    path: `services/${slug}`,
+    title: meta?.title ? `${meta.title} | D-GITALCODE` : slug,
     description: meta?.desc,
-  };
+  });
 }
 
 export function generateStaticParams() {

@@ -14,24 +14,25 @@ import {
   getPostTranslation,
   getReadTimeMinutes,
   getRelatedPosts,
-  incrementPostViews,
   injectHeadingIds,
   resolvePostImage,
 } from "@/lib/blog";
 import { getBlogImageAbsoluteUrl } from "@/lib/blog-images";
+import { buildPageAlternates, buildPublicPageMetadata } from "@/lib/seo/metadata";
 import { TableOfContents } from "@/components/blog/TableOfContents";
 import { BlogShare } from "@/components/blog/BlogShare";
+import { BlogCTA } from "@/components/blog/BlogCTA";
 import { RelatedArticles } from "@/components/blog/RelatedArticles";
+import { BlogArticleAnalytics } from "@/components/blog/BlogArticleAnalytics";
 import { BlogJsonLd } from "@/components/blog/BlogJsonLd";
+import { getPrimaryCategorySlug } from "@/lib/blog-images";
 
 export const revalidate = 3600;
 
 const AUTHOR = "D-GITALCODE";
 
 async function getPostForPage(slug: string, locale: Locale) {
-  const post = await getPublishedPostBySlug(slug, locale);
-  if (post) await incrementPostViews(post.id);
-  return post;
+  return getPublishedPostBySlug(slug, locale);
 }
 
 async function getPostForMeta(slug: string, locale: Locale) {
@@ -51,37 +52,39 @@ export async function generateMetadata({
   params: Promise<{ locale: string; slug: string }>;
 }): Promise<Metadata> {
   const { locale, slug } = await params;
-  const post = await getPostForMeta(slug, locale as Locale);
-  const translation = post ? getPostTranslation(post, locale as Locale) : null;
-  const siteUrl = process.env.NEXT_PUBLIC_SITE_URL || "https://d-gitalcode.ma";
-  const url = `${siteUrl}/${locale}/blog/${slug}`;
+  const loc = locale as Locale;
+  const post = await getPostForMeta(slug, loc);
+  const translation = post ? getPostTranslation(post, loc) : null;
+  const alternates = buildPageAlternates(`blog/${slug}`, loc);
   const cover =
     post && translation
       ? resolvePostImage(post, translation.title).image
       : null;
-  const ogImage = cover ? getBlogImageAbsoluteUrl(cover, siteUrl) : undefined;
+  const ogImage = cover ? getBlogImageAbsoluteUrl(cover) : undefined;
+  const title = translation?.metaTitle || translation?.title || slug;
+  const description = translation?.metaDescription || translation?.excerpt;
 
   return {
-    title: translation?.metaTitle || translation?.title || slug,
-    description: translation?.metaDescription || translation?.excerpt,
+    ...buildPublicPageMetadata({
+      locale: loc,
+      path: `blog/${slug}`,
+      title,
+      description: description ?? undefined,
+      openGraph: {
+        type: "article",
+        title: translation?.metaTitle || translation?.title,
+        description: description ?? undefined,
+        images: ogImage ? [{ url: ogImage, alt: translation?.title || "" }] : undefined,
+        publishedTime: post?.publishedAt?.toISOString(),
+        authors: [AUTHOR],
+        url: alternates.canonical,
+      },
+      twitter: {
+        images: ogImage ? [ogImage] : undefined,
+      },
+    }),
     keywords: translation?.excerpt?.split(" ").slice(0, 8),
     authors: [{ name: AUTHOR }],
-    openGraph: {
-      type: "article",
-      title: translation?.metaTitle || translation?.title,
-      description: translation?.metaDescription || translation?.excerpt || undefined,
-      images: ogImage ? [{ url: ogImage, alt: translation?.title || "" }] : undefined,
-      publishedTime: post?.publishedAt?.toISOString(),
-      authors: [AUTHOR],
-      url,
-    },
-    twitter: {
-      card: "summary_large_image",
-      title: translation?.metaTitle || translation?.title,
-      description: translation?.metaDescription || translation?.excerpt || undefined,
-      images: ogImage ? [ogImage] : undefined,
-    },
-    alternates: { canonical: url },
   };
 }
 
@@ -99,8 +102,7 @@ export default async function BlogPostPage({
 
   const translation = getPostTranslation(post, loc);
   const basePath = `/${locale}`;
-  const siteUrl = process.env.NEXT_PUBLIC_SITE_URL || "https://d-gitalcode.ma";
-  const articleUrl = `${siteUrl}/${locale}/blog/${slug}`;
+  const articleUrl = buildPageAlternates(`blog/${slug}`, loc).canonical;
   const cover = resolvePostImage(post, translation?.title || slug);
 
   const rawContent = translation?.content || "";
@@ -109,6 +111,7 @@ export default async function BlogPostPage({
   const readTime = getReadTimeMinutes(rawContent);
 
   const categoryIds = post.categories.map((c) => c.categoryId);
+  const primaryCategory = getPrimaryCategorySlug(post.categories);
   const related = await getRelatedPosts(post.id, categoryIds, loc);
 
   const relatedSerialized = related.map((r) => {
@@ -130,12 +133,21 @@ export default async function BlogPostPage({
   return (
     <>
       <BlogJsonLd
+        locale={loc}
         title={translation?.title || slug}
         description={translation?.metaDescription || translation?.excerpt}
         url={articleUrl}
-        image={getBlogImageAbsoluteUrl(cover.image, siteUrl)}
+        image={getBlogImageAbsoluteUrl(cover.image)}
         datePublished={post.publishedAt?.toISOString()}
+        dateModified={post.updatedAt?.toISOString()}
         author={AUTHOR}
+        blogLabel={t("blog.title")}
+      />
+
+      <BlogArticleAnalytics
+        slug={slug}
+        locale={locale}
+        category={primaryCategory}
       />
 
       <article className="pt-10 pb-16 md:pt-12">
@@ -199,6 +211,7 @@ export default async function BlogPostPage({
               )}
 
               <div
+                id="blog-article-content"
                 className="prose-blog mt-10"
                 dangerouslySetInnerHTML={{ __html: contentWithIds }}
               />
@@ -215,6 +228,19 @@ export default async function BlogPostPage({
                   </div>
                 </div>
               )}
+
+              <BlogCTA
+                locale={locale}
+                slug={slug}
+                basePath={basePath}
+                labels={{
+                  badge: t("blog.cta.badge"),
+                  title: t("blog.cta.title"),
+                  subtitle: t("blog.cta.subtitle"),
+                  quote: t("blog.cta.quote"),
+                  support: t("blog.cta.support"),
+                }}
+              />
 
               <RelatedArticles
                 posts={relatedSerialized}

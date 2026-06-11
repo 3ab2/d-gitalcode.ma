@@ -3,6 +3,7 @@ import { getTranslation } from "@/lib/i18n/server";
 import { type Locale } from "@/lib/i18n/settings";
 import { SectionHeading } from "@/components/ui/SectionHeading";
 import { BlogListClient } from "@/components/blog/BlogListClient";
+import { buildPublicPageMetadata } from "@/lib/seo/metadata";
 import { getPublishedPosts, getPostTranslation, resolvePostImage } from "@/lib/blog";
 
 export const revalidate = 3600;
@@ -13,16 +14,14 @@ export async function generateMetadata({
   params: Promise<{ locale: string }>;
 }): Promise<Metadata> {
   const { locale } = await params;
-  const { t } = await getTranslation(locale as Locale);
-  return {
-    title: t("blog.title"),
+  const loc = locale as Locale;
+  const { t } = await getTranslation(loc);
+  return buildPublicPageMetadata({
+    locale: loc,
+    path: "blog",
+    title: `${t("blog.title")} | D-GITALCODE`,
     description: t("blog.subtitle"),
-    openGraph: {
-      title: `${t("blog.title")} | D-GITALCODE`,
-      description: t("blog.subtitle"),
-      type: "website",
-    },
-  };
+  });
 }
 
 export default async function BlogPage({

@@ -1,5 +1,10 @@
 import type { Metadata, Viewport } from "next";
 import { Geist, Geist_Mono } from "next/font/google";
+import {
+  DEFAULT_OG_IMAGE,
+  getSiteUrl,
+  SITE_NAME,
+} from "@/lib/seo/metadata";
 import { SessionProvider } from "@/components/providers/SessionProvider";
 import { NotificationProvider } from "@/components/notifications/NotificationProvider";
 import { SerwistProvider } from "@/components/providers/SerwistProvider";
@@ -21,6 +26,7 @@ const geistMono = Geist_Mono({
 });
 
 export const metadata: Metadata = {
+  metadataBase: new URL(getSiteUrl()),
   applicationName: APP_NAME,
   title: {
     default: "D-GITALCODE — Agence Digitale & Solutions WooCommerce",
@@ -48,8 +54,21 @@ export const metadata: Metadata = {
   openGraph: {
     type: "website",
     locale: "fr_FR",
-    siteName: APP_NAME,
+    siteName: SITE_NAME,
     description: APP_DESCRIPTION,
+    images: [
+      {
+        url: DEFAULT_OG_IMAGE,
+        width: 512,
+        height: 512,
+        alt: `${SITE_NAME} — Agence digitale`,
+      },
+    ],
+  },
+  twitter: {
+    card: "summary_large_image",
+    site: SITE_NAME,
+    images: [DEFAULT_OG_IMAGE],
   },
   icons: {
     icon: [

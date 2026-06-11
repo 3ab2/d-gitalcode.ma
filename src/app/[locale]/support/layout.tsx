@@ -1,7 +1,14 @@
+import type { Metadata } from "next";
 import { redirect } from "next/navigation";
 import { auth, isAdminRole, isClientRole } from "@/lib/auth";
 import { getLoginPath } from "@/lib/auth-urls";
 import { isValidLocale } from "@/lib/i18n/settings";
+import { NOINDEX_ROBOTS } from "@/lib/seo/metadata";
+
+export const metadata: Metadata = {
+  title: "Support | D-GITALCODE",
+  robots: NOINDEX_ROBOTS,
+};
 
 export default async function SupportLayout({
   children,

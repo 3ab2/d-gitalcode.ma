@@ -1,5 +1,9 @@
+import type { Metadata } from "next";
 import { prisma } from "@/lib/prisma";
+import { getTranslation } from "@/lib/i18n/server";
 import { type Locale } from "@/lib/i18n/settings";
+import { buildPublicPageMetadata } from "@/lib/seo/metadata";
+import { SiteJsonLd } from "@/components/seo/SiteJsonLd";
 import { getHomepageServiceCategories } from "@/lib/services";
 import { getSocialLinks } from "@/lib/social-links";
 import { inferPortfolioCategory, estimateReadTime } from "@/lib/portfolio-category";
@@ -9,6 +13,22 @@ import { PortfolioSection } from "@/components/home/PortfolioSection";
 import { BlogPreviewSection } from "@/components/home/BlogPreviewSection";
 import { AboutPreviewSection } from "@/components/home/AboutPreviewSection";
 import { HomeContactSection } from "@/components/home/HomeContactSection";
+
+export async function generateMetadata({
+  params,
+}: {
+  params: Promise<{ locale: string }>;
+}): Promise<Metadata> {
+  const { locale } = await params;
+  const loc = locale as Locale;
+  const { t } = await getTranslation(loc);
+  return buildPublicPageMetadata({
+    locale: loc,
+    path: "",
+    title: `${t("hero.brand")} — ${t("hero.badge")}`,
+    description: t("hero.subtitle"),
+  });
+}
 
 const defaultStats = [
   { key: "projects", value: "50+", label: "" },
@@ -96,6 +116,7 @@ export default async function HomePage({
 
   return (
     <>
+      <SiteJsonLd locale={locale as Locale} />
       <Hero locale={locale as Locale} stats={data.stats} />
       <ServicesSection locale={locale as Locale} services={data.services} />
       <PortfolioSection locale={locale as Locale} projects={data.projects} />
