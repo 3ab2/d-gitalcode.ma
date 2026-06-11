@@ -149,3 +149,54 @@ export function validateAttachmentFiles(
   validateAttachmentCount(files.length);
   return files.map((file) => validateAttachmentFile(file));
 }
+
+const ADMIN_IMAGE_EXTENSIONS = new Set(["png", "jpg", "jpeg", "webp"]);
+const ADMIN_IMAGE_MIMES = new Set(["image/png", "image/jpeg", "image/webp"]);
+const MAX_ADMIN_IMAGE_BYTES = 10 * 1024 * 1024;
+
+/** Backend validation for CMS image uploads (admin). */
+export function validateAdminImageFile(
+  file: Pick<File, "name" | "type" | "size">
+): { extension: string; mimeType: string } {
+  if (file.size <= 0) {
+    throw new AttachmentValidationError("empty_file", "File is empty");
+  }
+
+  if (file.size > MAX_ADMIN_IMAGE_BYTES) {
+    throw new AttachmentValidationError(
+      "file_too_large",
+      `Image exceeds ${MAX_ADMIN_IMAGE_BYTES / (1024 * 1024)} MB limit`
+    );
+  }
+
+  const basename = sanitizeBasename(file.name);
+  if (!basename || basename === "." || basename === "..") {
+    throw new AttachmentValidationError("invalid_filename", "Invalid filename");
+  }
+
+  const extension = getExtension(basename);
+  if (!extension || !ADMIN_IMAGE_EXTENSIONS.has(extension)) {
+    throw new AttachmentValidationError(
+      "invalid_extension",
+      "Only PNG, JPG, JPEG and WebP images are allowed"
+    );
+  }
+
+  const mimeType = (file.type || "").toLowerCase().split(";")[0].trim();
+  if (!mimeType || !ADMIN_IMAGE_MIMES.has(mimeType)) {
+    throw new AttachmentValidationError(
+      "invalid_mime",
+      `MIME type ${mimeType || "unknown"} is not allowed`
+    );
+  }
+
+  const allowedMimes = EXTENSION_MIME_MAP[extension];
+  if (!allowedMimes?.includes(mimeType)) {
+    throw new AttachmentValidationError(
+      "mime_extension_mismatch",
+      `Extension .${extension} does not match MIME type ${mimeType}`
+    );
+  }
+
+  return { extension, mimeType };
+}

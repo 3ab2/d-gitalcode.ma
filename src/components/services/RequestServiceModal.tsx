@@ -7,6 +7,7 @@ import { X, Mail, MessageCircle } from "lucide-react";
 import { ContactForm } from "@/components/contact/ContactForm";
 import { buildServiceRequestMessage, buildWhatsAppUrl } from "@/lib/whatsapp";
 import { type Locale } from "@/lib/i18n/settings";
+import { usePublicSettings } from "@/components/providers/PublicSettingsProvider";
 
 interface RequestServiceModalProps {
   isOpen: boolean;
@@ -24,10 +25,12 @@ export function RequestServiceModal({
   serviceName,
 }: RequestServiceModalProps) {
   const { t } = useTranslation();
+  const settings = usePublicSettings();
   const [mode, setMode] = useState<"choose" | "form">("choose");
 
   const whatsappUrl = buildWhatsAppUrl(
-    buildServiceRequestMessage(serviceName, locale)
+    buildServiceRequestMessage(serviceName, locale),
+    settings.whatsappNumber
   );
 
   const handleWhatsAppClick = async () => {

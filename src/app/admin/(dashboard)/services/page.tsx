@@ -61,7 +61,18 @@ export default function AdminServicesPage() {
     setLoading(false);
   };
 
-  useEffect(() => { fetchServices(); }, []);
+  useEffect(() => {
+    let cancelled = false;
+    void (async () => {
+      const res = await fetch("/api/admin/services");
+      if (cancelled) return;
+      setServices(await res.json());
+      setLoading(false);
+    })();
+    return () => {
+      cancelled = true;
+    };
+  }, []);
 
   const openCreate = () => {
     setEditing(null);

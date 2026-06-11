@@ -60,7 +60,22 @@ export default function SubmissionsPage() {
     setLoading(false);
   }, [search, statusFilter, typeFilter]);
 
-  useEffect(() => { fetchSubmissions(); }, [fetchSubmissions]);
+  useEffect(() => {
+    let cancelled = false;
+    void (async () => {
+      const params = new URLSearchParams();
+      if (search) params.set("search", search);
+      if (statusFilter) params.set("status", statusFilter);
+      if (typeFilter) params.set("type", typeFilter);
+      const res = await fetch(`/api/admin/submissions?${params}`);
+      if (cancelled) return;
+      setSubmissions(await res.json());
+      setLoading(false);
+    })();
+    return () => {
+      cancelled = true;
+    };
+  }, [search, statusFilter, typeFilter]);
 
   const openDetail = async (sub: Submission) => {
     const res = await fetch(`/api/admin/submissions/${sub.id}`);

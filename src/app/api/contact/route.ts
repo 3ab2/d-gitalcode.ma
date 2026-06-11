@@ -2,6 +2,9 @@ import { NextRequest, NextResponse } from "next/server";
 import { z } from "zod";
 import { prisma } from "@/lib/prisma";
 import { sendContactNotification } from "@/lib/email";
+import { enforceRateLimit, RATE_LIMITS } from "@/lib/rate-limit";
+import { getSiteSettings } from "@/lib/settings";
+import { logError } from "@/lib/logger";
 
 const contactSchema = z.object({
   name: z.string().min(2),
@@ -16,6 +19,12 @@ const contactSchema = z.object({
 });
 
 export async function POST(request: NextRequest) {
+  const limited = await enforceRateLimit(request, {
+    name: "contact",
+    config: RATE_LIMITS.contact,
+  });
+  if (limited) return limited;
+
   try {
     const body = await request.json();
     const data = contactSchema.parse(body);
@@ -48,14 +57,18 @@ export async function POST(request: NextRequest) {
     };
 
     if (data.method === "FORM") {
-      const emailResult = await sendContactNotification({
-        name: data.name,
-        email: data.email,
-        phone: data.phone,
-        message: data.message,
-        serviceName: data.serviceName,
-        type: data.type,
-      });
+      const settings = await getSiteSettings();
+      const emailResult = await sendContactNotification(
+        {
+          name: data.name,
+          email: data.email,
+          phone: data.phone,
+          message: data.message,
+          serviceName: data.serviceName,
+          type: data.type,
+        },
+        { notifyEmail: settings.contactEmail }
+      );
 
       emailNotification = emailResult.success
         ? { sent: true }
@@ -82,7 +95,7 @@ export async function POST(request: NextRequest) {
         { status: 400 }
       );
     }
-    console.error("Contact API error:", error);
+    logError("contact", error);
     return NextResponse.json({ error: "Internal server error" }, { status: 500 });
   }
 }

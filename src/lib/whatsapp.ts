@@ -1,9 +1,15 @@
-const WHATSAPP_NUMBER =
-  process.env.NEXT_PUBLIC_WHATSAPP_NUMBER || "212706984671";
+import { DEFAULT_SITE_SETTINGS } from "@/lib/site-settings";
 
-export function buildWhatsAppUrl(message: string): string {
+export function buildWhatsAppUrl(
+  message: string,
+  whatsappNumber?: string
+): string {
+  const number =
+    whatsappNumber?.replace(/\D/g, "") ||
+    process.env.NEXT_PUBLIC_WHATSAPP_NUMBER ||
+    DEFAULT_SITE_SETTINGS.whatsappNumber;
   const encoded = encodeURIComponent(message);
-  return `https://wa.me/${WHATSAPP_NUMBER}?text=${encoded}`;
+  return `https://wa.me/${number}?text=${encoded}`;
 }
 
 export function buildServiceRequestMessage(

@@ -6,11 +6,16 @@ import { useTranslation } from "react-i18next";
 import { Button } from "@/components/ui/Button";
 import { buildGeneralContactMessage, buildWhatsAppUrl } from "@/lib/whatsapp";
 import { type Locale } from "@/lib/i18n/settings";
+import { usePublicSettings } from "@/components/providers/PublicSettingsProvider";
 
 export function CtaSection({ locale }: { locale: Locale }) {
   const { t } = useTranslation();
+  const settings = usePublicSettings();
   const basePath = `/${locale}`;
-  const whatsappUrl = buildWhatsAppUrl(buildGeneralContactMessage(locale));
+  const whatsappUrl = buildWhatsAppUrl(
+    buildGeneralContactMessage(locale),
+    settings.whatsappNumber
+  );
 
   return (
     <section className="py-24 relative overflow-hidden">

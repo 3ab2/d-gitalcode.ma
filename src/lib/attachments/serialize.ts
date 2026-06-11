@@ -1,5 +1,3 @@
-import type { AttachmentRecord } from "./service";
-
 export type SerializedAttachment = {
   id: string;
   originalName: string;

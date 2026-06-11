@@ -359,6 +359,35 @@ async function main() {
     });
   }
 
+  const siteSettingsSeed = [
+    { key: "contact_email", value: DEFAULT_CONTACT_EMAIL },
+    { key: "whatsapp_number", value: process.env.NEXT_PUBLIC_WHATSAPP_NUMBER || "212706984671" },
+    { key: "phone", value: "+212 706-984671" },
+    { key: "address", value: "Casablanca, Maroc" },
+    {
+      key: "seo_title",
+      value: "D-GITALCODE — Agence Digitale & Solutions WooCommerce",
+    },
+    {
+      key: "seo_description",
+      value:
+        "Agence digitale spécialisée en développement web, applications mobiles, plugins WooCommerce et solutions eCommerce intelligentes.",
+    },
+    {
+      key: "seo_keywords",
+      value:
+        "développement web, WooCommerce, WhatsApp, WordPress plugins, agence digitale Maroc",
+    },
+  ];
+
+  for (const setting of siteSettingsSeed) {
+    await prisma.siteSetting.upsert({
+      where: { key: setting.key },
+      update: { value: setting.value },
+      create: setting,
+    });
+  }
+
   const socialLinksSeed = [
     { platform: "instagram", url: "https://www.instagram.com/digitalcode.ma/", label: "Instagram", order: 0 },
     { platform: "linkedin", url: "https://www.linkedin.com/in/d-gitalcode-elkarch-abdelhamid-0604583bb/", label: "LinkedIn", order: 1 },

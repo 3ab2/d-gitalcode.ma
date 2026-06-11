@@ -1,5 +1,6 @@
 import type { Prisma } from "@prisma/client";
 import { prisma } from "./prisma";
+import { logError } from "./logger";
 
 interface AuditParams {
   userId: string;
@@ -23,6 +24,6 @@ export async function logAdminAction(params: AuditParams) {
       },
     });
   } catch (error) {
-    console.error("Failed to log admin action:", error);
+    logError("audit", error);
   }
 }

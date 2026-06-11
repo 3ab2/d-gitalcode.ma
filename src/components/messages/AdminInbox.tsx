@@ -39,8 +39,9 @@ interface ThreadItem {
 
 export function AdminInbox() {
   const searchParams = useSearchParams();
+  const userFromQuery = searchParams.get("user");
   const [conversations, setConversations] = useState<Conversation[]>([]);
-  const [selectedId, setSelectedId] = useState<string | null>(null);
+  const [selectedId, setSelectedId] = useState<string | null>(userFromQuery);
   const [thread, setThread] = useState<ThreadItem[]>([]);
   const [selectedUser, setSelectedUser] = useState<Conversation["user"] | null>(null);
   const [loadingList, setLoadingList] = useState(true);
@@ -48,7 +49,7 @@ export function AdminInbox() {
   const [draft, setDraft] = useState("");
   const [sending, setSending] = useState(false);
   const [search, setSearch] = useState("");
-  const [showThread, setShowThread] = useState(false);
+  const [showThread, setShowThread] = useState(Boolean(userFromQuery));
   const scrollRef = useRef<HTMLDivElement>(null);
 
   const fetchConversations = useCallback(async () => {
@@ -60,15 +61,31 @@ export function AdminInbox() {
   }, []);
 
   useEffect(() => {
-    const userFromQuery = searchParams.get("user");
-    if (userFromQuery) {
-      setSelectedId(userFromQuery);
+    const userId = searchParams.get("user");
+    if (!userId) return;
+    let cancelled = false;
+    void Promise.resolve().then(() => {
+      if (cancelled) return;
+      setSelectedId(userId);
       setShowThread(true);
-      return;
-    }
-    if (!selectedId && conversations.length > 0) {
-      setSelectedId(conversations[0].userId);
-    }
+    });
+    return () => {
+      cancelled = true;
+    };
+  }, [searchParams]);
+
+  useEffect(() => {
+    if (searchParams.get("user")) return;
+    if (selectedId) return;
+    if (conversations.length === 0) return;
+    let cancelled = false;
+    const firstId = conversations[0].userId;
+    void Promise.resolve().then(() => {
+      if (!cancelled) setSelectedId(firstId);
+    });
+    return () => {
+      cancelled = true;
+    };
   }, [conversations, selectedId, searchParams]);
 
   const fetchThread = useCallback(async (userId: string) => {
@@ -85,8 +102,23 @@ export function AdminInbox() {
   usePolling(fetchConversations, 5000);
 
   useEffect(() => {
-    if (selectedId) fetchThread(selectedId);
-  }, [selectedId, fetchThread]);
+    if (!selectedId) return;
+    let cancelled = false;
+    void (async () => {
+      setLoadingThread(true);
+      const res = await fetch(`/api/admin/conversations/${selectedId}`);
+      if (cancelled) return;
+      if (res.ok) {
+        const data = await res.json();
+        setThread(data.thread);
+        setSelectedUser(data.user);
+      }
+      setLoadingThread(false);
+    })();
+    return () => {
+      cancelled = true;
+    };
+  }, [selectedId]);
 
   useEffect(() => {
     const el = scrollRef.current;

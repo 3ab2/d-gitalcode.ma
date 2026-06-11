@@ -7,7 +7,7 @@ import { SocialLinks } from "@/components/social/SocialLinks";
 import { GlassCard } from "@/components/ui/GlassCard";
 import { Button } from "@/components/ui/Button";
 import { buildGeneralContactMessage, buildWhatsAppUrl } from "@/lib/whatsapp";
-import { CONTACT_EMAIL } from "@/config/contact";
+import { usePublicSettings } from "@/components/providers/PublicSettingsProvider";
 import { type SocialLinkConfig } from "@/config/social-links";
 import { type Locale } from "@/lib/i18n/settings";
 
@@ -19,7 +19,11 @@ export function HomeContactSection({
   socialLinks: SocialLinkConfig[];
 }) {
   const { t } = useTranslation();
-  const whatsappUrl = buildWhatsAppUrl(buildGeneralContactMessage(locale));
+  const settings = usePublicSettings();
+  const whatsappUrl = buildWhatsAppUrl(
+    buildGeneralContactMessage(locale),
+    settings.whatsappNumber
+  );
 
   return (
     <section id="contact" className="relative py-24 lg:py-32">
@@ -67,10 +71,10 @@ export function HomeContactSection({
                 <div>
                   <h3 className="font-semibold text-white">Email</h3>
                   <a
-                    href={`mailto:${CONTACT_EMAIL}`}
+                    href={`mailto:${settings.contactEmail}`}
                     className="mt-2 block text-sm text-brand-green hover:underline"
                   >
-                    {CONTACT_EMAIL}
+                    {settings.contactEmail}
                   </a>
                 </div>
               </div>

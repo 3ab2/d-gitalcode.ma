@@ -97,13 +97,34 @@ export function NotificationProvider({ children }: { children: React.ReactNode }
   }, []);
 
   useEffect(() => {
-    if (enabled) void refresh();
-    else {
-      setNotifications([]);
-      setUnreadCount(0);
-      setNextCursor(null);
+    let cancelled = false;
+
+    if (enabled) {
+      void (async () => {
+        setLoading(true);
+        try {
+          const data = await fetchPage();
+          if (cancelled || !data) return;
+          setNotifications(data.items);
+          setNextCursor(data.nextCursor);
+          setUnreadCount(data.unreadCount);
+        } finally {
+          if (!cancelled) setLoading(false);
+        }
+      })();
+    } else {
+      void Promise.resolve().then(() => {
+        if (cancelled) return;
+        setNotifications([]);
+        setUnreadCount(0);
+        setNextCursor(null);
+      });
     }
-  }, [enabled, refresh]);
+
+    return () => {
+      cancelled = true;
+    };
+  }, [enabled, fetchPage]);
 
   useNotificationStream(enabled, {
     onConnected: setUnreadCount,

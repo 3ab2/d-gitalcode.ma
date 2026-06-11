@@ -5,6 +5,7 @@ import {
   getSiteUrl,
   SITE_NAME,
 } from "@/lib/seo/metadata";
+import { getSiteSettings } from "@/lib/settings";
 import { SessionProvider } from "@/components/providers/SessionProvider";
 import { NotificationProvider } from "@/components/notifications/NotificationProvider";
 import { SerwistProvider } from "@/components/providers/SerwistProvider";
@@ -12,8 +13,6 @@ import { PwaInstallProvider } from "@/components/pwa/PwaInstallProvider";
 import "./globals.css";
 
 const APP_NAME = "D-GITALCODE";
-const APP_DESCRIPTION =
-  "Professional web development and digital solutions platform.";
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -25,22 +24,22 @@ const geistMono = Geist_Mono({
   subsets: ["latin"],
 });
 
-export const metadata: Metadata = {
+export async function generateMetadata(): Promise<Metadata> {
+  const settings = await getSiteSettings();
+  const keywords = settings.seoKeywords
+    .split(",")
+    .map((k) => k.trim())
+    .filter(Boolean);
+
+  return {
   metadataBase: new URL(getSiteUrl()),
   applicationName: APP_NAME,
   title: {
-    default: "D-GITALCODE — Agence Digitale & Solutions WooCommerce",
+    default: settings.seoTitle,
     template: "%s | D-GITALCODE",
   },
-  description:
-    "Agence digitale spécialisée en développement web, applications mobiles, plugins WooCommerce et solutions eCommerce intelligentes.",
-  keywords: [
-    "développement web",
-    "WooCommerce",
-    "WhatsApp",
-    "WordPress plugins",
-    "agence digitale Maroc",
-  ],
+  description: settings.seoDescription,
+  keywords,
   authors: [{ name: APP_NAME }],
   manifest: "/manifest.webmanifest",
   appleWebApp: {
@@ -55,7 +54,7 @@ export const metadata: Metadata = {
     type: "website",
     locale: "fr_FR",
     siteName: SITE_NAME,
-    description: APP_DESCRIPTION,
+    description: settings.seoDescription,
     images: [
       {
         url: DEFAULT_OG_IMAGE,
@@ -96,6 +95,7 @@ export const metadata: Metadata = {
     shortcut: ["/favicon.ico"],
   },
 };
+}
 
 export const viewport: Viewport = {
   themeColor: "#0a0f14",

@@ -44,7 +44,18 @@ export default function AdminPortfolioPage() {
     setLoading(false);
   };
 
-  useEffect(() => { fetchProjects(); }, []);
+  useEffect(() => {
+    let cancelled = false;
+    void (async () => {
+      const res = await fetch("/api/admin/portfolio");
+      if (cancelled) return;
+      setProjects(await res.json());
+      setLoading(false);
+    })();
+    return () => {
+      cancelled = true;
+    };
+  }, []);
 
   const openCreate = () => { setEditing(null); setForm(emptyForm()); setShowForm(true); };
 

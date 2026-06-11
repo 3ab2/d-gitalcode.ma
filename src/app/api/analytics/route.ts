@@ -2,6 +2,9 @@ import { NextRequest, NextResponse } from "next/server";
 import { prisma } from "@/lib/prisma";
 import { requireAdmin } from "@/lib/auth";
 import { aggregateBlogAnalytics } from "@/lib/analytics/aggregate-blog";
+import { aggregateSupportMetrics } from "@/lib/analytics/support-metrics";
+import { enforceRateLimit, RATE_LIMITS } from "@/lib/rate-limit";
+import { logError } from "@/lib/logger";
 
 export async function GET() {
   const session = await requireAdmin();
@@ -75,7 +78,10 @@ export async function GET() {
       submissionsByDay[day] = (submissionsByDay[day] || 0) + 1;
     });
 
-    const blog = await aggregateBlogAnalytics(30);
+    const [blog, support] = await Promise.all([
+      aggregateBlogAnalytics(30),
+      aggregateSupportMetrics(),
+    ]);
 
     return NextResponse.json({
       totalSubmissions,
@@ -103,14 +109,21 @@ export async function GET() {
       submissionsByDay,
       recentEvents: recentEvents.slice(0, 10),
       blog,
+      support,
     });
   } catch (error) {
-    console.error("Analytics error:", error);
+    logError("analytics", error);
     return NextResponse.json({ error: "Internal server error" }, { status: 500 });
   }
 }
 
 export async function POST(request: NextRequest) {
+  const limited = await enforceRateLimit(request, {
+    name: "analytics",
+    config: RATE_LIMITS.analytics,
+  });
+  if (limited) return limited;
+
   try {
     const { event, page, metadata } = await request.json();
     await prisma.analyticsEvent.create({

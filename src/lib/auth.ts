@@ -29,7 +29,7 @@ export const { handlers, auth, signIn, signOut } = NextAuth({
           where: { email: credentials.email as string },
         });
 
-        if (!user?.password) return null;
+        if (!user?.password || !user.active) return null;
 
         const isValid = await bcrypt.compare(
           credentials.password as string,
@@ -51,12 +51,17 @@ export const { handlers, auth, signIn, signOut } = NextAuth({
     async jwt({ token, user }) {
       if (user) {
         token.role = (user as { role?: string }).role;
-      } else if (token.sub && !token.role) {
+        token.active = true;
+      }
+      if (token.sub) {
         const dbUser = await prisma.user.findUnique({
           where: { id: token.sub },
-          select: { role: true },
+          select: { role: true, active: true },
         });
-        if (dbUser) token.role = dbUser.role;
+        if (dbUser) {
+          token.role = dbUser.role;
+          token.active = dbUser.active;
+        }
       }
       return token;
     },
@@ -64,6 +69,9 @@ export const { handlers, auth, signIn, signOut } = NextAuth({
       if (session.user) {
         session.user.id = token.sub!;
         (session.user as { role?: string }).role = token.role as string;
+        if (token.active === false) {
+          return { ...session, user: undefined, expires: new Date(0).toISOString() };
+        }
       }
       return session;
     },
@@ -75,6 +83,14 @@ export async function requireAdmin() {
   if (!session?.user || !isAdminRole(session.user.role)) {
     return null;
   }
+
+  const dbUser = await prisma.user.findUnique({
+    where: { id: session.user.id },
+    select: { active: true },
+  });
+
+  if (!dbUser?.active) return null;
+
   return session;
 }
 
@@ -83,6 +99,14 @@ export async function requireClient() {
   if (!session?.user || !isClientRole(session.user.role)) {
     return null;
   }
+
+  const dbUser = await prisma.user.findUnique({
+    where: { id: session.user.id },
+    select: { active: true },
+  });
+
+  if (!dbUser?.active) return null;
+
   return session;
 }
 

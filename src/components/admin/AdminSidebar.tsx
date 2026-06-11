@@ -12,6 +12,8 @@ import {
   MessageSquare,
   Inbox,
   Share2,
+  Settings,
+  Users,
   LogOut,
   Menu,
   X,
@@ -27,7 +29,9 @@ const links = [
   { href: "/admin/blog", label: "Blog", icon: FileText },
   { href: "/admin/submissions", label: "Submissions", icon: MessageSquare },
   { href: "/admin/messages", label: "Support", icon: Inbox },
+  { href: "/admin/users", label: "Users", icon: Users },
   { href: "/admin/social", label: "Social Media", icon: Share2 },
+  { href: "/admin/settings", label: "Settings", icon: Settings },
 ];
 
 function SidebarNav({

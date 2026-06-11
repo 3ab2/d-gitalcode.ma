@@ -1,12 +1,24 @@
+import { CloudinaryStorageProvider } from "./cloudinary-provider";
 import { LocalStorageProvider } from "./local-provider";
+import { isCloudinaryConfigured } from "@/lib/cloudinary";
 import type { StorageProvider } from "./types";
 
 let provider: StorageProvider | null = null;
 
+function resolveDriver(): "cloudinary" | "local" {
+  const configured = process.env.STORAGE_DRIVER?.toLowerCase();
+  if (configured === "local") return "local";
+  if (configured === "cloudinary") return "cloudinary";
+  return isCloudinaryConfigured() ? "cloudinary" : "local";
+}
+
 export function getStorageProvider(): StorageProvider {
   if (!provider) {
-    const driver = process.env.STORAGE_DRIVER ?? "local";
+    const driver = resolveDriver();
     switch (driver) {
+      case "cloudinary":
+        provider = new CloudinaryStorageProvider();
+        break;
       case "local":
         provider = new LocalStorageProvider();
         break;

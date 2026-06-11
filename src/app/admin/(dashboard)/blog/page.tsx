@@ -54,7 +54,23 @@ export default function AdminBlogPage() {
     setLoading(false);
   };
 
-  useEffect(() => { fetchData(); }, []);
+  useEffect(() => {
+    let cancelled = false;
+    void (async () => {
+      const [postsRes, catsRes] = await Promise.all([
+        fetch("/api/admin/blog"),
+        fetch("/api/admin/categories"),
+      ]);
+      if (cancelled) return;
+      setPosts(await postsRes.json());
+      const catsData = await catsRes.json();
+      setCategories(catsData.categories || []);
+      setLoading(false);
+    })();
+    return () => {
+      cancelled = true;
+    };
+  }, []);
 
   const openCreate = () => { setEditing(null); setForm(emptyForm()); setPreview(false); setShowForm(true); };
 

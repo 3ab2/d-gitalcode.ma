@@ -4,10 +4,15 @@ import { MessageCircle } from "lucide-react";
 import { useTranslation } from "react-i18next";
 import { buildGeneralContactMessage, buildWhatsAppUrl } from "@/lib/whatsapp";
 import { type Locale } from "@/lib/i18n/settings";
+import { usePublicSettings } from "@/components/providers/PublicSettingsProvider";
 
 export function WhatsAppFloat({ locale }: { locale: Locale }) {
   const { t } = useTranslation();
-  const url = buildWhatsAppUrl(buildGeneralContactMessage(locale));
+  const settings = usePublicSettings();
+  const url = buildWhatsAppUrl(
+    buildGeneralContactMessage(locale),
+    settings.whatsappNumber
+  );
 
   return (
     <a

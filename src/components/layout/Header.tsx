@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useEffect, useRef, useCallback } from "react";
+import { useState, useEffect, useRef, useCallback, useSyncExternalStore } from "react";
 import { createPortal } from "react-dom";
 import Link from "next/link";
 import { Logo } from "@/components/brand/Logo";
@@ -18,7 +18,11 @@ export function Header({ locale }: { locale: Locale }) {
   const pathname = usePathname();
   const [mobileOpen, setMobileOpen] = useState(false);
   const [servicesOpen, setServicesOpen] = useState(false);
-  const [menuPortalReady, setMenuPortalReady] = useState(false);
+  const menuPortalReady = useSyncExternalStore(
+    () => () => {},
+    () => true,
+    () => false
+  );
   const mobileBarRef = useRef<HTMLElement>(null);
   const desktopBarRef = useRef<HTMLElement>(null);
   const headerHeight = useHeaderHeight(mobileBarRef, desktopBarRef);
@@ -55,10 +59,6 @@ export function Header({ locale }: { locale: Locale }) {
 
   const toggleMenu = useCallback(() => {
     setMobileOpen((open) => !open);
-  }, []);
-
-  useEffect(() => {
-    setMenuPortalReady(true);
   }, []);
 
   useEffect(() => {

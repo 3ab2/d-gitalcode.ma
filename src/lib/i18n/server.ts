@@ -24,8 +24,8 @@ const initI18next = async (locale: Locale) => {
 };
 
 export async function getMessages(locale: Locale, ns = "common") {
-  const module = await import(`../../../messages/${locale}/${ns}.json`);
-  return module.default;
+  const messagesModule = await import(`../../../messages/${locale}/${ns}.json`);
+  return messagesModule.default;
 }
 
 export async function getTranslation(locale: Locale, ns = "common") {

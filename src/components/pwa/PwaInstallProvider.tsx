@@ -7,6 +7,7 @@ import {
   useEffect,
   useMemo,
   useState,
+  useSyncExternalStore,
 } from "react";
 import { PwaInstallModal } from "@/components/pwa/PwaInstallModal";
 import { PwaInstallIosModal } from "@/components/pwa/PwaInstallIosModal";
@@ -57,12 +58,19 @@ export function PwaInstallProvider({ children }: { children: React.ReactNode }) 
   const [iosSafari, setIosSafari] = useState(false);
   const [nativeModalOpen, setNativeModalOpen] = useState(false);
   const [iosModalOpen, setIosModalOpen] = useState(false);
-  const [hydrated, setHydrated] = useState(false);
+  const hydrated = useSyncExternalStore(
+    () => () => {},
+    () => true,
+    () => false
+  );
 
   useEffect(() => {
-    setHydrated(true);
-    setIsInstalled(isPwaInstalled());
-    setIosSafari(isIosSafari());
+    let cancelled = false;
+    void Promise.resolve().then(() => {
+      if (cancelled) return;
+      setIsInstalled(isPwaInstalled());
+      setIosSafari(isIosSafari());
+    });
 
     const onBeforeInstall = (event: Event) => {
       event.preventDefault();
@@ -94,6 +102,7 @@ export function PwaInstallProvider({ children }: { children: React.ReactNode }) 
     document.addEventListener("visibilitychange", onVisibility);
 
     return () => {
+      cancelled = true;
       window.removeEventListener("beforeinstallprompt", onBeforeInstall);
       window.removeEventListener("appinstalled", onInstalled);
       document.removeEventListener("visibilitychange", onVisibility);

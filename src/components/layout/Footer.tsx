@@ -11,9 +11,15 @@ import { type SocialLinkConfig } from "@/config/social-links";
 export function Footer({
   locale,
   socialLinks,
+  contactEmail = CONTACT_EMAIL,
+  phone,
+  address,
 }: {
   locale: Locale;
   socialLinks: SocialLinkConfig[];
+  contactEmail?: string;
+  phone?: string;
+  address?: string;
 }) {
   const { t } = useTranslation();
   const basePath = `/${locale}`;
@@ -93,12 +99,14 @@ export function Footer({
             <ul className="mt-5 space-y-3 text-sm text-white/50">
               <li>
                 <a
-                  href={`mailto:${CONTACT_EMAIL}`}
+                  href={`mailto:${contactEmail}`}
                   className="transition-colors hover:text-brand-green"
                 >
-                  {CONTACT_EMAIL}
+                  {contactEmail}
                 </a>
               </li>
+              {phone && <li>{phone}</li>}
+              {address && <li>{address}</li>}
               <li>
                 <Link href={`${basePath}/contact`} className="transition-colors hover:text-brand-green">
                   {t("nav.contact")}

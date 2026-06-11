@@ -8,8 +8,8 @@ import { buildGeneralContactMessage, buildWhatsAppUrl } from "@/lib/whatsapp";
 import { MessageCircle } from "lucide-react";
 import { Button } from "@/components/ui/Button";
 import { SocialConnect } from "@/components/social/SocialConnect";
-import { CONTACT_EMAIL } from "@/config/contact";
 import { getSocialLinks } from "@/lib/social-links";
+import { getSiteSettings } from "@/lib/settings";
 import { buildPublicPageMetadata } from "@/lib/seo/metadata";
 
 export async function generateMetadata({
@@ -34,12 +34,14 @@ export default async function ContactPage({
   params: Promise<{ locale: string }>;
 }) {
   const { locale } = await params;
-  const [{ t }, socialLinks] = await Promise.all([
+  const [{ t }, socialLinks, settings] = await Promise.all([
     getTranslation(locale as Locale),
     getSocialLinks(),
+    getSiteSettings(),
   ]);
   const whatsappUrl = buildWhatsAppUrl(
-    buildGeneralContactMessage(locale as Locale)
+    buildGeneralContactMessage(locale as Locale),
+    settings.whatsappNumber
   );
 
   return (
@@ -64,11 +66,17 @@ export default async function ContactPage({
             </h3>
             <p className="mt-2 text-white/50">{t("contact.whatsappDesc")}</p>
             <a
-              href={`mailto:${CONTACT_EMAIL}`}
+              href={`mailto:${settings.contactEmail}`}
               className="mt-4 block text-sm text-brand-green hover:underline"
             >
-              {CONTACT_EMAIL}
+              {settings.contactEmail}
             </a>
+            {settings.phone && (
+              <p className="mt-2 text-sm text-white/50">{settings.phone}</p>
+            )}
+            {settings.address && (
+              <p className="mt-1 text-sm text-white/50">{settings.address}</p>
+            )}
             <a
               href={whatsappUrl}
               target="_blank"

@@ -8,6 +8,8 @@ import {
 } from "@/lib/attachments/service";
 import { validateAttachmentCount } from "@/lib/attachments/validation";
 import { notifyAdminsNewMessage } from "@/lib/notifications/events";
+import { enforceRateLimit, RATE_LIMITS } from "@/lib/rate-limit";
+import { logError } from "@/lib/logger";
 
 const createMessageSchema = z.object({
   subject: z.string().min(2).max(200).optional(),
@@ -67,6 +69,15 @@ export async function POST(request: NextRequest) {
     return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
   }
 
+  const limited = await enforceRateLimit(request, {
+    name: "messages",
+    config: RATE_LIMITS.messages,
+    identifier: `messages:user:${session.user.id}`,
+  });
+  if (limited) return limited;
+
+  let messageId: string | null = null;
+
   try {
     const { data, files } = await parseMessageRequest(request);
 
@@ -78,6 +89,7 @@ export async function POST(request: NextRequest) {
         status: "OPEN",
       },
     });
+    messageId = message.id;
 
     const attachments = await saveMessageAttachments(
       message.id,
@@ -107,6 +119,16 @@ export async function POST(request: NextRequest) {
       { status: 201 }
     );
   } catch (error) {
+    if (messageId) {
+      await prisma.clientMessage
+        .delete({ where: { id: messageId } })
+        .catch((deleteError) => {
+          console.error(
+            "[messages] Failed to rollback message:",
+            deleteError instanceof Error ? deleteError.message : deleteError
+          );
+        });
+    }
     if (error instanceof z.ZodError) {
       return NextResponse.json(
         { error: "validation_failed", details: error.issues },
@@ -119,7 +141,7 @@ export async function POST(request: NextRequest) {
         { status: 400 }
       );
     }
-    console.error("[messages] Create error:", error);
+    logError("messages", error);
     return NextResponse.json({ error: "internal_error" }, { status: 500 });
   }
 }

@@ -59,7 +59,35 @@ export default function AdminSocialPage() {
   };
 
   useEffect(() => {
-    fetchLinks();
+    let cancelled = false;
+    void (async () => {
+      const res = await fetch("/api/admin/social-links");
+      const data = await res.json();
+      if (cancelled) return;
+      if (res.ok) {
+        setLinks(
+          data.map((l: SocialLinkForm) => ({
+            platform: l.platform,
+            url: l.url,
+            label: l.label,
+            enabled: l.enabled ?? true,
+          }))
+        );
+      } else {
+        setLinks(
+          DEFAULT_SOCIAL_LINKS.map((l) => ({
+            platform: l.platform,
+            url: l.url,
+            label: l.label,
+            enabled: l.enabled ?? true,
+          }))
+        );
+      }
+      setLoading(false);
+    })();
+    return () => {
+      cancelled = true;
+    };
   }, []);
 
   const updateLink = (platform: SocialPlatform, field: keyof SocialLinkForm, value: string | boolean) => {

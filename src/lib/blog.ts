@@ -128,10 +128,17 @@ export function getPostTranslation<
 }
 
 export function getCategoryName(
-  category: { slug: string; translations: Array<{ name: string }> },
+  category: {
+    slug: string;
+    translations: Array<{ locale?: string; name: string }>;
+  },
   locale: Locale
 ) {
-  return category.translations[0]?.name ?? category.slug;
+  return (
+    category.translations.find((t) => t.locale === locale)?.name ??
+    category.translations[0]?.name ??
+    category.slug
+  );
 }
 
 export function getReadTimeMinutes(content: string): number {

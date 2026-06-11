@@ -35,7 +35,7 @@ function resolveLocale(): keyof typeof copy {
 }
 
 export default function OfflinePage() {
-  const locale = useMemo(resolveLocale, []);
+  const locale = useMemo(() => resolveLocale(), []);
   const t = copy[locale];
   const homeHref = `/${locale}`;
 

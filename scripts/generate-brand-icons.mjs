@@ -1,8 +1,8 @@
 import sharp from "sharp";
 import toIco from "to-ico";
-import { copyFile, mkdir, readFile, writeFile } from "fs/promises";
+import { copyFile, mkdir, writeFile } from "fs/promises";
 import { existsSync } from "fs";
-import { dirname, join } from "path";
+import { join } from "path";
 
 const root = process.cwd();
 const publicDir = join(root, "public");

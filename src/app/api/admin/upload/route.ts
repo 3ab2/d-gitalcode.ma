@@ -2,6 +2,11 @@ import { NextRequest, NextResponse } from "next/server";
 import { requireAdmin } from "@/lib/auth";
 import { uploadImage } from "@/lib/cloudinary";
 import { logAdminAction } from "@/lib/audit";
+import { logError } from "@/lib/logger";
+import {
+  AttachmentValidationError,
+  validateAdminImageFile,
+} from "@/lib/attachments/validation";
 
 export async function POST(request: NextRequest) {
   const session = await requireAdmin();
@@ -18,12 +23,14 @@ export async function POST(request: NextRequest) {
       return NextResponse.json({ error: "No file provided" }, { status: 400 });
     }
 
+    const { mimeType } = validateAdminImageFile(file);
+
     const bytes = await file.arrayBuffer();
     const buffer = Buffer.from(bytes);
-    const base64 = `data:${file.type};base64,${buffer.toString("base64")}`;
-    const url = await uploadImage(base64, folder);
+    const base64 = `data:${mimeType};base64,${buffer.toString("base64")}`;
+    const result = await uploadImage(base64, folder);
 
-    if (!url) {
+    if (!result) {
       return NextResponse.json(
         { error: "Upload failed. Check Cloudinary configuration." },
         { status: 500 }
@@ -35,12 +42,26 @@ export async function POST(request: NextRequest) {
       userEmail: session.user.email,
       action: "CREATE",
       entity: "media",
-      metadata: { url, folder },
+      metadata: {
+        url: result.secureUrl,
+        publicId: result.publicId,
+        folder,
+      },
     });
 
-    return NextResponse.json({ url });
+    return NextResponse.json({
+      url: result.secureUrl,
+      publicId: result.publicId,
+      optimizedUrl: result.optimizedUrl,
+    });
   } catch (error) {
-    console.error("Upload error:", error);
+    if (error instanceof AttachmentValidationError) {
+      return NextResponse.json(
+        { error: error.code, message: error.message },
+        { status: 400 }
+      );
+    }
+    logError("admin/upload", error);
     return NextResponse.json({ error: "Upload failed" }, { status: 500 });
   }
 }

@@ -96,7 +96,10 @@ export function SupportChat() {
   const [pendingFiles, setPendingFiles] = useState<PendingAttachment[]>([]);
   const [sending, setSending] = useState(false);
   const [uploadProgress, setUploadProgress] = useState<number | null>(null);
-  const [lastSeenId, setLastSeenId] = useState<string | null>(null);
+  const [lastSeenId, setLastSeenId] = useState<string | null>(() => {
+    if (typeof window === "undefined") return null;
+    return localStorage.getItem(SEEN_STORAGE_KEY);
+  });
   const [newMessageIds, setNewMessageIds] = useState<Set<string>>(new Set());
 
   const scrollRef = useRef<HTMLDivElement>(null);
@@ -128,11 +131,6 @@ export function SupportChat() {
   }, []);
 
   const dropZone = useAttachmentDropZone(addPendingFromDrop, sending);
-
-  useEffect(() => {
-    const stored = localStorage.getItem(SEEN_STORAGE_KEY);
-    if (stored) setLastSeenId(stored);
-  }, []);
 
   const markSeen = useCallback((items: ThreadItem[]) => {
     const last = items.at(-1);
@@ -173,10 +171,13 @@ export function SupportChat() {
 
   useEffect(() => {
     const el = scrollRef.current;
-    if (el) {
-      el.scrollTo({ top: el.scrollHeight, behavior: "smooth" });
-      if (thread.length > 0) markSeen(thread);
-    }
+    if (!el) return;
+    el.scrollTo({ top: el.scrollHeight, behavior: "smooth" });
+    if (thread.length === 0) return;
+    const frame = requestAnimationFrame(() => {
+      markSeen(thread);
+    });
+    return () => cancelAnimationFrame(frame);
   }, [thread, markSeen]);
 
   useEffect(() => {

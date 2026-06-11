@@ -69,10 +69,11 @@ interface ContactEmailData {
 }
 
 export async function sendContactNotification(
-  data: ContactEmailData
+  data: ContactEmailData,
+  options?: { notifyEmail?: string }
 ): Promise<EmailSendResult> {
   const client = getResendClient();
-  const adminEmail = getAdminNotifyEmail();
+  const adminEmail = options?.notifyEmail?.trim() || getAdminNotifyEmail();
 
   if (!client) {
     console.warn("[email] RESEND_API_KEY missing or invalid — skipping notification");

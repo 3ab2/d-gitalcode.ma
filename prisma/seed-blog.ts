@@ -51,7 +51,7 @@ function buildContent(
   return `${intro}<h2>${title}</h2>${body}${cta}`;
 }
 
-function metaTitle(title: string, locale: string) {
+function metaTitle(title: string) {
   return `${title} | ${AUTHOR}`;
 }
 
@@ -131,7 +131,7 @@ async function seedArticle(
           title: article.titles[locale],
           excerpt: article.excerpts[locale],
           content: buildContent(article, locale),
-          metaTitle: metaTitle(article.titles[locale], locale),
+          metaTitle: metaTitle(article.titles[locale]),
           metaDescription: `${article.excerpts[locale]} Mots-clés: ${article.keywords.join(", ")}.`,
         })),
       },
