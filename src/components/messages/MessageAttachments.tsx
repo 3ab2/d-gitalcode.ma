@@ -21,6 +21,7 @@ export type MessageAttachment = {
   createdAt: string;
   uploadedById?: string;
   uploadedByName?: string | null;
+  secureUrl?: string | null;
 };
 
 function getFileIcon(mimeType: string) {
@@ -41,11 +42,27 @@ function AttachmentImage({
   className?: string;
 }) {
   const [loaded, setLoaded] = useState(false);
-  const src = `/api/support/attachments/${attachment.id}`;
+  const [failed, setFailed] = useState(false);
+  const src =
+    attachment.secureUrl ?? `/api/support/attachments/${attachment.id}`;
+  const href = attachment.secureUrl ?? `/api/support/attachments/${attachment.id}`;
+
+  if (failed) {
+    return (
+      <div
+        className={cn(
+          "flex items-center justify-center rounded-xl border border-white/10 bg-white/[0.03] px-3 py-6 text-center text-[11px] text-white/40",
+          className
+        )}
+      >
+        {attachment.originalName}
+      </div>
+    );
+  }
 
   return (
     <a
-      href={src}
+      href={href}
       target="_blank"
       rel="noopener noreferrer"
       className={cn(
@@ -63,6 +80,7 @@ function AttachmentImage({
         loading="lazy"
         decoding="async"
         onLoad={() => setLoaded(true)}
+        onError={() => setFailed(true)}
         className={cn(
           "h-full w-full object-cover transition-opacity",
           loaded ? "opacity-100" : "opacity-0"

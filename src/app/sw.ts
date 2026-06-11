@@ -10,8 +10,25 @@ declare global {
 
 declare const self: ServiceWorkerGlobalScope;
 
+function dedupePrecacheEntries(
+  entries: (PrecacheEntry | string)[] | undefined
+): (PrecacheEntry | string)[] {
+  if (!entries?.length) return [];
+
+  const byPath = new Map<string, PrecacheEntry | string>();
+  for (const entry of entries) {
+    const raw = typeof entry === "string" ? entry : entry.url;
+    const pathname = raw.startsWith("http")
+      ? new URL(raw).pathname
+      : raw.split("?")[0];
+    byPath.set(pathname, entry);
+  }
+
+  return [...byPath.values()];
+}
+
 const serwist = new Serwist({
-  precacheEntries: self.__SW_MANIFEST,
+  precacheEntries: dedupePrecacheEntries(self.__SW_MANIFEST),
   skipWaiting: true,
   clientsClaim: true,
   navigationPreload: true,
@@ -36,8 +53,7 @@ const serwist = new Serwist({
     {
       matcher: ({ request, sameOrigin }) =>
         sameOrigin &&
-        (request.destination === "document" ||
-          request.mode === "navigate"),
+        (request.destination === "document" || request.mode === "navigate"),
       handler: new NetworkFirst({
         cacheName: "dgitalcode-pages",
         networkTimeoutSeconds: 8,

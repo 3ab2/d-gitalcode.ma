@@ -6,6 +6,7 @@ export type SerializedAttachment = {
   createdAt: string;
   uploadedById: string;
   uploadedByName?: string | null;
+  secureUrl?: string | null;
 };
 
 type AttachmentSource = {
@@ -16,6 +17,7 @@ type AttachmentSource = {
   createdAt: Date;
   uploadedById: string;
   uploadedByName?: string | null;
+  secureUrl?: string | null;
   uploadedBy?: { name: string | null } | null;
 };
 
@@ -29,5 +31,6 @@ export function serializeAttachment(attachment: AttachmentSource): SerializedAtt
     uploadedById: attachment.uploadedById,
     uploadedByName:
       attachment.uploadedByName ?? attachment.uploadedBy?.name ?? null,
+    secureUrl: attachment.secureUrl ?? null,
   };
 }

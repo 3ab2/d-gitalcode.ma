@@ -27,6 +27,7 @@ type AttachmentRow = {
   fileSize: number;
   createdAt: Date;
   uploadedById: string;
+  secureUrl?: string | null;
   uploadedBy?: { name: string | null } | null;
 };
 
