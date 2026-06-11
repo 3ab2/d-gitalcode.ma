@@ -4,7 +4,7 @@ export type BlogImageMapping = {
   alt: string;
 };
 
-export const BLOG_IMAGE_DEFAULT = "/images/blog-default.jpg";
+export const BLOG_IMAGE_DEFAULT = "/images/blog-default.webp";
 
 const UNSPLASH_BASE = "https://images.unsplash.com";
 

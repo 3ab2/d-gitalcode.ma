@@ -8,6 +8,11 @@ import {
 export const SITE_NAME = "D-GITALCODE";
 export const DEFAULT_OG_IMAGE = "/icons/android-chrome-512x512.png";
 
+/** Strip redundant site suffix; root layout template appends `| D-GITALCODE`. */
+export function normalizePageTitle(title: string): string {
+  return title.replace(/\s*\|\s*D-GITALCODE\s*$/i, "").trim();
+}
+
 const HREFLANG: Record<Locale, string> = {
   fr: "fr",
   en: "en",
@@ -85,9 +90,10 @@ export function buildPublicPageMetadata({
 }: PageMetadataInput): Metadata {
   const alternates = buildPageAlternates(path, locale);
   const canonical = alternates.canonical;
+  const pageTitle = normalizePageTitle(title);
 
   return {
-    title,
+    title: pageTitle,
     description,
     alternates,
     robots,
@@ -95,7 +101,7 @@ export function buildPublicPageMetadata({
       type: "website",
       siteName: SITE_NAME,
       locale: localeToInLanguage(locale),
-      title,
+      title: pageTitle,
       description,
       url: canonical,
       ...openGraph,
@@ -110,7 +116,7 @@ export function buildPublicPageMetadata({
     },
     twitter: {
       card: "summary_large_image",
-      title,
+      title: pageTitle,
       description,
       ...twitter,
     },

@@ -38,6 +38,7 @@
     "cloudinary:test": "tsx scripts/test-cloudinary.ts",
     "db:studio": "prisma studio",
     "assets:optimize": "node scripts/optimize-brand-assets.mjs",
+    "assets:optimize-public": "node scripts/optimize-public-images.mjs",
     "pwa:icons": "node scripts/generate-brand-icons.mjs",
     "icons:generate": "node scripts/generate-brand-icons.mjs",
     "postinstall": "prisma generate"

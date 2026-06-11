@@ -45,7 +45,7 @@ export async function generateMetadata({
   return buildPublicPageMetadata({
     locale: loc,
     path: `services/${slug}`,
-    title: meta?.title ? `${meta.title} | D-GITALCODE` : slug,
+    title: meta?.title ?? slug,
     description: meta?.desc,
   });
 }

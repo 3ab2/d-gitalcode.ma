@@ -21,7 +21,7 @@ export async function generateMetadata({
   return buildPublicPageMetadata({
     locale: loc,
     path: "portfolio",
-    title: `${t("portfolio.title")} | D-GITALCODE`,
+    title: t("portfolio.title"),
     description: t("portfolio.subtitle"),
   });
 }

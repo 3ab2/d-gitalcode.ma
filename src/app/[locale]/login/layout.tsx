@@ -6,7 +6,7 @@ import { isValidLocale } from "@/lib/i18n/settings";
 import { NOINDEX_ROBOTS } from "@/lib/seo/metadata";
 
 export const metadata: Metadata = {
-  title: "Login | D-GITALCODE",
+  title: "Login",
   robots: NOINDEX_ROBOTS,
 };
 

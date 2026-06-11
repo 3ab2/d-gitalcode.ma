@@ -18,7 +18,7 @@ export function HeroIllustration({ className }: HeroIllustrationProps) {
       />
 
       <Image
-        src="/hero.png"
+        src="/hero.webp"
         alt="D-GITALCODE — Web, Mobile, WordPress & Plugins"
         width={1200}
         height={900}

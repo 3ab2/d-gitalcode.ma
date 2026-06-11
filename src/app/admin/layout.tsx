@@ -2,7 +2,7 @@ import type { Metadata } from "next";
 import { NOINDEX_ROBOTS } from "@/lib/seo/metadata";
 
 export const metadata: Metadata = {
-  title: "Admin | D-GITALCODE",
+  title: "Admin",
   robots: NOINDEX_ROBOTS,
 };
 

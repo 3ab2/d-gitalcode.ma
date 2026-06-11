@@ -1,31 +1,44 @@
 import { NextRequest, NextResponse } from "next/server";
 import { z } from "zod";
 import { registerClient } from "@/lib/auth";
-import { enforceRateLimit, RATE_LIMITS } from "@/lib/rate-limit";
+import { enforceRateLimit, getClientIp, RATE_LIMITS } from "@/lib/rate-limit";
 import { logError } from "@/lib/logger";
-
-const registerSchema = z.object({
-  name: z.string().min(2).max(100),
-  email: z.string().email(),
-  password: z.string().min(8).max(128),
-});
+import { registerSchema } from "@/lib/register-validation";
 
 export async function POST(request: NextRequest) {
-  const limited = await enforceRateLimit(request, {
+  const ip = getClientIp(request);
+
+  const ipLimited = await enforceRateLimit(request, {
     name: "register",
     config: RATE_LIMITS.register,
+    identifier: `register:ip:${ip}`,
   });
-  if (limited) return limited;
+  if (ipLimited) return ipLimited;
 
   try {
     const body = await request.json();
+
+    if (typeof body?.website === "string" && body.website.trim().length > 0) {
+      return NextResponse.json({ success: true }, { status: 201 });
+    }
+
     const data = registerSchema.parse(body);
+
+    const emailLimited = await enforceRateLimit(request, {
+      name: "register-email",
+      config: RATE_LIMITS.register,
+      identifier: `register:email:${data.email}`,
+    });
+    if (emailLimited) return emailLimited;
 
     const result = await registerClient(data);
 
     if (!result.success) {
       return NextResponse.json(
-        { error: "email_exists", message: "An account with this email already exists." },
+        {
+          error: "email_exists",
+          message: "An account with this email already exists.",
+        },
         { status: 409 }
       );
     }

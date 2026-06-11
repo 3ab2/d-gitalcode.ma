@@ -28,10 +28,15 @@ export default function RegisterPage() {
     setLoading(true);
     setError("");
 
+    const form = e.currentTarget as HTMLFormElement;
+    const website = (
+      form.elements.namedItem("website") as HTMLInputElement | null
+    )?.value;
+
     const res = await fetch("/api/auth/register", {
       method: "POST",
       headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ name, email, password }),
+      body: JSON.stringify({ name, email, password, website: website ?? "" }),
     });
 
     if (!res.ok) {
@@ -73,6 +78,14 @@ export default function RegisterPage() {
           onSubmit={handleSubmit}
           className="rounded-2xl border border-white/10 bg-white/[0.02] p-8 space-y-5"
         >
+          <input
+            type="text"
+            name="website"
+            tabIndex={-1}
+            autoComplete="off"
+            aria-hidden
+            className="absolute -left-[9999px] h-0 w-0 opacity-0"
+          />
           <Input
             id="name"
             label={t("contact.name")}

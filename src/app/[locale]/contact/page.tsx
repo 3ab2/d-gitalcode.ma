@@ -23,7 +23,7 @@ export async function generateMetadata({
   return buildPublicPageMetadata({
     locale: loc,
     path: "contact",
-    title: `${t("contact.title")} | D-GITALCODE`,
+    title: t("contact.title"),
     description: t("contact.subtitle"),
   });
 }
