@@ -31,6 +31,9 @@ function formatUploadError(
   if (status === 413) {
     return `Image is too large. Maximum size is ${MAX_MB} MB.`;
   }
+  if (status === 503 && data.error?.includes("Cloudinary")) {
+    return data.error;
+  }
   if (status === 503 && data.error === "invalid_credentials") {
     return "Cloudinary credentials are invalid. Update CLOUDINARY_* in your environment.";
   }

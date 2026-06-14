@@ -63,7 +63,11 @@ export async function POST(request: NextRequest) {
 
     const cloudinaryStatus = getCloudinaryConfigStatus();
     if (!cloudinaryStatus.ok) {
-      return uploadError(cloudinaryStatus.message, 503);
+      const message =
+        process.env.VERCEL === "1"
+          ? `${cloudinaryStatus.message} Add them in Vercel → Project Settings → Environment Variables (Production).`
+          : cloudinaryStatus.message;
+      return uploadError(message, 503);
     }
 
     let formData: FormData;

@@ -8,13 +8,16 @@ import { logError } from "@/lib/logger";
 
 const CLOUDINARY_SDK_VERSION = "2.10.0";
 
-let configured = false;
+/** Re-configure when env credentials change (required on Vercel after env updates). */
+let configuredSignature = "";
 
 function ensureCloudinaryConfigured(): boolean {
   if (!isCloudinaryEnvConfigured()) return false;
 
-  if (!configured) {
-    const { cloudName, apiKey, apiSecret } = getCloudinaryConfig();
+  const { cloudName, apiKey, apiSecret } = getCloudinaryConfig();
+  const signature = `${cloudName}:${apiKey}:${apiSecret}`;
+
+  if (configuredSignature !== signature) {
     cloudinary.config({
       cloud_name: cloudName,
       api_key: apiKey,
@@ -22,7 +25,7 @@ function ensureCloudinaryConfigured(): boolean {
       secure: true,
       sdk_semver: CLOUDINARY_SDK_VERSION,
     });
-    configured = true;
+    configuredSignature = signature;
   }
 
   return true;
@@ -218,15 +221,19 @@ function classifyCloudinaryError(error: unknown): {
 
   if (
     text.includes("Invalid cloud_name") ||
+    text.includes("cloud_name is disabled") ||
     text.includes("Invalid API Key") ||
     text.includes("http_code\":401") ||
     text.includes("http_code\":403") ||
     text.includes("http_code: 401") ||
     text.includes("http_code: 403")
   ) {
+    const disabled = text.includes("cloud_name is disabled");
     return {
       reason: "invalid_credentials",
-      message: "Cloudinary rejected the credentials. Check CLOUDINARY_* in .env.",
+      message: disabled
+        ? "Cloudinary cloud is disabled or credentials are wrong. Update CLOUDINARY_* in Vercel Production env vars to match your active Cloudinary account."
+        : "Cloudinary rejected the credentials. Check CLOUDINARY_* in .env or Vercel env vars.",
     };
   }
 

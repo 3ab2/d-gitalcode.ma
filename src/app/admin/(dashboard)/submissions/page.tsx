@@ -119,6 +119,9 @@ function SubmissionsInbox() {
 
     try {
       const res = await fetch(`/api/admin/submissions/${sub.id}`);
+      if (res.status === 404) {
+        throw new Error("This lead no longer exists. It may have been deleted.");
+      }
       if (!res.ok) {
         throw new Error("Could not load lead details.");
       }
