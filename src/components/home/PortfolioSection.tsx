@@ -112,7 +112,13 @@ export function PortfolioSection({
                     ))}
                   </div>
                 )}
-                <div className="mt-6 flex gap-3">
+                <div className="mt-6 flex flex-wrap gap-3">
+                  <Link
+                    href={`${basePath}/portfolio/${project.slug}`}
+                    className="inline-flex min-h-11 touch-manipulation items-center gap-2 text-sm font-medium text-brand-green hover:underline"
+                  >
+                    {t("portfolio.viewProject")}
+                  </Link>
                   {project.url && (
                     <a
                       href={project.url}
@@ -125,7 +131,7 @@ export function PortfolioSection({
                     </a>
                   )}
                   <Link
-                    href={`${basePath}/portfolio`}
+                    href={`${basePath}/portfolio/${project.slug}`}
                     className="inline-flex min-h-11 items-center text-sm text-white/50 hover:text-white"
                   >
                     {t("home.portfolio.details")} →

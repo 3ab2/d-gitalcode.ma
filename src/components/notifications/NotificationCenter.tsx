@@ -1,8 +1,7 @@
 "use client";
 
 import { useEffect, useMemo, useRef } from "react";
-import { usePathname, useRouter } from "next/navigation";
-import { getSupportPath, resolveLocaleFromPathname } from "@/lib/auth-urls";
+import { useRouter } from "next/navigation";
 import { AnimatePresence, motion } from "framer-motion";
 import { Bell, CheckCheck, X } from "lucide-react";
 import { useTranslation } from "react-i18next";
@@ -52,7 +51,6 @@ export function NotificationCenter({
 }) {
   const { t } = useTranslation();
   const router = useRouter();
-  const pathname = usePathname();
   const {
     notifications,
     unreadCount,
@@ -76,14 +74,8 @@ export function NotificationCenter({
     if (!notification.isRead) {
       await markAsRead(notification.id);
     }
-    let href = notification.metadata?.href;
-    if (href === "support") {
-      const locale =
-        (notification.metadata?.locale as string | undefined) ??
-        resolveLocaleFromPathname(pathname);
-      href = getSupportPath(locale);
-    }
-    if (href) {
+    const href = notification.metadata?.href;
+    if (typeof href === "string" && href.startsWith("/admin")) {
       router.push(href);
       onClose();
     }

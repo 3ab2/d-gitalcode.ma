@@ -1,6 +1,7 @@
 import { NextRequest, NextResponse } from "next/server";
 import { z } from "zod";
 import { requireAdmin } from "@/lib/auth";
+import { SUPPORTED_CURRENCIES } from "@/lib/currency";
 import { getSiteSettings, upsertSiteSettings } from "@/lib/settings";
 import { logAdminAction } from "@/lib/audit";
 import { logError } from "@/lib/logger";
@@ -13,6 +14,8 @@ const settingsSchema = z.object({
   seoTitle: z.string().min(3).max(120).optional(),
   seoDescription: z.string().min(10).max(320).optional(),
   seoKeywords: z.string().min(3).max(500).optional(),
+  productDemoUrl: z.string().url().optional().or(z.literal("")),
+  defaultCurrency: z.enum(SUPPORTED_CURRENCIES).optional(),
 });
 
 export async function GET() {

@@ -9,7 +9,7 @@ import { Card } from "@/components/ui/Card";
 import { Button } from "@/components/ui/Button";
 import { Badge } from "@/components/ui/Badge";
 import { RequestServiceModal } from "./RequestServiceModal";
-import { formatPrice } from "@/lib/utils";
+import { useCurrency } from "@/components/providers/PublicSettingsProvider";
 import { type Locale } from "@/lib/i18n/settings";
 
 interface ServiceCardProps {
@@ -31,6 +31,7 @@ interface ServiceCardProps {
 
 export function ServiceCard({ locale, service }: ServiceCardProps) {
   const { t } = useTranslation();
+  const { formatPrice } = useCurrency();
   const [modalOpen, setModalOpen] = useState(false);
 
   return (
@@ -80,7 +81,7 @@ export function ServiceCard({ locale, service }: ServiceCardProps) {
                 <span className="text-sm text-white/50">{t("request.price")}: </span>
                 <span className="text-lg font-bold text-brand-green">
                   {service.priceLabel ||
-                    (service.price ? formatPrice(service.price) : "")}
+                    (service.price ? formatPrice(service.price, locale) : "")}
                 </span>
               </div>
             )}

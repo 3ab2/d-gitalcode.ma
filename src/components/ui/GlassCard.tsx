@@ -10,7 +10,7 @@ export function GlassCard({ children, className, hover = true }: GlassCardProps)
   return (
     <div
       className={cn(
-        "relative overflow-hidden rounded-2xl border border-white/[0.08] bg-brand-card/80 p-6 lg:bg-white/[0.03] lg:backdrop-blur-sm",
+        "relative overflow-visible rounded-2xl border border-white/[0.08] bg-brand-card/80 p-6 lg:overflow-hidden lg:bg-white/[0.03] lg:backdrop-blur-sm",
         hover &&
           "transition-all duration-300 hover:border-brand-green/20 hover:bg-white/[0.05] hover:shadow-lg hover:shadow-brand-green/5",
         className

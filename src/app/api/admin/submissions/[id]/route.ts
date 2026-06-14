@@ -1,7 +1,9 @@
 import { NextRequest, NextResponse } from "next/server";
+import { z } from "zod";
 import { prisma } from "@/lib/prisma";
 import { requireAdmin } from "@/lib/auth";
 import { logAdminAction } from "@/lib/audit";
+import { submissionStatusSchema } from "@/lib/admin/schemas";
 
 export async function GET(
   _request: NextRequest,
@@ -17,7 +19,6 @@ export async function GET(
     where: { id },
     include: {
       service: true,
-      replies: { orderBy: { createdAt: "asc" } },
     },
   });
 
@@ -38,23 +39,32 @@ export async function PATCH(
   }
 
   const { id } = await params;
-  const { status } = await request.json();
 
-  const submission = await prisma.contactSubmission.update({
-    where: { id },
-    data: { status },
-  });
+  try {
+    const body = await request.json();
+    const { status } = submissionStatusSchema.parse(body);
 
-  await logAdminAction({
-    userId: session.user.id,
-    userEmail: session.user.email,
-    action: "UPDATE",
-    entity: "submission",
-    entityId: id,
-    metadata: { status },
-  });
+    const submission = await prisma.contactSubmission.update({
+      where: { id },
+      data: { status },
+    });
 
-  return NextResponse.json(submission);
+    await logAdminAction({
+      userId: session.user.id,
+      userEmail: session.user.email,
+      action: "UPDATE",
+      entity: "submission",
+      entityId: id,
+      metadata: { status },
+    });
+
+    return NextResponse.json(submission);
+  } catch (error) {
+    if (error instanceof z.ZodError) {
+      return NextResponse.json({ error: error.issues }, { status: 400 });
+    }
+    return NextResponse.json({ error: "Failed to update" }, { status: 500 });
+  }
 }
 
 export async function DELETE(

@@ -4,7 +4,7 @@ import { getMessages } from "@/lib/i18n/server";
 import { I18nProvider } from "@/components/providers/I18nProvider";
 import { Header } from "@/components/layout/Header";
 import { Footer } from "@/components/layout/Footer";
-import { WhatsAppFloat } from "@/components/layout/WhatsAppFloat";
+import { ConversionFloat } from "@/components/layout/ConversionFloat";
 import { getSocialLinks } from "@/lib/social-links";
 import { getSiteSettings } from "@/lib/settings";
 import { PublicSettingsProvider } from "@/components/providers/PublicSettingsProvider";
@@ -43,8 +43,9 @@ export default async function LocaleLayout({
             contactEmail={siteSettings.contactEmail}
             phone={siteSettings.phone}
             address={siteSettings.address}
+            productDemoUrl={siteSettings.productDemoUrl}
           />
-          <WhatsAppFloat locale={locale as Locale} />
+          <ConversionFloat locale={locale as Locale} />
         </PublicSettingsProvider>
       </I18nProvider>
     </div>

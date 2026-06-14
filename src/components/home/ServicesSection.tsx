@@ -6,8 +6,7 @@ import { useTranslation } from "react-i18next";
 import { SectionHeading } from "@/components/ui/SectionHeading";
 import { GlassCard } from "@/components/ui/GlassCard";
 import { Button } from "@/components/ui/Button";
-import { Badge } from "@/components/ui/Badge";
-import { formatPrice } from "@/lib/utils";
+import { useCurrency } from "@/components/providers/PublicSettingsProvider";
 import { type Locale } from "@/lib/i18n/settings";
 
 const serviceIcons = {
@@ -47,6 +46,7 @@ export function ServicesSection({
   services: ServiceItem[];
 }) {
   const { t } = useTranslation();
+  const { formatPrice } = useCurrency();
   const basePath = `/${locale}`;
 
   return (
@@ -97,7 +97,7 @@ export function ServicesSection({
                     <p className="text-2xl font-bold text-brand-green">
                       {service.priceLabel ||
                         (service.price != null
-                          ? formatPrice(service.price)
+                          ? formatPrice(service.price, locale)
                           : t("home.services.custom"))}
                     </p>
                   </div>
@@ -114,10 +114,11 @@ export function ServicesSection({
         </div>
 
         <div className="mt-10 text-center">
-          <Link href={`${basePath}/contact`}>
-            <Badge variant="green" className="cursor-pointer px-4 py-2 text-sm">
-              {t("home.services.viewAll")} →
-            </Badge>
+          <Link
+            href={`${basePath}/services`}
+            className="inline-flex min-h-11 items-center text-sm font-medium text-brand-green hover:underline"
+          >
+            {t("services.viewAll")} →
           </Link>
         </div>
       </div>

@@ -2,7 +2,6 @@ import { NextRequest, NextResponse } from "next/server";
 import { prisma } from "@/lib/prisma";
 import { requireAdmin } from "@/lib/auth";
 import { aggregateBlogAnalytics } from "@/lib/analytics/aggregate-blog";
-import { aggregateSupportMetrics } from "@/lib/analytics/support-metrics";
 import { enforceRateLimit, RATE_LIMITS } from "@/lib/rate-limit";
 import { logError } from "@/lib/logger";
 
@@ -78,10 +77,7 @@ export async function GET() {
       submissionsByDay[day] = (submissionsByDay[day] || 0) + 1;
     });
 
-    const [blog, support] = await Promise.all([
-      aggregateBlogAnalytics(30),
-      aggregateSupportMetrics(),
-    ]);
+    const blog = await aggregateBlogAnalytics(30);
 
     return NextResponse.json({
       totalSubmissions,
@@ -109,7 +105,6 @@ export async function GET() {
       submissionsByDay,
       recentEvents: recentEvents.slice(0, 10),
       blog,
-      support,
     });
   } catch (error) {
     logError("analytics", error);

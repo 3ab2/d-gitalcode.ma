@@ -41,7 +41,7 @@ export function HomeContactSection({
             <h3 className="text-lg font-semibold text-white">{t("contact.title")}</h3>
             <p className="mt-2 text-sm text-white/50">{t("contact.subtitle")}</p>
             <div className="mt-8">
-              <ClientContactForm locale={locale} />
+              <ClientContactForm locale={locale} sourcePage="/#contact" />
             </div>
           </GlassCard>
 

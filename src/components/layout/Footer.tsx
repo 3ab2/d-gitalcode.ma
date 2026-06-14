@@ -14,12 +14,14 @@ export function Footer({
   contactEmail = CONTACT_EMAIL,
   phone,
   address,
+  productDemoUrl,
 }: {
   locale: Locale;
   socialLinks: SocialLinkConfig[];
   contactEmail?: string;
   phone?: string;
   address?: string;
+  productDemoUrl?: string;
 }) {
   const { t } = useTranslation();
   const basePath = `/${locale}`;
@@ -34,6 +36,7 @@ export function Footer({
 
   const quickLinks = [
     { href: basePath, label: t("nav.home") },
+    { href: `${basePath}/services`, label: t("nav.allServices") },
     { href: `${basePath}/about`, label: t("nav.about") },
     { href: `${basePath}/portfolio`, label: t("nav.portfolio") },
     { href: `${basePath}/blog`, label: t("nav.blog") },
@@ -112,16 +115,18 @@ export function Footer({
                   {t("nav.contact")}
                 </Link>
               </li>
-              <li>
-                <a
-                  href="https://whatsflow-demo.fwh.is"
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="transition-colors hover:text-brand-green"
-                >
-                  {t("footer.demo")}
-                </a>
-              </li>
+              {productDemoUrl ? (
+                <li>
+                  <a
+                    href={productDemoUrl}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="transition-colors hover:text-brand-green"
+                  >
+                    {t("footer.demo")}
+                  </a>
+                </li>
+              ) : null}
             </ul>
           </div>
         </div>

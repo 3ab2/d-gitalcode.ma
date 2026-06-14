@@ -148,8 +148,6 @@ export async function enforceRateLimit(
 
 export const RATE_LIMITS = {
   contact: { requests: 8, window: "1 h" as const },
-  messages: { requests: 30, window: "1 h" as const },
-  register: { requests: 5, window: "1 h" as const },
   analytics: { requests: 120, window: "1 m" as const },
   login: { requests: 10, window: "15 m" as const },
 } satisfies Record<string, LimitConfig>;

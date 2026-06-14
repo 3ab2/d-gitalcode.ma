@@ -7,12 +7,19 @@ type IconButtonProps = {
   label: string;
   className?: string;
   children: React.ReactNode;
+  onClick?: () => void;
 } & (
-  | { href: string; onClick?: never }
+  | { href: string; onClick?: () => void }
   | { href?: never; onClick: () => void }
 );
 
-export function IconButton({ label, className, children, href, onClick }: IconButtonProps) {
+export function IconButton({
+  label,
+  className,
+  children,
+  href,
+  onClick,
+}: IconButtonProps) {
   const classes = cn(
     "flex h-10 w-10 items-center justify-center rounded-xl border border-white/10",
     "text-white/70 transition-colors hover:border-brand-green/30 hover:bg-white/5 hover:text-brand-green",

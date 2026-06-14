@@ -6,8 +6,6 @@ import {
   SITE_NAME,
 } from "@/lib/seo/metadata";
 import { getSiteSettings } from "@/lib/settings";
-import { SessionProvider } from "@/components/providers/SessionProvider";
-import { NotificationProvider } from "@/components/notifications/NotificationProvider";
 import { SerwistProvider } from "@/components/providers/SerwistProvider";
 import { PwaInstallProvider } from "@/components/pwa/PwaInstallProvider";
 import "./globals.css";
@@ -117,11 +115,7 @@ export default function RootLayout({
     >
       <body className="min-h-full flex flex-col antialiased">
         <SerwistProvider>
-          <PwaInstallProvider>
-            <SessionProvider>
-              <NotificationProvider>{children}</NotificationProvider>
-            </SessionProvider>
-          </PwaInstallProvider>
+          <PwaInstallProvider>{children}</PwaInstallProvider>
         </SerwistProvider>
       </body>
     </html>

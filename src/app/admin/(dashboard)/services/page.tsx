@@ -6,6 +6,7 @@ import { Button } from "@/components/ui/Button";
 import { Badge } from "@/components/ui/Badge";
 import { ImageUpload } from "@/components/admin/ImageUpload";
 import { LocaleTabs } from "@/components/admin/LocaleTabs";
+import { useCurrency } from "@/components/providers/PublicSettingsProvider";
 
 interface Translation {
   locale: string;
@@ -48,6 +49,7 @@ const emptyForm = () => ({
 });
 
 export default function AdminServicesPage() {
+  const { formatPrice, symbol } = useCurrency();
   const [services, setServices] = useState<Service[]>([]);
   const [loading, setLoading] = useState(true);
   const [editing, setEditing] = useState<Service | null>(null);
@@ -172,7 +174,7 @@ export default function AdminServicesPage() {
                 <option value="WORDPRESS_PLUGINS">WordPress Plugins</option>
                 <option value="WORDPRESS_TEMPLATES">WordPress Templates</option>
               </select>
-              <input className="rounded-xl border border-white/10 bg-white/5 px-4 py-2 text-white text-sm" placeholder="Price (MAD)" value={form.price} onChange={(e) => setForm({ ...form, price: e.target.value })} />
+              <input className="rounded-xl border border-white/10 bg-white/5 px-4 py-2 text-white text-sm" placeholder={`Price (${symbol})`} value={form.price} onChange={(e) => setForm({ ...form, price: e.target.value })} />
               <input className="rounded-xl border border-white/10 bg-white/5 px-4 py-2 text-white text-sm" placeholder="Price Label" value={form.priceLabel} onChange={(e) => setForm({ ...form, priceLabel: e.target.value })} />
               <input className="rounded-xl border border-white/10 bg-white/5 px-4 py-2 text-white text-sm" placeholder="Demo URL" value={form.demoUrl} onChange={(e) => setForm({ ...form, demoUrl: e.target.value })} />
               <input className="rounded-xl border border-white/10 bg-white/5 px-4 py-2 text-white text-sm" placeholder="Display Order" value={form.order} onChange={(e) => setForm({ ...form, order: e.target.value })} />
@@ -206,7 +208,7 @@ export default function AdminServicesPage() {
                 {!service.published && <Badge>Unpublished</Badge>}
                 <Badge variant="default">#{service.order}</Badge>
               </div>
-              <p className="text-sm text-white/40 mt-1">{service.type} • {service.priceLabel || (service.price ? `${service.price} MAD` : "No price")}</p>
+              <p className="text-sm text-white/40 mt-1">{service.type} • {service.priceLabel || (service.price != null ? formatPrice(service.price, "en") : "No price")}</p>
             </div>
             <div className="flex gap-2">
               <button onClick={() => openEdit(service)} className="p-2 text-white/40 hover:text-brand-green"><Pencil className="h-4 w-4" /></button>

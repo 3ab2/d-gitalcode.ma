@@ -8,7 +8,16 @@ export function middleware(request: NextRequest) {
   const legacyMessages = pathname.match(/^\/(fr|en|ar)\/messages(\/.*)?$/);
   if (legacyMessages) {
     return NextResponse.redirect(
-      new URL(`/${legacyMessages[1]}/support`, request.url)
+      new URL(`/${legacyMessages[1]}/contact`, request.url)
+    );
+  }
+
+  const removedAuthPaths = pathname.match(
+    /^\/(fr|en|ar)\/(login|register|support)(\/.*)?$/
+  );
+  if (removedAuthPaths) {
+    return NextResponse.redirect(
+      new URL(`/${removedAuthPaths[1]}`, request.url)
     );
   }
 

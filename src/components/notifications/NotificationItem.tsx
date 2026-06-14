@@ -1,21 +1,19 @@
 "use client";
 
-import { Headphones, MessageCircle, Bell, User, FolderKanban } from "lucide-react";
+import { Bell, User, FolderKanban, UserPlus } from "lucide-react";
 import type { NotificationType } from "@prisma/client";
 import { cn, formatRelativeTime } from "@/lib/utils";
 import type { SerializedNotification } from "@/lib/notifications/types";
 
 const TYPE_ICONS: Record<NotificationType, typeof Bell> = {
-  SUPPORT_REPLY: Headphones,
-  NEW_MESSAGE: MessageCircle,
+  NEW_LEAD: UserPlus,
   SYSTEM: Bell,
   ACCOUNT: User,
   PROJECT_UPDATE: FolderKanban,
 };
 
 const TYPE_COLORS: Record<NotificationType, string> = {
-  SUPPORT_REPLY: "bg-brand-green/15 text-brand-green",
-  NEW_MESSAGE: "bg-brand-purple/15 text-brand-purple",
+  NEW_LEAD: "bg-brand-green/15 text-brand-green",
   SYSTEM: "bg-white/10 text-white/70",
   ACCOUNT: "bg-amber-400/15 text-amber-300",
   PROJECT_UPDATE: "bg-sky-400/15 text-sky-300",

@@ -1,7 +1,6 @@
 "use client";
 
-import { useState, useEffect, useRef, useCallback, useSyncExternalStore } from "react";
-import { createPortal } from "react-dom";
+import { useState, useEffect, useRef, useCallback } from "react";
 import Link from "next/link";
 import { Logo } from "@/components/brand/Logo";
 import { usePathname } from "next/navigation";
@@ -11,21 +10,21 @@ import { cn } from "@/lib/utils";
 import { type Locale, localeNames, locales } from "@/lib/i18n/settings";
 import { Button } from "@/components/ui/Button";
 import { useHeaderHeight } from "@/hooks/useHeaderHeight";
-import { AuthNav } from "@/components/layout/AuthNav";
+import { useMediaQuery } from "@/hooks/useMediaQuery";
+import { useBodyScrollLock } from "@/hooks/useBodyScrollLock";
 
 export function Header({ locale }: { locale: Locale }) {
   const { t } = useTranslation();
   const pathname = usePathname();
   const [mobileOpen, setMobileOpen] = useState(false);
   const [servicesOpen, setServicesOpen] = useState(false);
-  const menuPortalReady = useSyncExternalStore(
-    () => () => {},
-    () => true,
-    () => false
-  );
+  const menuOpenedAtRef = useRef(0);
   const mobileBarRef = useRef<HTMLElement>(null);
   const desktopBarRef = useRef<HTMLElement>(null);
   const headerHeight = useHeaderHeight(mobileBarRef, desktopBarRef);
+  const isDesktop = useMediaQuery("(min-width: 1024px)");
+
+  useBodyScrollLock(mobileOpen && !isDesktop);
 
   const basePath = `/${locale}`;
 
@@ -34,6 +33,7 @@ export function Header({ locale }: { locale: Locale }) {
     {
       label: t("nav.services"),
       children: [
+        { href: `${basePath}/services`, label: t("nav.allServices") },
         { href: `${basePath}/services/web-development`, label: t("nav.webDev") },
         { href: `${basePath}/services/mobile-apps`, label: t("nav.mobileApps") },
         { href: `${basePath}/services/wordpress-plugins`, label: t("nav.wpPlugins") },
@@ -57,30 +57,50 @@ export function Header({ locale }: { locale: Locale }) {
     setServicesOpen(false);
   }, []);
 
+  const handleMobileNavClick = useCallback(() => {
+    closeMenu();
+  }, [closeMenu]);
+
   const toggleMenu = useCallback(() => {
-    setMobileOpen((open) => !open);
+    setMobileOpen((open) => {
+      if (!open) menuOpenedAtRef.current = Date.now();
+      return !open;
+    });
   }, []);
 
-  useEffect(() => {
-    document.body.style.overflow = mobileOpen ? "hidden" : "";
-    return () => {
-      document.body.style.overflow = "";
-    };
-  }, [mobileOpen]);
+  const handleOverlayClose = useCallback(() => {
+    if (Date.now() - menuOpenedAtRef.current < 350) return;
+    closeMenu();
+  }, [closeMenu]);
 
-  const mobileMenuPanel = (
+  useEffect(() => {
+    queueMicrotask(closeMenu);
+  }, [pathname, closeMenu]);
+
+  useEffect(() => {
+    if (!mobileOpen) return;
+
+    const onKeyDown = (event: KeyboardEvent) => {
+      if (event.key === "Escape") closeMenu();
+    };
+
+    document.addEventListener("keydown", onKeyDown);
+    return () => document.removeEventListener("keydown", onKeyDown);
+  }, [mobileOpen, closeMenu]);
+
+  const mobileMenuPanel = mobileOpen && !isDesktop && (
     <>
       <button
         type="button"
         aria-label="Close menu overlay"
-        className="site-menu-overlay fixed inset-x-0 bottom-0 cursor-pointer bg-black/60 lg:hidden"
-        style={{ top: headerHeight, zIndex: 9997 }}
-        onClick={closeMenu}
+        className="site-menu-overlay fixed inset-x-0 bottom-0 cursor-pointer bg-black/60 touch-manipulation lg:hidden"
+        style={{ top: headerHeight, zIndex: 10101 }}
+        onClick={handleOverlayClose}
       />
       <nav
         id="mobile-navigation"
-        className="site-mobile-nav fixed inset-x-0 overflow-y-auto border-t border-white/10 bg-brand-dark lg:hidden"
-        style={{ top: headerHeight, zIndex: 9998, maxHeight: `calc(100dvh - ${headerHeight}px)` }}
+        className="site-mobile-nav fixed inset-x-0 overflow-y-auto overscroll-contain border-t border-white/10 bg-brand-dark lg:hidden"
+        style={{ top: headerHeight, zIndex: 10102, maxHeight: `calc(100dvh - ${headerHeight}px)` }}
       >
         <div className="space-y-1 px-4 py-4">
           {navLinks.map((link) =>
@@ -90,6 +110,7 @@ export function Header({ locale }: { locale: Locale }) {
                   type="button"
                   onClick={() => setServicesOpen((open) => !open)}
                   className="flex min-h-11 w-full cursor-pointer touch-manipulation items-center justify-between rounded-lg px-4 py-3 text-white/80 active:bg-white/5"
+                  aria-expanded={servicesOpen}
                 >
                   {link.label}
                   <ChevronDown
@@ -105,7 +126,7 @@ export function Header({ locale }: { locale: Locale }) {
                       <Link
                         key={child.href}
                         href={child.href}
-                        onClick={closeMenu}
+                        onClick={handleMobileNavClick}
                         className="block min-h-11 cursor-pointer touch-manipulation rounded-lg px-4 py-3 text-sm text-white/65 active:bg-white/5 active:text-brand-green"
                       >
                         {child.label}
@@ -118,7 +139,7 @@ export function Header({ locale }: { locale: Locale }) {
               <Link
                 key={link.href}
                 href={link.href!}
-                onClick={closeMenu}
+                onClick={handleMobileNavClick}
                 className="block min-h-11 cursor-pointer touch-manipulation rounded-lg px-4 py-3 text-white/80 active:bg-white/5 active:text-white"
               >
                 {link.label}
@@ -130,7 +151,7 @@ export function Header({ locale }: { locale: Locale }) {
               <Link
                 key={l}
                 href={switchLocale(l)}
-                onClick={closeMenu}
+                onClick={handleMobileNavClick}
                 className={cn(
                   "min-h-11 flex-1 cursor-pointer touch-manipulation rounded-lg border py-3 text-center text-xs",
                   l === locale
@@ -142,10 +163,11 @@ export function Header({ locale }: { locale: Locale }) {
               </Link>
             ))}
           </div>
-          <div className="mt-4 space-y-1 border-t border-white/10 pt-4">
-            <AuthNav locale={locale} />
-          </div>
-          <Link href={`${basePath}/contact`} onClick={closeMenu} className="mt-4 block">
+          <Link
+            href={`${basePath}/contact`}
+            onClick={handleMobileNavClick}
+            className="mt-4 block touch-manipulation"
+          >
             <Button className="w-full">{t("nav.contact")}</Button>
           </Link>
         </div>
@@ -155,116 +177,115 @@ export function Header({ locale }: { locale: Locale }) {
 
   return (
     <>
-      {/* Mobile navbar — rendered in React tree (reliable on iOS Safari/Chrome) */}
-      <header
-        ref={mobileBarRef}
-        className="site-header site-header-mobile site-header-bar border-b border-white/[0.06] bg-brand-dark lg:hidden"
-      >
-        <div className="mx-auto flex h-16 min-h-16 items-center justify-between px-4 sm:px-6 md:h-20 md:min-h-20">
-          <Link
-            href={basePath}
-            className="flex h-14 shrink-0 items-center md:h-16"
-            aria-label="D-GITALCODE"
-          >
-            <Logo size="md" priority />
-          </Link>
+      {!isDesktop ? (
+        <header
+          ref={mobileBarRef}
+          className="site-header site-header-mobile site-header-bar site-chrome border-b border-white/[0.06] bg-brand-dark"
+        >
+          <div className="mx-auto flex h-16 min-h-16 items-center justify-between px-4 sm:px-6 md:h-20 md:min-h-20">
+            <Link
+              href={basePath}
+              className="relative z-[1] flex h-14 shrink-0 items-center md:h-16"
+              aria-label="D-GITALCODE"
+            >
+              <Logo size="md" priority />
+            </Link>
 
-          <button
-            type="button"
-            className="menu-toggle flex h-11 min-h-11 w-11 min-w-11 shrink-0 cursor-pointer touch-manipulation items-center justify-center rounded-lg text-white/90 transition-colors hover:bg-white/10 active:bg-white/15"
-            onClick={toggleMenu}
-            aria-label={mobileOpen ? "Close menu" : "Open menu"}
-            aria-expanded={mobileOpen}
-            aria-controls="mobile-navigation"
-          >
-            {mobileOpen ? (
-              <X className="pointer-events-none h-6 w-6" aria-hidden />
-            ) : (
-              <Menu className="pointer-events-none h-6 w-6" aria-hidden />
-            )}
-          </button>
-        </div>
-      </header>
+            <button
+              type="button"
+              className="menu-toggle relative z-[2] flex h-11 min-h-11 w-11 min-w-11 shrink-0 cursor-pointer touch-manipulation items-center justify-center rounded-lg text-white/90 transition-colors hover:bg-white/10 active:bg-white/15"
+              onClick={toggleMenu}
+              aria-label={mobileOpen ? "Close menu" : "Open menu"}
+              aria-expanded={mobileOpen}
+              aria-controls="mobile-navigation"
+            >
+              {mobileOpen ? (
+                <X className="pointer-events-none h-6 w-6" aria-hidden />
+              ) : (
+                <Menu className="pointer-events-none h-6 w-6" aria-hidden />
+              )}
+            </button>
+          </div>
+        </header>
+      ) : (
+        <header
+          ref={desktopBarRef}
+          className="site-header site-header-desktop site-header-bar site-chrome border-b border-white/[0.06] bg-brand-dark/95 backdrop-blur-xl"
+        >
+          <div className="mx-auto flex h-[5.625rem] min-h-[5.625rem] max-w-7xl items-center justify-between gap-4 px-8">
+            <Link href={basePath} className="flex shrink-0 items-center" aria-label="D-GITALCODE">
+              <Logo size="md" priority />
+            </Link>
 
-      {/* Desktop navbar */}
-      <header
-        ref={desktopBarRef}
-        className="site-header site-header-desktop site-header-bar hidden border-b border-white/[0.06] bg-brand-dark/95 backdrop-blur-xl lg:block"
-      >
-        <div className="mx-auto flex h-[5.625rem] min-h-[5.625rem] max-w-7xl items-center justify-between gap-4 px-8">
-          <Link href={basePath} className="flex shrink-0 items-center" aria-label="D-GITALCODE">
-            <Logo size="md" priority />
-          </Link>
-
-          <nav className="flex flex-1 items-center justify-center gap-0.5">
-            {navLinks.map((link) =>
-              link.children ? (
-                <div key={link.label} className="group relative">
-                  <button
-                    type="button"
-                    className="flex cursor-pointer items-center gap-1 px-3.5 py-2 text-sm font-medium text-white/65 transition-colors hover:text-white"
-                  >
-                    {link.label}
-                    <ChevronDown className="h-4 w-4" />
-                  </button>
-                  <div className="invisible absolute left-0 top-full pt-2 opacity-0 transition-all group-hover:visible group-hover:opacity-100">
-                    <div className="min-w-[220px] rounded-xl border border-white/10 bg-brand-dark/95 p-2 shadow-xl backdrop-blur-xl">
-                      {link.children.map((child) => (
-                        <Link
-                          key={child.href}
-                          href={child.href}
-                          className="block rounded-lg px-4 py-2.5 text-sm text-white/70 transition-colors hover:bg-white/5 hover:text-brand-green"
-                        >
-                          {child.label}
-                        </Link>
-                      ))}
+            <nav className="flex flex-1 items-center justify-center gap-0.5">
+              {navLinks.map((link) =>
+                link.children ? (
+                  <div key={link.label} className="group relative">
+                    <button
+                      type="button"
+                      className="flex cursor-pointer items-center gap-1 px-3.5 py-2 text-sm font-medium text-white/65 transition-colors hover:text-white"
+                    >
+                      {link.label}
+                      <ChevronDown className="h-4 w-4" />
+                    </button>
+                    <div className="invisible absolute left-0 top-full pt-2 opacity-0 transition-all group-hover:visible group-hover:opacity-100">
+                      <div className="min-w-[220px] rounded-xl border border-white/10 bg-brand-dark/95 p-2 shadow-xl backdrop-blur-xl">
+                        {link.children.map((child) => (
+                          <Link
+                            key={child.href}
+                            href={child.href}
+                            className="block rounded-lg px-4 py-2.5 text-sm text-white/70 transition-colors hover:bg-white/5 hover:text-brand-green"
+                          >
+                            {child.label}
+                          </Link>
+                        ))}
+                      </div>
                     </div>
                   </div>
-                </div>
-              ) : (
-                <Link
-                  key={link.href}
-                  href={link.href!}
-                  className={cn(
-                    "rounded-lg px-3.5 py-2 text-sm font-medium transition-colors",
-                    pathname === link.href
-                      ? "text-brand-green"
-                      : "text-white/65 hover:text-white"
-                  )}
-                >
-                  {link.label}
-                </Link>
-              )
-            )}
-          </nav>
+                ) : (
+                  <Link
+                    key={link.href}
+                    href={link.href!}
+                    className={cn(
+                      "rounded-lg px-3.5 py-2 text-sm font-medium transition-colors",
+                      pathname === link.href
+                        ? "text-brand-green"
+                        : "text-white/65 hover:text-white"
+                    )}
+                  >
+                    {link.label}
+                  </Link>
+                )
+              )}
+            </nav>
 
-          <div className="flex shrink-0 items-center gap-3">
-            <div className="flex items-center gap-1 rounded-lg border border-white/10 p-1">
-              {locales.map((l) => (
-                <Link
-                  key={l}
-                  href={switchLocale(l)}
-                  className={cn(
-                    "rounded-md px-2 py-1 text-xs transition-colors",
-                    l === locale
-                      ? "bg-brand-green/20 text-brand-green"
-                      : "text-white/50 hover:text-white"
-                  )}
-                >
-                  {l.toUpperCase()}
-                </Link>
-              ))}
+            <div className="flex shrink-0 items-center gap-3">
+              <div className="flex items-center gap-1 rounded-lg border border-white/10 p-1">
+                {locales.map((l) => (
+                  <Link
+                    key={l}
+                    href={switchLocale(l)}
+                    className={cn(
+                      "rounded-md px-2 py-1 text-xs transition-colors",
+                      l === locale
+                        ? "bg-brand-green/20 text-brand-green"
+                        : "text-white/50 hover:text-white"
+                    )}
+                  >
+                    {l.toUpperCase()}
+                  </Link>
+                ))}
+              </div>
+
+              <Link href={`${basePath}/contact`}>
+                <Button size="sm">{t("nav.contact")}</Button>
+              </Link>
             </div>
-
-            <AuthNav locale={locale} />
-            <Link href={`${basePath}/contact`}>
-              <Button size="sm">{t("nav.contact")}</Button>
-            </Link>
           </div>
-        </div>
-      </header>
+        </header>
+      )}
 
-      {menuPortalReady && mobileOpen ? createPortal(mobileMenuPanel, document.body) : null}
+      {mobileMenuPanel}
     </>
   );
 }

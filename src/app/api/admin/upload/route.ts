@@ -4,9 +4,9 @@ import { uploadImage } from "@/lib/cloudinary";
 import { logAdminAction } from "@/lib/audit";
 import { logError } from "@/lib/logger";
 import {
-  AttachmentValidationError,
+  UploadValidationError,
   validateAdminImageFile,
-} from "@/lib/attachments/validation";
+} from "@/lib/admin/upload-validation";
 
 export async function POST(request: NextRequest) {
   const session = await requireAdmin();
@@ -55,7 +55,7 @@ export async function POST(request: NextRequest) {
       optimizedUrl: result.optimizedUrl,
     });
   } catch (error) {
-    if (error instanceof AttachmentValidationError) {
+    if (error instanceof UploadValidationError) {
       return NextResponse.json(
         { error: error.code, message: error.message },
         { status: 400 }

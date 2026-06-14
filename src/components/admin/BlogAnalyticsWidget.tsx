@@ -1,6 +1,6 @@
 "use client";
 
-import { BookOpen, Eye, FileText, Headphones, MousePointerClick, TrendingUp } from "lucide-react";
+import { BookOpen, Eye, FileText, MousePointerClick, TrendingUp } from "lucide-react";
 import { StatCard } from "@/components/admin/StatCard";
 import { SimpleBarChart } from "@/components/admin/SimpleBarChart";
 import type { BlogAnalyticsSummary } from "@/lib/analytics/aggregate-blog";
@@ -72,7 +72,7 @@ export function BlogAnalyticsWidget({ blog }: { blog: BlogAnalyticsSummary }) {
         </div>
       </div>
 
-      <div className="mb-6 grid grid-cols-1 gap-4 sm:grid-cols-2 xl:grid-cols-4">
+      <div className="mb-6 grid grid-cols-1 gap-4 sm:grid-cols-2 xl:grid-cols-3">
         <StatCard title="Article Views" value={blog.totalViews} icon={Eye} color="green" />
         <StatCard title="Articles Read (80%+)" value={blog.totalReads} icon={BookOpen} color="purple" />
         <StatCard
@@ -80,12 +80,6 @@ export function BlogAnalyticsWidget({ blog }: { blog: BlogAnalyticsSummary }) {
           value={blog.quoteRequests}
           icon={MousePointerClick}
           color="green"
-        />
-        <StatCard
-          title="Support Requests (Blog)"
-          value={blog.supportRequests}
-          icon={Headphones}
-          color="purple"
         />
       </div>
 

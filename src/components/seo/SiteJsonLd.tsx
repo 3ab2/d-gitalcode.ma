@@ -30,14 +30,6 @@ export function SiteJsonLd({ locale }: { locale: Locale }) {
         url: siteUrl,
         publisher: { "@id": `${siteUrl}/#organization` },
         inLanguage: [locale],
-        potentialAction: {
-          "@type": "SearchAction",
-          target: {
-            "@type": "EntryPoint",
-            urlTemplate: `${localizedUrl(locale, "blog")}?q={search_term_string}`,
-          },
-          "query-input": "required name=search_term_string",
-        },
       },
       {
         "@type": "WebPage",

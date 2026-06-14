@@ -4,24 +4,7 @@ import { prisma } from "@/lib/prisma";
 import { requireAdmin } from "@/lib/auth";
 import { logAdminAction } from "@/lib/audit";
 
-const portfolioSchema = z.object({
-  slug: z.string(),
-  image: z.string().optional(),
-  url: z.string().optional(),
-  githubUrl: z.string().optional(),
-  technologies: z.array(z.string()).optional(),
-  featured: z.boolean().optional(),
-  published: z.boolean().optional(),
-  order: z.number().optional(),
-  translations: z.array(
-    z.object({
-      locale: z.string(),
-      title: z.string(),
-      description: z.string(),
-      client: z.string().optional(),
-    })
-  ),
-});
+import { portfolioSchema } from "@/lib/admin/schemas";
 
 export async function GET() {
   const session = await requireAdmin();
@@ -51,8 +34,9 @@ export async function POST(request: NextRequest) {
       data: {
         slug: data.slug,
         image: data.image,
-        url: data.url,
-        githubUrl: data.githubUrl,
+        gallery: data.gallery ?? [],
+        url: data.url || null,
+        githubUrl: data.githubUrl || null,
         technologies: data.technologies ?? [],
         featured: data.featured ?? false,
         published: data.published ?? true,

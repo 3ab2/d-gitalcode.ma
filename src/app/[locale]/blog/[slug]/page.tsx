@@ -17,6 +17,7 @@ import {
   injectHeadingIds,
   resolvePostImage,
 } from "@/lib/blog";
+import { sanitizeBlogHtml } from "@/lib/sanitize-html";
 import { getBlogImageAbsoluteUrl } from "@/lib/blog-images";
 import { buildPageAlternates, buildPublicPageMetadata } from "@/lib/seo/metadata";
 import { TableOfContents } from "@/components/blog/TableOfContents";
@@ -106,7 +107,7 @@ export default async function BlogPostPage({
   const cover = resolvePostImage(post, translation?.title || slug);
 
   const rawContent = translation?.content || "";
-  const contentWithIds = injectHeadingIds(rawContent);
+  const contentWithIds = sanitizeBlogHtml(injectHeadingIds(rawContent));
   const headings = extractHeadings(contentWithIds);
   const readTime = getReadTimeMinutes(rawContent);
 
@@ -238,7 +239,6 @@ export default async function BlogPostPage({
                   title: t("blog.cta.title"),
                   subtitle: t("blog.cta.subtitle"),
                   quote: t("blog.cta.quote"),
-                  support: t("blog.cta.support"),
                 }}
               />
 

@@ -1,6 +1,6 @@
 import { sendAnalyticsEvent } from "@/lib/analytics/client";
 
-export type BlogCtaAction = "quote" | "support";
+export type BlogCtaAction = "quote";
 
 export type BlogCtaEvent = {
   event: BlogCtaAction;
@@ -42,10 +42,7 @@ export function trackBlogCtaClick(
 
   writeQueue([...readQueue(), entry]);
 
-  const eventName =
-    action === "quote" ? "blog_cta_quote_click" : "blog_cta_support_click";
-
-  sendAnalyticsEvent(eventName, `/${locale}/blog/${slug}`, {
+  sendAnalyticsEvent("blog_cta_quote_click", `/${locale}/blog/${slug}`, {
     slug,
     locale,
     action,

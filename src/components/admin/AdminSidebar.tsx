@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import Link from "next/link";
 import { Logo } from "@/components/brand/Logo";
 import { usePathname } from "next/navigation";
@@ -10,10 +10,7 @@ import {
   FileText,
   FolderOpen,
   MessageSquare,
-  Inbox,
-  Share2,
   Settings,
-  Users,
   LogOut,
   Menu,
   X,
@@ -27,19 +24,18 @@ const links = [
   { href: "/admin/services", label: "Services", icon: Briefcase },
   { href: "/admin/portfolio", label: "Portfolio", icon: FolderOpen },
   { href: "/admin/blog", label: "Blog", icon: FileText },
-  { href: "/admin/submissions", label: "Submissions", icon: MessageSquare },
-  { href: "/admin/messages", label: "Support", icon: Inbox },
-  { href: "/admin/users", label: "Users", icon: Users },
-  { href: "/admin/social", label: "Social Media", icon: Share2 },
+  { href: "/admin/submissions", label: "Leads", icon: MessageSquare, showNewBadge: true },
   { href: "/admin/settings", label: "Settings", icon: Settings },
 ];
 
 function SidebarNav({
   pathname,
   onNavigate,
+  newLeadsCount,
 }: {
   pathname: string;
   onNavigate?: () => void;
+  newLeadsCount: number;
 }) {
   return (
     <nav className="flex-1 space-y-1 overflow-y-auto p-4">
@@ -63,7 +59,12 @@ function SidebarNav({
             )}
           >
             <Icon className="h-5 w-5 shrink-0" />
-            {link.label}
+            <span className="flex-1">{link.label}</span>
+            {link.showNewBadge && newLeadsCount > 0 && (
+              <span className="rounded-full bg-brand-green px-2 py-0.5 text-xs font-semibold text-brand-dark">
+                {newLeadsCount > 99 ? "99+" : newLeadsCount}
+              </span>
+            )}
           </Link>
         );
       })}
@@ -74,6 +75,18 @@ function SidebarNav({
 export function AdminSidebar() {
   const pathname = usePathname();
   const [mobileOpen, setMobileOpen] = useState(false);
+  const [newLeadsCount, setNewLeadsCount] = useState(0);
+
+  useEffect(() => {
+    void fetch("/api/admin/submissions/stats")
+      .then((res) => (res.ok ? res.json() : null))
+      .then((data) => {
+        if (data?.newLeads != null) setNewLeadsCount(data.newLeads);
+      })
+      .catch(() => {
+        /* optional badge */
+      });
+  }, [pathname]);
 
   const closeMobile = () => setMobileOpen(false);
 
@@ -137,7 +150,7 @@ export function AdminSidebar() {
           </div>
         </div>
 
-        <SidebarNav pathname={pathname} onNavigate={closeMobile} />
+        <SidebarNav pathname={pathname} onNavigate={closeMobile} newLeadsCount={newLeadsCount} />
 
         <div className="hidden border-t border-white/10 p-4 lg:block">
           <button

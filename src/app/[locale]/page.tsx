@@ -8,6 +8,8 @@ import { getHomepageServiceCategories } from "@/lib/services";
 import { getSocialLinks } from "@/lib/social-links";
 import { inferPortfolioCategory, estimateReadTime } from "@/lib/portfolio-category";
 import { Hero } from "@/components/home/Hero";
+import { AgencyMapSection } from "@/components/home/agency-map/AgencyMapSection";
+import { TrustSection } from "@/components/home/TrustSection";
 import { ServicesSection } from "@/components/home/ServicesSection";
 import { PortfolioSection } from "@/components/home/PortfolioSection";
 import { BlogPreviewSection } from "@/components/home/BlogPreviewSection";
@@ -118,6 +120,8 @@ export default async function HomePage({
     <>
       <SiteJsonLd locale={locale as Locale} />
       <Hero locale={locale as Locale} stats={data.stats} />
+      <AgencyMapSection locale={locale as Locale} />
+      <TrustSection locale={locale as Locale} />
       <ServicesSection locale={locale as Locale} services={data.services} />
       <PortfolioSection locale={locale as Locale} projects={data.projects} />
       <BlogPreviewSection locale={locale as Locale} posts={data.posts} />

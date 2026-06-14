@@ -1,5 +1,7 @@
 import type { Metadata } from "next";
 import { NOINDEX_ROBOTS } from "@/lib/seo/metadata";
+import { SessionProvider } from "@/components/providers/SessionProvider";
+import { NotificationProvider } from "@/components/notifications/NotificationProvider";
 
 export const metadata: Metadata = {
   title: "Admin",
@@ -11,5 +13,11 @@ export default function AdminLayout({
 }: {
   children: React.ReactNode;
 }) {
-  return <div className="min-h-screen bg-brand-dark">{children}</div>;
+  return (
+    <div className="min-h-screen bg-brand-dark">
+      <SessionProvider>
+        <NotificationProvider>{children}</NotificationProvider>
+      </SessionProvider>
+    </div>
+  );
 }

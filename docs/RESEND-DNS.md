@@ -42,11 +42,10 @@ Update environment variables (local `.env` + Vercel):
 EMAIL_FROM="D-GITALCODE <noreply@d-igitalcode.ma>"
 ```
 
-Redeploy, then test admin replies:
+Redeploy, then test contact notifications:
 
 ```bash
 npm run email:test
-npx tsx scripts/test-reply-email.ts client@example.com
 ```
 
 ## Registrar tips

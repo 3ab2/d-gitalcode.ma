@@ -1,7 +1,7 @@
 "use client";
 
 import Link from "next/link";
-import { ArrowRight, Headphones, Sparkles } from "lucide-react";
+import { ArrowRight, Sparkles } from "lucide-react";
 import { Button } from "@/components/ui/Button";
 import { trackBlogCtaClick } from "@/lib/analytics/blog-cta";
 
@@ -10,7 +10,6 @@ export type BlogCTALabels = {
   title: string;
   subtitle: string;
   quote: string;
-  support: string;
 };
 
 export function BlogCTA({
@@ -25,7 +24,6 @@ export function BlogCTA({
   labels: BlogCTALabels;
 }) {
   const quoteHref = `${basePath}/contact?from=blog&article=${encodeURIComponent(slug)}`;
-  const supportHref = `${basePath}/support?from=blog&article=${encodeURIComponent(slug)}`;
 
   return (
     <section
@@ -60,7 +58,7 @@ export function BlogCTA({
           {labels.subtitle}
         </p>
 
-        <div className="mt-8 flex flex-col gap-3 sm:flex-row sm:flex-wrap">
+        <div className="mt-8">
           <Link
             href={quoteHref}
             onClick={() => trackBlogCtaClick("quote", slug, locale)}
@@ -69,16 +67,6 @@ export function BlogCTA({
             <Button size="lg" className="w-full sm:w-auto">
               {labels.quote}
               <ArrowRight className="h-4 w-4" aria-hidden />
-            </Button>
-          </Link>
-          <Link
-            href={supportHref}
-            onClick={() => trackBlogCtaClick("support", slug, locale)}
-            className="inline-flex"
-          >
-            <Button variant="outline" size="lg" className="w-full sm:w-auto">
-              <Headphones className="h-4 w-4" aria-hidden />
-              {labels.support}
             </Button>
           </Link>
         </div>

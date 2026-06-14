@@ -4,12 +4,14 @@ import { type Locale } from "@/lib/i18n/settings";
 import { SectionHeading } from "@/components/ui/SectionHeading";
 import { Card } from "@/components/ui/Card";
 import { ClientContactForm } from "@/components/contact/ClientContactForm";
+import { ContactTrustSignals } from "@/components/contact/ContactTrustSignals";
 import { buildGeneralContactMessage, buildWhatsAppUrl } from "@/lib/whatsapp";
 import { MessageCircle } from "lucide-react";
 import { Button } from "@/components/ui/Button";
 import { SocialConnect } from "@/components/social/SocialConnect";
 import { getSocialLinks } from "@/lib/social-links";
 import { getSiteSettings } from "@/lib/settings";
+import { getAllServices, mapService } from "@/lib/services";
 import { buildPublicPageMetadata } from "@/lib/seo/metadata";
 
 export async function generateMetadata({
@@ -34,27 +36,42 @@ export default async function ContactPage({
   params: Promise<{ locale: string }>;
 }) {
   const { locale } = await params;
-  const [{ t }, socialLinks, settings] = await Promise.all([
-    getTranslation(locale as Locale),
+  const loc = locale as Locale;
+  const [{ t }, socialLinks, settings, services] = await Promise.all([
+    getTranslation(loc),
     getSocialLinks(),
     getSiteSettings(),
+    getAllServices(loc),
   ]);
   const whatsappUrl = buildWhatsAppUrl(
-    buildGeneralContactMessage(locale as Locale),
+    buildGeneralContactMessage(loc),
     settings.whatsappNumber
   );
+  const serviceOptions = services.map((service) => ({
+    id: service.id,
+    name: mapService(service).title,
+  }));
 
   return (
     <section className="pt-10 pb-16 md:pt-12">
       <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
         <SectionHeading
           title={t("contact.title")}
-          subtitle={t("contact.subtitle")}
+          subtitle={t("contact.headline")}
         />
+
+        <div className="mt-10">
+          <ContactTrustSignals />
+        </div>
 
         <div className="mt-16 grid grid-cols-1 lg:grid-cols-2 gap-8">
           <Card>
-            <ClientContactForm locale={locale as Locale} />
+            <p className="mb-6 text-sm text-white/60">{t("contact.promise")}</p>
+            <ClientContactForm
+              locale={loc}
+              sourcePage="/contact"
+              serviceOptions={serviceOptions}
+            />
           </Card>
 
           <Card className="flex flex-col justify-center items-center text-center">

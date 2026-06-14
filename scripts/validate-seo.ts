@@ -19,11 +19,7 @@ const PUBLIC_PAGES = [
   },
 ];
 
-const NOINDEX_PAGES = [
-  "/fr/login",
-  "/fr/register",
-  "/fr/support",
-];
+const NOINDEX_PAGES = ["/admin/login"];
 
 type Check = { name: string; pass: boolean; detail?: string };
 

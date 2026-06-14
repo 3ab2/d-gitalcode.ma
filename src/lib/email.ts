@@ -65,6 +65,9 @@ interface ContactEmailData {
   phone?: string;
   message: string;
   serviceName?: string;
+  serviceInterest?: string;
+  budgetRange?: string;
+  sourcePage?: string;
   type: string;
 }
 
@@ -86,12 +89,15 @@ export async function sendContactNotification(
 
   const html = `
     <h2>New ${data.type === "SERVICE_REQUEST" ? "Service Request" : "Contact"} Message</h2>
-    <p><strong>Name:</strong> ${data.name}</p>
-    <p><strong>Email:</strong> ${data.email}</p>
-    ${data.phone ? `<p><strong>Phone:</strong> ${data.phone}</p>` : ""}
-    ${data.serviceName ? `<p><strong>Service:</strong> ${data.serviceName}</p>` : ""}
+    <p><strong>Name:</strong> ${escapeHtml(data.name)}</p>
+    <p><strong>Email:</strong> ${escapeHtml(data.email)}</p>
+    ${data.phone ? `<p><strong>Phone:</strong> ${escapeHtml(data.phone)}</p>` : ""}
+    ${data.serviceName ? `<p><strong>Service:</strong> ${escapeHtml(data.serviceName)}</p>` : ""}
+    ${data.serviceInterest ? `<p><strong>Interest:</strong> ${escapeHtml(data.serviceInterest)}</p>` : ""}
+    ${data.budgetRange ? `<p><strong>Budget:</strong> ${escapeHtml(data.budgetRange)}</p>` : ""}
+    ${data.sourcePage ? `<p><strong>Source:</strong> ${escapeHtml(data.sourcePage)}</p>` : ""}
     <p><strong>Message:</strong></p>
-    <p>${data.message.replace(/\n/g, "<br>")}</p>
+    <p>${escapeHtml(data.message).replace(/\n/g, "<br>")}</p>
   `;
 
   const { data: result, error } = await client.emails.send({
@@ -110,79 +116,6 @@ export async function sendContactNotification(
       error: formatResendError(error),
     };
   }
-
-  return { success: true, id: result?.id };
-}
-
-interface ReplyEmailData {
-  to: string;
-  subject: string;
-  message: string;
-  clientName: string;
-}
-
-export async function sendReplyEmail(
-  data: ReplyEmailData
-): Promise<EmailSendResult> {
-  const client = getResendClient();
-  const clientEmail = data.to.trim();
-
-  if (!client) {
-    console.error("[email] Reply aborted — RESEND_API_KEY not configured");
-    return { success: false, reason: "not_configured" };
-  }
-
-  if (!isDeliverableClientEmail(clientEmail)) {
-    const error = `Invalid or placeholder client email: ${clientEmail}`;
-    console.error("[email] Reply aborted —", error);
-    return { success: false, reason: "invalid_recipient", error };
-  }
-
-  const html = `
-    <p>Bonjour ${escapeHtml(data.clientName)},</p>
-    <div>${data.message.replace(/\n/g, "<br>")}</div>
-    <br>
-    <p>— L'équipe D-GITALCODE</p>
-    <p style="color:#888;font-size:12px;">Répondez à cet email pour contacter notre équipe.</p>
-  `;
-
-  const from = getEmailFrom();
-  const replyTo = getAdminNotifyEmail();
-
-  console.info("[email] Sending admin reply", {
-    from,
-    to: clientEmail,
-    replyTo,
-    subject: data.subject,
-  });
-
-  const { data: result, error } = await client.emails.send({
-    from,
-    to: clientEmail,
-    replyTo,
-    subject: data.subject,
-    html,
-  });
-
-  if (error) {
-    const errorInfo = formatResendError(error);
-    console.error("[email] Admin reply failed:", {
-      to: clientEmail,
-      from,
-      error: errorInfo,
-      raw: error,
-    });
-    return {
-      success: false,
-      reason: "send_failed",
-      error: errorInfo,
-    };
-  }
-
-  console.info("[email] Admin reply sent", {
-    to: clientEmail,
-    id: result?.id,
-  });
 
   return { success: true, id: result?.id };
 }

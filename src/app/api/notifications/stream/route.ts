@@ -21,55 +21,87 @@ export async function GET(request: Request) {
 
   let since = new Date();
   let closed = false;
+  let pollId: ReturnType<typeof setInterval> | undefined;
+  let heartbeatId: ReturnType<typeof setInterval> | undefined;
+  let cleanup: (() => void) | undefined;
 
   const stream = new ReadableStream({
-    async start(controller) {
-      const send = (payload: unknown) => {
+    start(controller) {
+      cleanup = () => {
         if (closed) return;
-        controller.enqueue(
-          encoder.encode(`data: ${JSON.stringify(payload)}\n\n`)
-        );
-      };
-
-      const initialUnread = await getUnreadCount(userId);
-      send({ type: "connected", unreadCount: initialUnread });
-
-      const poll = async () => {
-        if (closed) return;
-        try {
-          const newItems = await getNotificationsSince(userId, since);
-          if (newItems.length > 0) {
-            since = new Date(newItems[newItems.length - 1]!.createdAt);
-            for (const item of newItems) {
-              send({ type: "notification", notification: item });
-            }
-          }
-          const unreadCount = await getUnreadCount(userId);
-          send({ type: "unread_count", count: unreadCount });
-        } catch (error) {
-          console.error("[notifications/stream] poll error:", error);
-        }
-      };
-
-      await poll();
-
-      const pollId = setInterval(() => void poll(), POLL_MS);
-      const heartbeatId = setInterval(() => {
-        if (!closed) {
-          controller.enqueue(encoder.encode(": heartbeat\n\n"));
-        }
-      }, HEARTBEAT_MS);
-
-      request.signal.addEventListener("abort", () => {
         closed = true;
-        clearInterval(pollId);
-        clearInterval(heartbeatId);
+        if (pollId) clearInterval(pollId);
+        if (heartbeatId) clearInterval(heartbeatId);
+        pollId = undefined;
+        heartbeatId = undefined;
         try {
           controller.close();
         } catch {
           /* already closed */
         }
-      });
+      };
+
+      const enqueue = (chunk: Uint8Array) => {
+        if (closed) return false;
+        try {
+          controller.enqueue(chunk);
+          return true;
+        } catch {
+          cleanup?.();
+          return false;
+        }
+      };
+
+      const send = (payload: unknown) => {
+        enqueue(encoder.encode(`data: ${JSON.stringify(payload)}\n\n`));
+      };
+
+      const poll = async () => {
+        if (closed) return;
+        try {
+          const newItems = await getNotificationsSince(userId, since);
+          if (closed) return;
+
+          if (newItems.length > 0) {
+            since = new Date(newItems[newItems.length - 1]!.createdAt);
+            for (const item of newItems) {
+              if (closed) return;
+              send({ type: "notification", notification: item });
+            }
+          }
+
+          const unreadCount = await getUnreadCount(userId);
+          if (closed) return;
+          send({ type: "unread_count", count: unreadCount });
+        } catch (error) {
+          if (!closed) {
+            console.error("[notifications/stream] poll error:", error);
+          }
+        }
+      };
+
+      void (async () => {
+        const initialUnread = await getUnreadCount(userId);
+        if (closed) return;
+        send({ type: "connected", unreadCount: initialUnread });
+        if (closed) return;
+
+        await poll();
+        if (closed) return;
+
+        pollId = setInterval(() => {
+          void poll();
+        }, POLL_MS);
+
+        heartbeatId = setInterval(() => {
+          enqueue(encoder.encode(": heartbeat\n\n"));
+        }, HEARTBEAT_MS);
+      })();
+
+      request.signal.addEventListener("abort", () => cleanup?.(), { once: true });
+    },
+    cancel() {
+      cleanup?.();
     },
   });
 

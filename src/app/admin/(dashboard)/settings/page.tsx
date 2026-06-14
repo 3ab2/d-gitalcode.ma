@@ -1,6 +1,7 @@
 "use client";
 
 import { useEffect, useState } from "react";
+import { useRouter } from "next/navigation";
 import { Save } from "lucide-react";
 import { Button } from "@/components/ui/Button";
 import { Input } from "@/components/ui/Input";
@@ -10,6 +11,7 @@ import { GitHubIcon } from "@/components/social/GitHubIcon";
 import { InstagramIcon } from "@/components/social/InstagramIcon";
 import { KofiIcon } from "@/components/social/KofiIcon";
 import { LinkedInIcon } from "@/components/social/LinkedInIcon";
+import { CURRENCY_OPTIONS, type CurrencyCode } from "@/lib/currency";
 import type { SiteSettings } from "@/lib/site-settings";
 
 interface SocialLinkForm {
@@ -30,6 +32,7 @@ const platformMeta: Record<
 };
 
 export default function AdminSettingsPage() {
+  const router = useRouter();
   const [settings, setSettings] = useState<SiteSettings | null>(null);
   const [socialLinks, setSocialLinks] = useState<SocialLinkForm[]>([]);
   const [loading, setLoading] = useState(true);
@@ -98,6 +101,7 @@ export default function AdminSettingsPage() {
     if (settingsRes.ok && socialRes.ok) {
       setMessage({ type: "success", text: "Settings saved successfully." });
       setSettings(await settingsRes.json());
+      router.refresh();
     } else {
       setMessage({ type: "error", text: "Failed to save settings. Please try again." });
     }
@@ -118,7 +122,7 @@ export default function AdminSettingsPage() {
       <div className="mb-8">
         <h1 className="text-2xl font-bold text-white">Site Settings</h1>
         <p className="mt-2 text-sm text-white/50">
-          Contact details, social links and global SEO configuration.
+          Contact details, currency, social links and global SEO configuration.
         </p>
       </div>
 
@@ -155,6 +159,43 @@ export default function AdminSettingsPage() {
             onChange={(e) => setSettings({ ...settings, address: e.target.value })}
             required
           />
+          <Input
+            id="productDemoUrl"
+            label="Product demo URL (footer link)"
+            type="url"
+            value={settings.productDemoUrl}
+            onChange={(e) => setSettings({ ...settings, productDemoUrl: e.target.value })}
+          />
+        </section>
+
+        <section className="rounded-2xl border border-white/10 bg-white/[0.02] p-6 space-y-4">
+          <h2 className="text-sm font-semibold text-white">Currency Management</h2>
+          <p className="text-sm text-white/50">
+            Default currency for service prices, packages, invoices, dashboard stats, and all
+            pricing displays across the website and admin panel.
+          </p>
+          <div className="space-y-2">
+            <label htmlFor="defaultCurrency" className="block text-sm font-medium text-white/80">
+              Default currency
+            </label>
+            <select
+              id="defaultCurrency"
+              value={settings.defaultCurrency}
+              onChange={(e) =>
+                setSettings({
+                  ...settings,
+                  defaultCurrency: e.target.value as CurrencyCode,
+                })
+              }
+              className="min-h-11 w-full appearance-none rounded-xl border border-white/10 bg-white/5 px-4 py-3 text-base text-white transition-colors focus:border-brand-green/50 focus:outline-none focus:ring-2 focus:ring-brand-green/20"
+            >
+              {CURRENCY_OPTIONS.map((option) => (
+                <option key={option.code} value={option.code} className="bg-brand-dark">
+                  {option.code} — {option.name} ({option.symbol})
+                </option>
+              ))}
+            </select>
+          </div>
         </section>
 
         <section className="space-y-4">

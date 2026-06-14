@@ -1,102 +1,212 @@
 "use client";
 
+import dynamic from "next/dynamic";
 import Link from "next/link";
-import { HeroIllustration } from "@/components/brand/HeroIllustration";
+import { useEffect, useState } from "react";
+import { motion } from "framer-motion";
 import { useTranslation } from "react-i18next";
 import { ArrowRight, CheckCircle2, Sparkles } from "lucide-react";
 import { Button } from "@/components/ui/Button";
+import { CodeRainCanvas } from "@/components/home/hero/CodeRainCanvas";
+import { HeroIntroControls } from "@/components/home/hero/HeroIntroControls";
+import { useHeroIntro } from "@/components/home/hero/useHeroIntro";
 import { type Locale } from "@/lib/i18n/settings";
+
+const HeroParticles = dynamic(
+  () =>
+    import("@/components/home/hero/HeroParticles").then((mod) => mod.HeroParticles),
+  { ssr: false }
+);
+
+const HeroBrandPulse = dynamic(
+  () =>
+    import("@/components/home/hero/HeroBrandPulse").then((mod) => mod.HeroBrandPulse),
+  {
+    ssr: false,
+    loading: () => (
+      <span className="inline-flex h-10 w-10 shrink-0 rounded-full bg-brand-green/15 ring-1 ring-brand-green/30" />
+    ),
+  }
+);
 
 interface HeroProps {
   locale: Locale;
   stats: { key: string; value: string; label: string }[];
 }
 
+const easeOut = [0.22, 1, 0.36, 1] as const;
+
 export function Hero({ locale, stats }: HeroProps) {
   const { t } = useTranslation();
   const basePath = `/${locale}`;
   const trustItems = t("hero.trust", { returnObjects: true }) as string[];
 
+  const {
+    hydrated,
+    skipped,
+    introComplete,
+    animateIntro,
+    reducedMotion: prefersReducedMotion,
+    skipIntro,
+  } = useHeroIntro();
+
+  const [parallax, setParallax] = useState({ x: 0, y: 0 });
+
+  useEffect(() => {
+    if (prefersReducedMotion) return;
+
+    const onMove = (event: MouseEvent) => {
+      const x = (event.clientX / window.innerWidth - 0.5) * 2;
+      const y = (event.clientY / window.innerHeight - 0.5) * 2;
+      setParallax({ x, y });
+    };
+
+    window.addEventListener("mousemove", onMove, { passive: true });
+    return () => window.removeEventListener("mousemove", onMove);
+  }, [prefersReducedMotion]);
+
+  const showEffects = hydrated && !prefersReducedMotion;
+  const motionReady = introComplete || skipped || prefersReducedMotion;
+
+  const containerVariants = {
+    hidden: {},
+    visible: {
+      transition: {
+        staggerChildren: motionReady ? 0 : 0.1,
+        delayChildren: motionReady ? 0 : 0.55,
+      },
+    },
+  };
+
+  const itemVariants = {
+    hidden: {
+      opacity: 1,
+      y: motionReady ? 0 : 32,
+    },
+    visible: {
+      opacity: 1,
+      y: 0,
+      transition: { duration: motionReady ? 0 : 0.8, ease: easeOut },
+    },
+  };
+
   return (
-    <section className="hero-section premium-grid">
-      {/* Layer 0 — ambient glows (green + blue, max ~25% opacity) */}
-      <div className="hero-ambient" aria-hidden>
-        <div className="hero-ambient-glow -left-32 top-0 h-[26rem] w-[26rem] bg-brand-green/25 sm:-left-40 sm:top-10 sm:h-[28rem] sm:w-[28rem]" />
-        <div className="hero-ambient-glow -right-32 bottom-0 h-[22rem] w-[22rem] bg-brand-purple/20 sm:-right-40 sm:bottom-10 sm:h-[24rem] sm:w-[24rem]" />
-        <div className="hero-ambient-glow left-1/2 top-1/3 h-[18rem] w-[36rem] -translate-x-1/2 bg-brand-green/10" />
+    <section className="hero-section hero-cinematic premium-grid">
+      <div className="hero-cinematic-backdrop" aria-hidden>
+        {showEffects && (
+          <>
+            <CodeRainCanvas active parallaxX={parallax.x} parallaxY={parallax.y} />
+            <HeroParticles active />
+          </>
+        )}
+        <div className="hero-cinematic-overlay" />
+        <div className="hero-ambient">
+          <div className="hero-ambient-glow -left-32 top-0 h-[30rem] w-[30rem] bg-brand-green/15 sm:-left-40 sm:h-[34rem] sm:w-[34rem]" />
+          <div className="hero-ambient-glow -right-32 bottom-0 h-[24rem] w-[24rem] bg-brand-purple/12 sm:-right-40 sm:h-[28rem] sm:w-[28rem]" />
+        </div>
       </div>
 
-      {/* Layer 10 — all readable content sits above backgrounds */}
-      <div className="hero-content mx-auto w-full max-w-7xl px-4 pb-10 sm:px-6 sm:pb-14 lg:px-8 lg:pb-20">
-        <div className="grid items-center gap-12 lg:grid-cols-2 lg:gap-16">
-          <div className="hero-fade-in">
-            <div className="mb-6 inline-flex items-center gap-2 rounded-full border border-brand-green/25 bg-brand-green/15 px-4 py-1.5 text-sm font-medium text-brand-green">
-              <Sparkles className="h-4 w-4" />
-              {t("hero.badge")}
-            </div>
+      <HeroIntroControls showSkip={hydrated && animateIntro} onSkip={skipIntro} />
 
-            <p className="text-sm font-semibold uppercase tracking-[0.2em] text-brand-green">
-              {t("hero.brand")}
-            </p>
+      <div className="hero-content relative mx-auto flex w-full max-w-7xl flex-col justify-between px-4 py-8 sm:px-6 sm:py-10 lg:px-8 lg:py-12">
+        <motion.div
+          className="flex flex-1 flex-col justify-center pt-8 sm:pt-10 lg:max-w-4xl lg:pt-0"
+          variants={containerVariants}
+          initial={motionReady ? "visible" : "hidden"}
+          animate="visible"
+        >
+          <motion.div
+            variants={itemVariants}
+            className="mb-6 inline-flex w-fit items-center gap-2 rounded-full border border-brand-green/20 bg-brand-green/[0.07] px-4 py-1.5 text-sm font-medium text-brand-green"
+          >
+            <Sparkles className="h-4 w-4" />
+            {t("hero.badge")}
+          </motion.div>
 
-            <h1 className="hero-headline mt-3 text-3xl font-bold leading-[1.1] tracking-tight text-white sm:text-4xl lg:text-5xl xl:text-[3.25rem]">
-              {t("hero.headline")}
-            </h1>
+          <motion.h1
+            variants={itemVariants}
+            className="hero-headline flex max-w-5xl items-center gap-4 text-[clamp(2.5rem,8vw,5.5rem)] font-bold leading-[0.95] tracking-[-0.03em] text-white"
+          >
+            <HeroBrandPulse active={showEffects} />
+            <span>{t("hero.brand")}</span>
+          </motion.h1>
 
-            <p className="mt-6 max-w-xl text-lg leading-relaxed text-white/80">
-              {t("hero.subtitle")}
-            </p>
+          <motion.p
+            variants={itemVariants}
+            className="mt-5 max-w-2xl text-lg leading-relaxed text-white/80 sm:text-xl lg:text-2xl lg:leading-snug"
+          >
+            {t("hero.headline")}
+          </motion.p>
 
-            <ul className="mt-8 flex flex-col gap-3 sm:flex-row sm:flex-wrap">
-              {Array.isArray(trustItems) &&
-                trustItems.map((item) => (
-                  <li
-                    key={item}
-                    className="flex items-center gap-2 text-sm text-white/85"
-                  >
-                    <CheckCircle2 className="h-4 w-4 shrink-0 text-brand-green" />
-                    {item}
-                  </li>
-                ))}
-            </ul>
+          <motion.p
+            variants={itemVariants}
+            className="mt-4 max-w-xl text-sm leading-relaxed text-white/50 sm:text-base"
+          >
+            {t("hero.subtitle")}
+          </motion.p>
 
-            <div className="mt-10 flex flex-wrap gap-4">
-              <Link href={`${basePath}/contact`}>
-                <Button size="lg" className="min-h-12 px-8">
-                  {t("hero.cta")}
-                  <ArrowRight className="h-5 w-5" />
-                </Button>
-              </Link>
-              <Link href={`${basePath}/portfolio`}>
-                <Button variant="outline" size="lg" className="min-h-12 px-8">
-                  {t("hero.ctaSecondary")}
-                </Button>
-              </Link>
-            </div>
-          </div>
+          <motion.ul
+            variants={itemVariants}
+            className="mt-8 flex flex-col gap-3 sm:flex-row sm:flex-wrap"
+          >
+            {Array.isArray(trustItems) &&
+              trustItems.map((item) => (
+                <li
+                  key={item}
+                  className="flex items-center gap-2 text-sm text-white/70"
+                >
+                  <CheckCircle2 className="h-4 w-4 shrink-0 text-brand-green" />
+                  {item}
+                </li>
+              ))}
+          </motion.ul>
 
-          <div className="hero-fade-in-delay flex justify-center lg:justify-end">
-            <HeroIllustration />
-          </div>
-        </div>
+          <motion.div
+            variants={itemVariants}
+            className="mt-10 flex flex-col gap-3 sm:flex-row sm:flex-wrap sm:gap-4"
+          >
+            <Link href={`${basePath}/contact`} className="w-full sm:w-auto">
+              <Button size="lg" className="hero-cta-glow min-h-12 w-full px-8 sm:w-auto">
+                {t("hero.cta")}
+                <ArrowRight className="h-5 w-5" />
+              </Button>
+            </Link>
+            <Link href={`${basePath}/services`} className="w-full sm:w-auto">
+              <Button variant="outline" size="lg" className="min-h-12 w-full px-8 sm:w-auto">
+                {t("hero.ctaServices")}
+              </Button>
+            </Link>
+            <Link href={`${basePath}/portfolio`} className="w-full sm:w-auto">
+              <Button variant="ghost" size="lg" className="min-h-12 w-full px-8 sm:w-auto">
+                {t("hero.ctaSecondary")}
+              </Button>
+            </Link>
+          </motion.div>
+        </motion.div>
 
-        <div className="hero-fade-in-delay mt-14 lg:mt-20">
-          <div className="grid grid-cols-2 gap-4 md:grid-cols-4">
+        <motion.div
+          className="hero-stats-row mt-10 border-t border-white/[0.08] pt-8 lg:mt-12"
+          initial={prefersReducedMotion || motionReady ? false : { opacity: 1, y: 20 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{
+            delay: prefersReducedMotion || motionReady ? 0 : 1,
+            duration: 0.7,
+            ease: easeOut,
+          }}
+        >
+          <div className="grid grid-cols-2 gap-x-6 gap-y-6 md:grid-cols-4">
             {stats.map((stat) => (
-              <div
-                key={stat.key}
-                className="rounded-2xl border border-white/10 bg-white/[0.05] p-5 text-center backdrop-blur-sm sm:p-6"
-              >
+              <div key={stat.key} className="hero-stat-item">
                 <div className="text-2xl font-bold text-brand-green sm:text-3xl lg:text-4xl">
                   {stat.value}
                 </div>
-                <div className="mt-2 text-xs text-white/70 sm:text-sm">
+                <div className="mt-1.5 text-xs text-white/55 sm:text-sm">
                   {t(`hero.stats.${stat.key}` as "hero.stats.projects")}
                 </div>
               </div>
             ))}
           </div>
-        </div>
+        </motion.div>
       </div>
     </section>
   );

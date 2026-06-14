@@ -1,7 +1,5 @@
 "use client";
 
-import { SafeMotionDiv } from "@/components/ui/SafeMotion";
-
 interface SectionHeadingProps {
   title: string;
   subtitle?: string;
@@ -14,13 +12,7 @@ export function SectionHeading({
   align = "center",
 }: SectionHeadingProps) {
   return (
-    <SafeMotionDiv
-      initial={false}
-      whileInView={{ opacity: 1, y: 0 }}
-      viewport={{ once: true, margin: "-40px" }}
-      transition={{ duration: 0.5 }}
-      className={align === "center" ? "text-center" : "text-start"}
-    >
+    <div className={align === "center" ? "text-center" : "text-start"}>
       <h2 className="text-3xl font-bold tracking-tight text-white md:text-4xl">
         {title}
       </h2>
@@ -29,6 +21,6 @@ export function SectionHeading({
           {subtitle}
         </p>
       )}
-    </SafeMotionDiv>
+    </div>
   );
 }

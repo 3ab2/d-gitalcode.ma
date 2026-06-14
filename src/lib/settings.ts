@@ -1,6 +1,7 @@
 import { unstable_cache, revalidateTag } from "next/cache";
 import { prisma } from "@/lib/prisma";
 import { logError } from "@/lib/logger";
+import { DEFAULT_CURRENCY, isCurrencyCode } from "@/lib/currency";
 import {
   DEFAULT_SITE_SETTINGS,
   SETTING_KEYS,
@@ -23,6 +24,9 @@ function mapRows(rows: { key: string; value: string }[]): SiteSettings {
       DEFAULT_SITE_SETTINGS.whatsappNumber,
     phone: map.get(SETTING_KEYS.PHONE) ?? DEFAULT_SITE_SETTINGS.phone,
     address: map.get(SETTING_KEYS.ADDRESS) ?? DEFAULT_SITE_SETTINGS.address,
+    productDemoUrl:
+      map.get(SETTING_KEYS.PRODUCT_DEMO_URL) ??
+      DEFAULT_SITE_SETTINGS.productDemoUrl,
     seoTitle:
       map.get(SETTING_KEYS.SEO_TITLE) ?? DEFAULT_SITE_SETTINGS.seoTitle,
     seoDescription:
@@ -30,6 +34,9 @@ function mapRows(rows: { key: string; value: string }[]): SiteSettings {
       DEFAULT_SITE_SETTINGS.seoDescription,
     seoKeywords:
       map.get(SETTING_KEYS.SEO_KEYWORDS) ?? DEFAULT_SITE_SETTINGS.seoKeywords,
+    defaultCurrency: isCurrencyCode(map.get(SETTING_KEYS.DEFAULT_CURRENCY) ?? "")
+      ? (map.get(SETTING_KEYS.DEFAULT_CURRENCY) as SiteSettings["defaultCurrency"])
+      : DEFAULT_CURRENCY,
   };
 }
 
@@ -67,6 +74,9 @@ export async function upsertSiteSettings(
   if (values.address !== undefined) {
     entries.push([SETTING_KEYS.ADDRESS, values.address]);
   }
+  if (values.productDemoUrl !== undefined) {
+    entries.push([SETTING_KEYS.PRODUCT_DEMO_URL, values.productDemoUrl]);
+  }
   if (values.seoTitle !== undefined) {
     entries.push([SETTING_KEYS.SEO_TITLE, values.seoTitle]);
   }
@@ -75,6 +85,9 @@ export async function upsertSiteSettings(
   }
   if (values.seoKeywords !== undefined) {
     entries.push([SETTING_KEYS.SEO_KEYWORDS, values.seoKeywords]);
+  }
+  if (values.defaultCurrency !== undefined) {
+    entries.push([SETTING_KEYS.DEFAULT_CURRENCY, values.defaultCurrency]);
   }
 
   await prisma.$transaction(

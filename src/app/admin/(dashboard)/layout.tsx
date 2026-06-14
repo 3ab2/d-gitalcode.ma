@@ -1,8 +1,9 @@
-import { cookies } from "next/headers";
 import { redirect } from "next/navigation";
 import { AdminSidebar } from "@/components/admin/AdminSidebar";
-import { auth, isAdminRole, isClientRole } from "@/lib/auth";
-import { getLoginPath, getSupportPath, resolveLocaleFromCookie } from "@/lib/auth-urls";
+import { PublicSettingsProvider } from "@/components/providers/PublicSettingsProvider";
+import { auth, isAdminRole } from "@/lib/auth";
+import { getAdminLoginPath } from "@/lib/auth-urls";
+import { getSiteSettings } from "@/lib/settings";
 
 export default async function DashboardLayout({
   children,
@@ -11,23 +12,16 @@ export default async function DashboardLayout({
 }) {
   const session = await auth();
 
-  if (!session?.user) {
-    redirect(getLoginPath());
+  if (!session?.user || !isAdminRole(session.user.role)) {
+    redirect(getAdminLoginPath());
   }
 
-  if (!isAdminRole(session.user.role)) {
-    if (isClientRole(session.user.role)) {
-      const cookieStore = await cookies();
-      const locale = resolveLocaleFromCookie(cookieStore.get("NEXT_LOCALE")?.value);
-      redirect(getSupportPath(locale));
-    }
-    redirect(getLoginPath());
-  }
+  const siteSettings = await getSiteSettings();
 
   return (
-    <>
+    <PublicSettingsProvider settings={siteSettings}>
       <AdminSidebar />
       <main className="min-h-screen pt-14 lg:ms-64 lg:pt-0 p-4 sm:p-6 lg:p-8">{children}</main>
-    </>
+    </PublicSettingsProvider>
   );
 }

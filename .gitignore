@@ -56,7 +56,7 @@ Desktop.ini
 *.swo
 *~
 
-# Cursor
+# Local IDE config
 .cursor/
 
 # Certificates

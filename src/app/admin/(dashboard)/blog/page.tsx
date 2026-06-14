@@ -7,6 +7,7 @@ import { Badge } from "@/components/ui/Badge";
 import { ImageUpload } from "@/components/admin/ImageUpload";
 import { LocaleTabs } from "@/components/admin/LocaleTabs";
 import { formatDate } from "@/lib/utils";
+import { sanitizeBlogHtml } from "@/lib/sanitize-html";
 
 interface BlogPost {
   id: string;
@@ -153,7 +154,7 @@ export default function AdminBlogPage() {
               <div className="prose-blog rounded-xl border border-white/10 p-6 bg-white/[0.02]">
                 <h1 className="text-2xl font-bold text-white">{form.translations[loc].title}</h1>
                 <p className="text-white/50 mt-2">{form.translations[loc].excerpt}</p>
-                <div className="mt-6" dangerouslySetInnerHTML={{ __html: form.translations[loc].content }} />
+                <div className="mt-6" dangerouslySetInnerHTML={{ __html: sanitizeBlogHtml(form.translations[loc].content) }} />
               </div>
             ) : (
               <>

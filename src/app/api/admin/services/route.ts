@@ -4,31 +4,7 @@ import { prisma } from "@/lib/prisma";
 import { requireAdmin } from "@/lib/auth";
 import { logAdminAction } from "@/lib/audit";
 
-const serviceSchema = z.object({
-  slug: z.string(),
-  type: z.enum([
-    "WEB_DEVELOPMENT",
-    "MOBILE_APPS",
-    "WORDPRESS_PLUGINS",
-    "WORDPRESS_TEMPLATES",
-  ]),
-  price: z.number().optional(),
-  priceLabel: z.string().optional(),
-  featured: z.boolean().optional(),
-  published: z.boolean().optional(),
-  image: z.string().optional(),
-  demoUrl: z.string().optional(),
-  order: z.number().optional(),
-  translations: z.array(
-    z.object({
-      locale: z.string(),
-      title: z.string(),
-      description: z.string(),
-      shortDesc: z.string().optional(),
-      features: z.array(z.string()).optional(),
-    })
-  ),
-});
+import { serviceSchema } from "@/lib/admin/schemas";
 
 export async function GET() {
   const session = await requireAdmin();
@@ -63,7 +39,7 @@ export async function POST(request: NextRequest) {
         featured: data.featured ?? false,
         published: data.published ?? true,
         image: data.image,
-        demoUrl: data.demoUrl,
+        demoUrl: data.demoUrl || null,
         order: data.order ?? 0,
         translations: {
           create: data.translations,

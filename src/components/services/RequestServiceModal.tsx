@@ -3,9 +3,11 @@
 import { useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { useTranslation } from "react-i18next";
+import { usePathname } from "next/navigation";
 import { X, Mail, MessageCircle } from "lucide-react";
 import { ContactForm } from "@/components/contact/ContactForm";
 import { buildServiceRequestMessage, buildWhatsAppUrl } from "@/lib/whatsapp";
+import { sendAnalyticsEvent } from "@/lib/analytics/client";
 import { type Locale } from "@/lib/i18n/settings";
 import { usePublicSettings } from "@/components/providers/PublicSettingsProvider";
 
@@ -25,6 +27,7 @@ export function RequestServiceModal({
   serviceName,
 }: RequestServiceModalProps) {
   const { t } = useTranslation();
+  const pathname = usePathname();
   const settings = usePublicSettings();
   const [mode, setMode] = useState<"choose" | "form">("choose");
 
@@ -32,8 +35,15 @@ export function RequestServiceModal({
     buildServiceRequestMessage(serviceName, locale),
     settings.whatsappNumber
   );
+  const sourcePage = pathname || `/services`;
 
   const handleWhatsAppClick = async () => {
+    sendAnalyticsEvent("cta_whatsapp_click", sourcePage, {
+      locale,
+      serviceName,
+      source: "service_modal",
+    });
+
     await fetch("/api/contact", {
       method: "POST",
       headers: { "Content-Type": "application/json" },
@@ -46,6 +56,7 @@ export function RequestServiceModal({
         method: "WHATSAPP",
         serviceId,
         serviceName,
+        sourcePage,
       }),
     });
     window.open(whatsappUrl, "_blank");
@@ -115,6 +126,7 @@ export function RequestServiceModal({
                 serviceId={serviceId}
                 serviceName={serviceName}
                 type="SERVICE_REQUEST"
+                sourcePage={sourcePage}
                 onSuccess={onClose}
               />
             )}

@@ -1,7 +1,9 @@
 import { NextRequest, NextResponse } from "next/server";
+import { z } from "zod";
 import { prisma } from "@/lib/prisma";
 import { requireAdmin } from "@/lib/auth";
 import { logAdminAction } from "@/lib/audit";
+import { portfolioSchema } from "@/lib/admin/schemas";
 
 export async function PUT(
   request: NextRequest,
@@ -13,43 +15,51 @@ export async function PUT(
   }
 
   const { id } = await params;
-  const body = await request.json();
 
-  const project = await prisma.portfolioProject.update({
-    where: { id },
-    data: {
-      slug: body.slug,
-      image: body.image,
-      url: body.url,
-      githubUrl: body.githubUrl,
-      technologies: body.technologies,
-      featured: body.featured,
-      published: body.published,
-      order: body.order,
-    },
-    include: { translations: true },
-  });
+  try {
+    const body = await request.json();
+    const data = portfolioSchema.parse(body);
 
-  if (body.translations) {
-    for (const t of body.translations) {
+    const project = await prisma.portfolioProject.update({
+      where: { id },
+      data: {
+        slug: data.slug,
+        image: data.image,
+        gallery: data.gallery ?? [],
+        url: data.url || null,
+        githubUrl: data.githubUrl || null,
+        technologies: data.technologies,
+        featured: data.featured,
+        published: data.published,
+        order: data.order,
+      },
+      include: { translations: true },
+    });
+
+    for (const t of data.translations) {
       await prisma.portfolioTranslation.upsert({
         where: { projectId_locale: { projectId: id, locale: t.locale } },
         create: { projectId: id, ...t },
         update: t,
       });
     }
+
+    await logAdminAction({
+      userId: session.user.id,
+      userEmail: session.user.email,
+      action: "UPDATE",
+      entity: "PortfolioProject",
+      entityId: id,
+      metadata: { slug: data.slug },
+    });
+
+    return NextResponse.json(project);
+  } catch (error) {
+    if (error instanceof z.ZodError) {
+      return NextResponse.json({ error: error.issues }, { status: 400 });
+    }
+    return NextResponse.json({ error: "Failed to update" }, { status: 500 });
   }
-
-  await logAdminAction({
-    userId: session.user.id,
-    userEmail: session.user.email,
-    action: "UPDATE",
-    entity: "PortfolioProject",
-    entityId: id,
-    metadata: { slug: body.slug },
-  });
-
-  return NextResponse.json(project);
 }
 
 export async function DELETE(

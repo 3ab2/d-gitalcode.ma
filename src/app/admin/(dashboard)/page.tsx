@@ -7,9 +7,7 @@ import {
 import { StatCard } from "@/components/admin/StatCard";
 import { SimpleBarChart } from "@/components/admin/SimpleBarChart";
 import { BlogAnalyticsWidget } from "@/components/admin/BlogAnalyticsWidget";
-import { SupportMetricsWidget } from "@/components/admin/SupportMetricsWidget";
 import type { BlogAnalyticsSummary } from "@/lib/analytics/aggregate-blog";
-import type { SupportMetrics } from "@/lib/analytics/support-metrics";
 
 interface Analytics {
   totalSubmissions: number;
@@ -27,7 +25,6 @@ interface Analytics {
   mostRequestedServices: { name: string; count: number }[];
   submissionsByStatus: { status: string; count: number }[];
   blog?: BlogAnalyticsSummary;
-  support?: SupportMetrics;
 }
 
 interface AuditLog {
@@ -96,8 +93,6 @@ export default function AdminDashboard() {
       <h1 className="text-2xl font-bold text-white mb-2">Dashboard</h1>
       <p className="text-sm text-white/50 mb-8">CMS overview and analytics</p>
 
-      {data?.support && <SupportMetricsWidget support={data.support} />}
-
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4 mb-8">
         <StatCard title="Total Submissions" value={data?.totalSubmissions ?? 0} icon={MessageSquare} color="green" trend={`${data?.newToday ?? 0} today`} />
         <StatCard title="New Submissions" value={data?.newSubmissions ?? 0} icon={Inbox} color="green" />
@@ -149,7 +144,6 @@ export default function AdminDashboard() {
               { href: "/admin/blog", label: "Write Blog Post" },
               { href: "/admin/portfolio", label: "Add Project" },
               { href: "/admin/submissions", label: "View Submissions" },
-              { href: "/admin/messages", label: "Support Inbox" },
               { href: "/admin/settings", label: "Site Settings" },
             ].map((action) => (
               <a key={action.href} href={action.href} className="rounded-xl border border-white/10 p-3 text-center text-sm text-white/70 hover:text-brand-green hover:border-brand-green/30 transition-colors">

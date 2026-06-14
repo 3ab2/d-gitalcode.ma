@@ -11,22 +11,39 @@ interface Project {
   id: string;
   slug: string;
   image: string | null;
+  gallery?: string[];
   url: string | null;
   githubUrl: string | null;
   technologies: string[];
   featured: boolean;
   published: boolean;
   order: number;
-  translations: { locale: string; title: string; description: string; client?: string }[];
+  translations: {
+    locale: string;
+    title: string;
+    description: string;
+    client?: string;
+    overview?: string;
+    challenge?: string;
+    solution?: string;
+    features?: string[];
+    results?: string;
+    outcome?: string;
+  }[];
 }
 
+const emptyTranslation = () => ({
+  title: "", description: "", client: "", overview: "", challenge: "", solution: "",
+  features: "", results: "", outcome: "",
+});
+
 const emptyForm = () => ({
-  slug: "", image: "", url: "", githubUrl: "", technologies: "", order: "0",
+  slug: "", image: "", url: "", githubUrl: "", technologies: "", gallery: "", order: "0",
   featured: false, published: true, activeLocale: "fr",
   translations: {
-    fr: { title: "", description: "", client: "" },
-    en: { title: "", description: "", client: "" },
-    ar: { title: "", description: "", client: "" },
+    fr: emptyTranslation(),
+    en: emptyTranslation(),
+    ar: emptyTranslation(),
   },
 });
 
@@ -61,12 +78,18 @@ export default function AdminPortfolioPage() {
 
   const openEdit = (project: Project) => {
     setEditing(project);
-    const translations = { fr: { title: "", description: "", client: "" }, en: { title: "", description: "", client: "" }, ar: { title: "", description: "", client: "" } };
+    const translations = { fr: emptyTranslation(), en: emptyTranslation(), ar: emptyTranslation() };
     project.translations.forEach((t) => {
-      translations[t.locale as keyof typeof translations] = { title: t.title, description: t.description, client: t.client || "" };
+      const loc = t.locale as keyof typeof translations;
+      translations[loc] = {
+        title: t.title, description: t.description, client: t.client || "",
+        overview: t.overview || "", challenge: t.challenge || "", solution: t.solution || "",
+        features: (t.features || []).join(", "), results: t.results || "", outcome: t.outcome || "",
+      };
     });
     setForm({
       slug: project.slug, image: project.image || "", url: project.url || "", githubUrl: project.githubUrl || "",
+      gallery: (project.gallery || []).join(", "),
       technologies: project.technologies.join(", "), order: project.order.toString(),
       featured: project.featured, published: project.published, activeLocale: "fr", translations,
     });
@@ -76,11 +99,19 @@ export default function AdminPortfolioPage() {
   const buildPayload = () => ({
     slug: form.slug, image: form.image || undefined, url: form.url || undefined,
     githubUrl: form.githubUrl || undefined,
+    gallery: form.gallery.split(",").map((g) => g.trim()).filter(Boolean),
     technologies: form.technologies.split(",").map((t) => t.trim()).filter(Boolean),
     order: parseInt(form.order) || 0, featured: form.featured, published: form.published,
     translations: (["fr", "en", "ar"] as const).map((locale) => ({
-      locale, title: form.translations[locale].title || form.translations.fr.title,
+      locale,
+      title: form.translations[locale].title || form.translations.fr.title,
       description: form.translations[locale].description || form.translations.fr.description,
+      overview: form.translations[locale].overview || undefined,
+      challenge: form.translations[locale].challenge || undefined,
+      solution: form.translations[locale].solution || undefined,
+      features: form.translations[locale].features.split(",").map((f) => f.trim()).filter(Boolean),
+      results: form.translations[locale].results || undefined,
+      outcome: form.translations[locale].outcome || undefined,
       client: form.translations[locale].client || undefined,
     })),
   });
@@ -129,7 +160,14 @@ export default function AdminPortfolioPage() {
             <LocaleTabs active={form.activeLocale} onChange={(l) => setForm({ ...form, activeLocale: l })} />
             <input className="w-full rounded-xl border border-white/10 bg-white/5 px-4 py-2 text-white text-sm" placeholder="Title" value={form.translations[loc].title} onChange={(e) => setForm({ ...form, translations: { ...form.translations, [loc]: { ...form.translations[loc], title: e.target.value } } })} required />
             <input className="w-full rounded-xl border border-white/10 bg-white/5 px-4 py-2 text-white text-sm" placeholder="Client" value={form.translations[loc].client} onChange={(e) => setForm({ ...form, translations: { ...form.translations, [loc]: { ...form.translations[loc], client: e.target.value } } })} />
-            <textarea className="w-full rounded-xl border border-white/10 bg-white/5 px-4 py-2 text-white text-sm" placeholder="Description" rows={3} value={form.translations[loc].description} onChange={(e) => setForm({ ...form, translations: { ...form.translations, [loc]: { ...form.translations[loc], description: e.target.value } } })} required />
+            <textarea className="w-full rounded-xl border border-white/10 bg-white/5 px-4 py-2 text-white text-sm" placeholder="Description (short)" rows={2} value={form.translations[loc].description} onChange={(e) => setForm({ ...form, translations: { ...form.translations, [loc]: { ...form.translations[loc], description: e.target.value } } })} required />
+            <textarea className="w-full rounded-xl border border-white/10 bg-white/5 px-4 py-2 text-white text-sm" placeholder="Overview" rows={2} value={form.translations[loc].overview} onChange={(e) => setForm({ ...form, translations: { ...form.translations, [loc]: { ...form.translations[loc], overview: e.target.value } } })} />
+            <textarea className="w-full rounded-xl border border-white/10 bg-white/5 px-4 py-2 text-white text-sm" placeholder="Challenge" rows={2} value={form.translations[loc].challenge} onChange={(e) => setForm({ ...form, translations: { ...form.translations, [loc]: { ...form.translations[loc], challenge: e.target.value } } })} />
+            <textarea className="w-full rounded-xl border border-white/10 bg-white/5 px-4 py-2 text-white text-sm" placeholder="Solution" rows={2} value={form.translations[loc].solution} onChange={(e) => setForm({ ...form, translations: { ...form.translations, [loc]: { ...form.translations[loc], solution: e.target.value } } })} />
+            <input className="w-full rounded-xl border border-white/10 bg-white/5 px-4 py-2 text-white text-sm" placeholder="Features (comma separated)" value={form.translations[loc].features} onChange={(e) => setForm({ ...form, translations: { ...form.translations, [loc]: { ...form.translations[loc], features: e.target.value } } })} />
+            <textarea className="w-full rounded-xl border border-white/10 bg-white/5 px-4 py-2 text-white text-sm" placeholder="Results" rows={2} value={form.translations[loc].results} onChange={(e) => setForm({ ...form, translations: { ...form.translations, [loc]: { ...form.translations[loc], results: e.target.value } } })} />
+            <textarea className="w-full rounded-xl border border-white/10 bg-white/5 px-4 py-2 text-white text-sm" placeholder="Client outcome" rows={2} value={form.translations[loc].outcome} onChange={(e) => setForm({ ...form, translations: { ...form.translations, [loc]: { ...form.translations[loc], outcome: e.target.value } } })} />
+            <input className="col-span-2 w-full rounded-xl border border-white/10 bg-white/5 px-4 py-2 text-white text-sm" placeholder="Gallery URLs (comma separated)" value={form.gallery} onChange={(e) => setForm({ ...form, gallery: e.target.value })} />
             <div className="flex gap-4">
               <label className="flex items-center gap-2 text-sm text-white/70"><input type="checkbox" checked={form.featured} onChange={(e) => setForm({ ...form, featured: e.target.checked })} /> Featured</label>
               <label className="flex items-center gap-2 text-sm text-white/70"><input type="checkbox" checked={form.published} onChange={(e) => setForm({ ...form, published: e.target.checked })} /> Published</label>

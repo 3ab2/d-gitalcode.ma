@@ -9,7 +9,8 @@
     "portfolio": "Portfolio",
     "about": "À propos",
     "blog": "Blog",
-    "contact": "Contact"
+    "contact": "Contact",
+    "allServices": "Tous les services"
   },
   "hero": {
     "badge": "Agence Digitale Premium",
@@ -20,7 +21,9 @@
     "subtitle": "Nous concevons des expériences digitales haute performance — du site vitrine à la plateforme eCommerce — avec un focus conversion, SEO et support expert.",
     "cta": "Demander un devis gratuit",
     "ctaSecondary": "Voir le portfolio",
+    "ctaServices": "Découvrir nos services",
     "trust": ["Réponse sous 24h", "Équipe senior dédiée", "Support & maintenance"],
+    "skipIntro": "Passer l'intro",
     "stats": {
       "projects": "Projets réalisés",
       "clients": "Clients satisfaits",
@@ -31,6 +34,40 @@
     }
   },
   "home": {
+    "agencyMap": {
+      "title": "Explorez notre écosystème digital",
+      "subtitle": "Une carte interactive des services D-GITALCODE — survolez, cliquez et naviguez dans notre expertise.",
+      "focusView": "Vue centrée",
+      "exploreService": "Explorer le service",
+      "serviceLabel": "Service",
+      "close": "Fermer",
+      "nodes": {
+        "web": {
+          "title": "Développement Web",
+          "description": "Applications et plateformes web modernes, scalables et performantes."
+        },
+        "uiux": {
+          "title": "UI/UX Design",
+          "description": "Interfaces premium et parcours utilisateur orientés conversion."
+        },
+        "seo": {
+          "title": "SEO & Marketing",
+          "description": "Visibilité search, stratégie de contenu et marketing digital orienté croissance."
+        },
+        "ecommerce": {
+          "title": "Solutions E-commerce",
+          "description": "Boutiques en ligne, tunnels de conversion et écosystèmes WooCommerce."
+        },
+        "branding": {
+          "title": "Branding",
+          "description": "Identité visuelle, systèmes de marque et présence digitale cohérente."
+        },
+        "automation": {
+          "title": "Automatisation & IA",
+          "description": "Automatisation de workflows, intégrations et produits digitaux intelligents."
+        }
+      }
+    },
     "services": {
       "title": "Services conçus pour la croissance",
       "subtitle": "Du développement web aux plugins WooCommerce — des solutions premium, livrées avec excellence.",
@@ -77,6 +114,17 @@
     "contact": {
       "title": "Construisons votre prochain projet",
       "subtitle": "Parlez-nous de votre vision. Nous vous répondons sous 24h avec une proposition claire."
+    },
+    "trust": {
+      "title": "Pourquoi les clients nous font confiance",
+      "subtitle": "D-GITALCODE combine expertise technique, design premium et accompagnement orienté résultats.",
+      "footer": "En savoir plus sur notre agence :",
+      "items": [
+        { "title": "Expertise prouvée", "desc": "Des projets web, mobile et WordPress livrés avec excellence technique." },
+        { "title": "Réponse rapide", "desc": "Devis et support sous 24h — communication claire à chaque étape." },
+        { "title": "Partenariat humain", "desc": "ELKARCH ABDELHAMID et l'équipe D-GITALCODE vous accompagnent de A à Z." },
+        { "title": "Résultats mesurables", "desc": "Conversion, performance et SEO intégrés dès la conception." }
+      ]
     }
   },
   "about": {
@@ -166,6 +214,163 @@
       "b3": "Installation & personnalisation"
     }
   },
+  "servicesLanding": {
+    "meta": {
+      "title": "Nos Services Digitaux",
+      "description": "Développement web, applications mobiles, plugins et templates WordPress — solutions premium par D-GITALCODE."
+    },
+    "hero": {
+      "badge": "Services D-GITALCODE",
+      "title": "Des solutions digitales qui transforment votre business",
+      "subtitle": "De la stratégie à la livraison — sites web, apps mobiles et solutions WordPress conçus pour convertir et scaler.",
+      "cta": "Demander un devis gratuit"
+    },
+    "grid": { "title": "Nos expertises", "subtitle": "Quatre piliers pour couvrir tous vos besoins digitaux." },
+    "why": {
+      "title": "Pourquoi D-GITALCODE",
+      "subtitle": "Une agence fondée par ELKARCH ABDELHAMID — expertise, rigueur et résultats.",
+      "items": [
+        { "title": "Expertise senior", "desc": "Stack moderne, code propre et architecture scalable." },
+        { "title": "Design premium", "desc": "Interfaces soignées qui inspirent confiance et convertissent." },
+        { "title": "Livraison fiable", "desc": "Méthodologie agile, délais respectés, communication transparente." },
+        { "title": "Support dédié", "desc": "Accompagnement post-lancement et maintenance disponible." }
+      ]
+    },
+    "process": {
+      "title": "Notre processus",
+      "subtitle": "De l'idée au lancement — un parcours clair et structuré.",
+      "steps": [
+        { "title": "Découverte", "desc": "Analyse de vos besoins, objectifs et contraintes." },
+        { "title": "Stratégie & design", "desc": "Wireframes, architecture technique et validation." },
+        { "title": "Développement", "desc": "Itérations agiles avec livraisons régulières." },
+        { "title": "Lancement & support", "desc": "Mise en production, formation et suivi." }
+      ]
+    },
+    "pricing": {
+      "title": "Tarifs transparents",
+      "subtitle": "Des offres adaptées à chaque catégorie — devis personnalisé sur demande."
+    },
+    "faq": {
+      "title": "Questions fréquentes",
+      "items": [
+        { "q": "Combien coûte un projet ?", "a": "Chaque projet est unique. Nous établissons un devis détaillé après analyse de vos besoins — généralement sous 24h." },
+        { "q": "Quels sont vos délais ?", "a": "Un site vitrine : 2–4 semaines. Une app mobile ou plateforme complexe : 6–12 semaines selon le scope." },
+        { "q": "Proposez-vous la maintenance ?", "a": "Oui — support, mises à jour et évolutions après livraison." },
+        { "q": "Travaillez-vous à distance ?", "a": "Absolument. Nous accompagnons des clients au Maroc et à l'international." }
+      ]
+    },
+    "portfolio": {
+      "title": "Preuves de notre travail",
+      "subtitle": "Des projets concrets qui démontrent notre expertise."
+    },
+    "testimonials": {
+      "title": "Ce que disent nos clients",
+      "subtitle": "La confiance de nos partenaires est notre meilleure référence.",
+      "placeholder": "Témoignages clients à venir — votre avis pourrait apparaître ici."
+    },
+    "cta": {
+      "title": "Prêt à lancer votre projet ?",
+      "subtitle": "Contactez D-GITALCODE — réponse garantie sous 24h.",
+      "button": "Obtenir un devis gratuit"
+    }
+  },
+  "servicesPage": {
+    "hero": { "badge": "Service D-GITALCODE" },
+    "labels": {
+      "problem": "Problème",
+      "solution": "Solution",
+      "benefits": "Avantages",
+      "deliverables": "Livrables",
+      "pricing": "Tarification",
+      "timeline": "Délai indicatif",
+      "faq": "FAQ"
+    },
+    "proof": {
+      "title": "Preuves de notre expertise",
+      "subtitle": "Des projets réels qui illustrent notre savoir-faire."
+    },
+    "catalog": {
+      "title": "Nos offres",
+      "subtitle": "Choisissez le pack adapté ou demandez une solution sur mesure."
+    },
+    "cta": {
+      "title": "Prêt à démarrer ?",
+      "subtitle": "Obtenez un devis personnalisé — réponse sous 24h."
+    },
+    "webDevelopment": {
+      "title": "Développement Web",
+      "subtitle": "Sites web, SaaS et plateformes eCommerce haute performance.",
+      "problemTitle": "Votre présence en ligne ne convertit pas",
+      "problem": "Un site lent, mal structuré ou daté fait perdre des clients et nuit à votre crédibilité.",
+      "solutionTitle": "Des expériences web qui performent",
+      "solution": "Nous concevons des sites et applications sur mesure — rapides, SEO-ready et orientés conversion.",
+      "benefitsTitle": "Ce que vous gagnez",
+      "benefits": ["Performance et Core Web Vitals optimisés", "Design premium responsive", "Architecture scalable et sécurisée", "SEO technique intégré"],
+      "deliverablesTitle": "Ce que nous livrons",
+      "deliverables": ["Site ou application responsive", "CMS ou dashboard admin", "Intégration analytics & formulaires", "Documentation et formation"],
+      "pricingTitle": "Investissement",
+      "pricing": "À partir de nos offres listées ci-dessous — devis sur mesure pour projets complexes.",
+      "timeline": "2 à 8 semaines selon le scope",
+      "faq": [
+        { "q": "Utilisez-vous Next.js ?", "a": "Oui — Next.js, React et TypeScript font partie de notre stack principale." },
+        { "q": "Gérez-vous l'hébergement ?", "a": "Nous recommandons et configurons Vercel, AWS ou l'hébergement de votre choix." }
+      ]
+    },
+    "mobileApps": {
+      "title": "Applications Mobiles",
+      "subtitle": "Apps iOS et Android natives et cross-platform.",
+      "problemTitle": "Vos clients sont sur mobile",
+      "problem": "Sans application mobile, vous perdez engagement, fidélité et canaux de vente directs.",
+      "solutionTitle": "Des apps qui engagent et convertissent",
+      "solution": "Nous développons des applications mobiles performantes avec une UX premium.",
+      "benefitsTitle": "Avantages clés",
+      "benefits": ["Expérience native ou cross-platform", "Notifications push et offline", "Publication App Store & Play Store", "Analytics intégrés"],
+      "deliverablesTitle": "Livrables",
+      "deliverables": ["Application iOS et/ou Android", "Backend API si nécessaire", "Assets store et soumission", "Documentation technique"],
+      "pricingTitle": "Tarifs",
+      "pricing": "Devis personnalisé selon fonctionnalités et plateformes.",
+      "timeline": "6 à 12 semaines",
+      "faq": [
+        { "q": "React Native ou natif ?", "a": "Nous choisissons la meilleure approche selon budget, délais et exigences." }
+      ]
+    },
+    "wordpressPlugins": {
+      "title": "Plugins WordPress",
+      "subtitle": "Extensions WooCommerce professionnelles comme WhatsFlow Pro.",
+      "problemTitle": "Votre boutique manque d'outils de conversion",
+      "problem": "Sans intégrations WooCommerce adaptées, vous laissez des ventes sur la table.",
+      "solutionTitle": "Plugins sur mesure qui boostent les ventes",
+      "solution": "Nous développons des plugins WordPress sécurisés, documentés et orientés ROI.",
+      "benefitsTitle": "Bénéfices",
+      "benefits": ["Code conforme aux standards WP", "Compatible WooCommerce", "Support et mises à jour", "Analytics et tracking"],
+      "deliverablesTitle": "Livrables",
+      "deliverables": ["Plugin fonctionnel testé", "Documentation utilisateur", "Support post-lancement", "Licence et déploiement"],
+      "pricingTitle": "Investissement",
+      "pricing": "Licences à partir de $49 — développement custom sur devis.",
+      "timeline": "2 à 6 semaines",
+      "faq": [
+        { "q": "Proposez-vous WhatsFlow Pro ?", "a": "Oui — notre plugin phare pour WhatsApp + WooCommerce. Démo disponible." }
+      ]
+    },
+    "wordpressTemplates": {
+      "title": "Templates WordPress",
+      "subtitle": "Thèmes premium optimisés conversion et SEO.",
+      "problemTitle": "Votre thème ne reflète pas votre marque",
+      "problem": "Un template générique n'inspire pas confiance et limite vos conversions.",
+      "solutionTitle": "Des thèmes sur mesure qui vendent",
+      "solution": "Thèmes WordPress premium, rapides et personnalisables pour votre identité.",
+      "benefitsTitle": "Avantages",
+      "benefits": ["Design unique aligné à votre marque", "Optimisé mobile et SEO", "WooCommerce ready", "Installation incluse"],
+      "deliverablesTitle": "Livrables",
+      "deliverables": ["Thème WordPress complet", "Pages clés configurées", "Guide d'utilisation", "Support initial"],
+      "pricingTitle": "Tarifs",
+      "pricing": "Thèmes premium et développement custom — devis sur demande.",
+      "timeline": "2 à 4 semaines",
+      "faq": [
+        { "q": "Compatible Elementor ?", "a": "Nous adaptons selon vos outils — Elementor, Gutenberg ou custom." }
+      ]
+    }
+  },
   "cta": {
     "title": "Prêt à transformer votre business ?",
     "subtitle": "Contactez-nous via WhatsApp ou formulaire. Réponse sous 24h.",
@@ -176,7 +381,28 @@
     "title": "Portfolio",
     "subtitle": "Découvrez nos réalisations récentes",
     "viewProject": "Voir le projet",
-    "technologies": "Technologies"
+    "technologies": "Technologies",
+    "detail": {
+      "back": "Retour au portfolio",
+      "client": "Client",
+      "overview": "Aperçu du projet",
+      "challenge": "Le défi",
+      "solution": "Notre solution",
+      "features": "Fonctionnalités livrées",
+      "stack": "Stack technique",
+      "results": "Résultats",
+      "outcome": "Impact client",
+      "gallery": "Galerie",
+      "viewCase": "Voir l'étude de cas",
+      "ctaTitle": "Un projet similaire en tête ?",
+      "ctaSubtitle": "Discutons de vos objectifs — devis gratuit et réponse sous 24h.",
+      "ctaPrimary": "Démarrer un projet similaire"
+    },
+    "listCta": {
+      "title": "Votre projet pourrait être le prochain",
+      "subtitle": "Contactez D-GITALCODE pour transformer votre idée en produit digital performant.",
+      "button": "Demander un devis gratuit"
+    }
   },
   "blog": {
     "title": "Blog",
@@ -204,19 +430,49 @@
   "contact": {
     "title": "Contactez-nous",
     "subtitle": "Parlons de votre projet",
+    "headline": "Obtenez un devis gratuit — réponse garantie sous 24h",
+    "promise": "Décrivez votre projet en quelques lignes. Notre équipe vous recontacte avec une proposition claire et sans engagement.",
     "name": "Nom complet",
     "email": "Email",
-    "phone": "Téléphone",
-    "message": "Message",
-    "send": "Envoyer le message",
+    "phone": "Téléphone (optionnel)",
+    "message": "Décrivez votre projet",
+    "budgetRange": "Budget estimé",
+    "budgetPlaceholder": "Sélectionnez une fourchette (recommandé)",
+    "serviceInterest": "Service recherché",
+    "serviceInterestPlaceholder": "Choisissez un service (optionnel)",
+    "send": "Obtenir mon devis gratuit",
     "sending": "Envoi en cours...",
-    "success": "Message envoyé avec succès !",
+    "success": "Merci ! Nous vous répondons sous 24h.",
     "error": "Une erreur est survenue. Réessayez.",
     "whatsappTitle": "Contact rapide WhatsApp",
-    "whatsappDesc": "Discutez directement avec notre équipe",
+    "whatsappDesc": "Discutez directement avec notre équipe — idéal pour une réponse immédiate",
     "whatsappBtn": "Ouvrir WhatsApp",
     "connectTitle": "Connectez-vous avec nous",
-    "connectDesc": "Suivez nos actualités, projets open-source et soutenez D-GITALCODE."
+    "connectDesc": "Suivez nos actualités, projets open-source et soutenez D-GITALCODE.",
+    "trust": {
+      "responseTime": "Réponse sous 24h",
+      "responseTimeDesc": "Devis et retour rapide sur chaque demande.",
+      "expertise": "Expertise full-stack",
+      "expertiseDesc": "Web, mobile et WordPress — une équipe senior dédiée.",
+      "confidential": "100% confidentiel",
+      "confidentialDesc": "Vos données ne sont jamais partagées avec des tiers."
+    },
+    "microcopy": {
+      "formIntro": "2 minutes suffisent — nous nous occupons du reste.",
+      "privacyNote": "En envoyant ce formulaire, vous acceptez d'être recontacté par D-GITALCODE."
+    }
+  },
+  "leads": {
+    "budget": {
+      "under_500": "Moins de 500 €",
+      "500_2000": "500 € – 2 000 €",
+      "2000_5000": "2 000 € – 5 000 €",
+      "5000_plus": "Plus de 5 000 €",
+      "not_sure": "Je ne sais pas encore"
+    }
+  },
+  "floatCta": {
+    "whatsapp": "WhatsApp"
   },
   "request": {
     "title": "Demander ce service",
@@ -288,9 +544,76 @@
     "empty": "Envoyez votre premier message — nous vous répondrons ici.",
     "placeholder": "Écrivez votre message…",
     "send": "Envoyer",
+    "sendError": "Impossible d'envoyer le message. Réessayez.",
+    "connectionError": "Connexion interrompue. Vérifiez votre réseau et réessayez.",
+    "sessionExpired": "Votre session a expiré. Reconnectez-vous pour continuer.",
+    "retryConnection": "Réessayer",
     "sendHint": "Entrée = nouvelle ligne · Ctrl+Entrée = envoyer",
     "loading": "Chargement de la conversation…",
     "adminInbox": "Support",
+    "center": {
+      "metaTitle": "Centre de support",
+      "metaDescription": "Assistance D-GITALCODE — chat en direct, FAQ et contact prioritaire sous 24h.",
+      "badge": "Centre de support client",
+      "heroTitle": "Comment pouvons-nous vous aider ?",
+      "heroSubtitle": "Notre équipe vous accompagne sur vos projets, votre compte et vos demandes techniques. Réponse garantie sous 24 heures.",
+      "responseBadge": "Réponse sous 24h",
+      "categoryTitle": "Type de demande",
+      "categorySubtitle": "Choisissez une catégorie pour orienter votre message vers la bonne équipe.",
+      "chatTitle": "Chat support en direct",
+      "menuOpen": "Ouvrir le menu support",
+      "menuClose": "Fermer le menu",
+      "mobileMenuLabel": "Aide & options",
+      "sidebarLabel": "Centre d'aide et ressources",
+      "priorityTitle": "Contact prioritaire",
+      "prioritySubtitle": "Besoin d'une réponse plus rapide ? Utilisez un canal direct.",
+      "whatsappCta": "WhatsApp",
+      "whatsappDesc": "Réponse rapide en direct",
+      "emailCta": "Email",
+      "emailSubject": "Demande support D-GITALCODE",
+      "faqTitle": "Questions fréquentes",
+      "faqSubtitle": "Réponses aux demandes les plus courantes avant d'ouvrir un ticket.",
+      "categories": {
+        "technical": {
+          "label": "Problème technique",
+          "desc": "Bug, accès, intégration ou fonctionnalité",
+          "subject": "Support technique"
+        },
+        "business": {
+          "label": "Demande commerciale",
+          "desc": "Devis, facturation ou évolution de projet",
+          "subject": "Demande commerciale"
+        },
+        "bug": {
+          "label": "Signaler un bug",
+          "desc": "Erreur, régression ou comportement inattendu",
+          "subject": "Signalement de bug"
+        },
+        "partnership": {
+          "label": "Partenariat",
+          "desc": "Collaboration, revendeur ou projet conjoint",
+          "subject": "Demande de partenariat"
+        }
+      },
+      "faq": [
+        {
+          "q": "Quel est le délai de réponse ?",
+          "a": "Nous répondons en moyenne sous 24 heures ouvrées. Les demandes urgentes via WhatsApp sont traitées en priorité."
+        },
+        {
+          "q": "Puis-je joindre des fichiers ?",
+          "a": "Oui — captures d'écran, PDF et documents jusqu'à 10 Mo par fichier (5 fichiers max par message)."
+        },
+        {
+          "q": "Comment suivre ma demande ?",
+          "a": "Toute la conversation reste visible dans ce chat. Vous recevrez une notification dès qu'un membre de l'équipe répond."
+        },
+        {
+          "q": "Qui traite mes messages ?",
+          "a": "L'équipe D-GITALCODE — développeurs et consultants seniors, pas un bot. Chaque demande est lue par un humain."
+        }
+      ]
+    },
     "attachments": {
       "add": "Joindre un fichier",
       "camera": "Prendre une photo",
@@ -298,6 +621,8 @@
       "dropHere": "Déposez vos fichiers ici",
       "tooMany": "Maximum {{max}} fichiers par message",
       "tooLarge": "Taille maximale : {{max}} Mo par fichier",
+      "uploadFailed": "Impossible d'envoyer la pièce jointe.",
+      "storageError": "Stockage des fichiers indisponible. Contactez le support ou réessayez sans pièce jointe.",
       "uploadedBy": "Envoyé par",
       "uploading": "Envoi en cours…"
     }

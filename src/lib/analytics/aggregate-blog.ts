@@ -4,7 +4,6 @@ export const BLOG_ANALYTICS_EVENTS = [
   "blog_article_view",
   "blog_article_read",
   "blog_cta_quote_click",
-  "blog_cta_support_click",
 ] as const;
 
 type RankedItem = { slug: string; title: string; count: number };
@@ -24,7 +23,6 @@ export type BlogAnalyticsSummary = {
   totalViews: number;
   totalReads: number;
   quoteRequests: number;
-  supportRequests: number;
   ctaConversionRate: number;
   mostViewedArticles: RankedItem[];
   mostReadArticles: RankedItem[];
@@ -57,7 +55,6 @@ export async function aggregateBlogAnalytics(
   let totalViews = 0;
   let totalReads = 0;
   let quoteRequests = 0;
-  let supportRequests = 0;
 
   for (const row of events) {
     const slug = metaString(row.metadata, "slug");
@@ -78,9 +75,6 @@ export async function aggregateBlogAnalytics(
         break;
       case "blog_cta_quote_click":
         quoteRequests++;
-        break;
-      case "blog_cta_support_click":
-        supportRequests++;
         break;
     }
   }
@@ -121,15 +115,13 @@ export async function aggregateBlogAnalytics(
     .slice(0, 8)
     .map(([category, count]) => ({ category, count }));
 
-  const ctaTotal = quoteRequests + supportRequests;
   const ctaConversionRate =
-    totalViews > 0 ? Math.round((ctaTotal / totalViews) * 1000) / 10 : 0;
+    totalViews > 0 ? Math.round((quoteRequests / totalViews) * 1000) / 10 : 0;
 
   return {
     totalViews,
     totalReads,
     quoteRequests,
-    supportRequests,
     ctaConversionRate,
     mostViewedArticles: toRanked(viewsBySlug),
     mostReadArticles: toRanked(readsBySlug),

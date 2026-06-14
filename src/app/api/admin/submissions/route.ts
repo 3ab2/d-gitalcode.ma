@@ -37,6 +37,9 @@ export async function GET(request: NextRequest) {
               { email: { contains: search, mode: "insensitive" } },
               { message: { contains: search, mode: "insensitive" } },
               { serviceName: { contains: search, mode: "insensitive" } },
+              { serviceInterest: { contains: search, mode: "insensitive" } },
+              { sourcePage: { contains: search, mode: "insensitive" } },
+              { budgetRange: { contains: search, mode: "insensitive" } },
             ],
           }
         : {}),
@@ -44,8 +47,6 @@ export async function GET(request: NextRequest) {
     orderBy: { createdAt: "desc" },
     include: {
       service: true,
-      replies: { orderBy: { createdAt: "desc" }, take: 1 },
-      _count: { select: { replies: true } },
     },
   });
 

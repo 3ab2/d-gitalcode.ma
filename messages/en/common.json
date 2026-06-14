@@ -9,7 +9,8 @@
     "portfolio": "Portfolio",
     "about": "About",
     "blog": "Blog",
-    "contact": "Contact"
+    "contact": "Contact",
+    "allServices": "All services"
   },
   "hero": {
     "badge": "Premium Digital Agency",
@@ -20,7 +21,9 @@
     "subtitle": "We craft high-performance digital experiences — from landing pages to eCommerce platforms — with a focus on conversion, SEO and expert support.",
     "cta": "Request a Free Quote",
     "ctaSecondary": "View Portfolio",
+    "ctaServices": "Explore our services",
     "trust": ["Response within 24h", "Senior dedicated team", "Support & maintenance"],
+    "skipIntro": "Skip intro",
     "stats": {
       "projects": "Projects completed",
       "clients": "Happy clients",
@@ -31,6 +34,40 @@
     }
   },
   "home": {
+    "agencyMap": {
+      "title": "Explore our digital ecosystem",
+      "subtitle": "An interactive map of D-GITALCODE services — hover, click and navigate our expertise.",
+      "focusView": "Focus view",
+      "exploreService": "Explore service",
+      "serviceLabel": "Service",
+      "close": "Close",
+      "nodes": {
+        "web": {
+          "title": "Web Development",
+          "description": "Modern, scalable web applications and platforms built for performance."
+        },
+        "uiux": {
+          "title": "UI/UX Design",
+          "description": "Premium interfaces and user journeys that convert and inspire trust."
+        },
+        "seo": {
+          "title": "SEO & Marketing",
+          "description": "Search visibility, content strategy and growth-focused digital marketing."
+        },
+        "ecommerce": {
+          "title": "E-commerce Solutions",
+          "description": "High-converting online stores, checkout flows and WooCommerce ecosystems."
+        },
+        "branding": {
+          "title": "Branding",
+          "description": "Visual identity, brand systems and consistent digital presence."
+        },
+        "automation": {
+          "title": "Automation & AI",
+          "description": "Workflow automation, integrations and intelligent digital products."
+        }
+      }
+    },
     "services": {
       "title": "Services built for growth",
       "subtitle": "From web development to WooCommerce plugins — premium solutions delivered with excellence.",
@@ -77,6 +114,17 @@
     "contact": {
       "title": "Let's Build Your Next Project",
       "subtitle": "Tell us about your vision. We respond within 24h with a clear proposal."
+    },
+    "trust": {
+      "title": "Why clients trust us",
+      "subtitle": "D-GITALCODE combines technical expertise, premium design and results-driven partnership.",
+      "footer": "Learn more about our agency:",
+      "items": [
+        { "title": "Proven expertise", "desc": "Web, mobile and WordPress projects delivered with technical excellence." },
+        { "title": "Fast response", "desc": "Quotes and support within 24h — clear communication at every step." },
+        { "title": "Human partnership", "desc": "ELKARCH ABDELHAMID and the D-GITALCODE team guide you from A to Z." },
+        { "title": "Measurable results", "desc": "Conversion, performance and SEO built in from day one." }
+      ]
     }
   },
   "about": {
@@ -166,6 +214,163 @@
       "b3": "Setup & customization"
     }
   },
+  "servicesLanding": {
+    "meta": {
+      "title": "Our Digital Services",
+      "description": "Web development, mobile apps, WordPress plugins and templates — premium solutions by D-GITALCODE."
+    },
+    "hero": {
+      "badge": "D-GITALCODE Services",
+      "title": "Digital solutions that transform your business",
+      "subtitle": "From strategy to delivery — websites, mobile apps and WordPress solutions built to convert and scale.",
+      "cta": "Request a free quote"
+    },
+    "grid": { "title": "Our expertise", "subtitle": "Four pillars covering all your digital needs." },
+    "why": {
+      "title": "Why D-GITALCODE",
+      "subtitle": "An agency founded by ELKARCH ABDELHAMID — expertise, rigor and results.",
+      "items": [
+        { "title": "Senior expertise", "desc": "Modern stack, clean code and scalable architecture." },
+        { "title": "Premium design", "desc": "Polished interfaces that build trust and convert." },
+        { "title": "Reliable delivery", "desc": "Agile methodology, on-time delivery, transparent communication." },
+        { "title": "Dedicated support", "desc": "Post-launch support and maintenance available." }
+      ]
+    },
+    "process": {
+      "title": "Our process",
+      "subtitle": "From idea to launch — a clear, structured journey.",
+      "steps": [
+        { "title": "Discovery", "desc": "Analysis of your needs, goals and constraints." },
+        { "title": "Strategy & design", "desc": "Wireframes, technical architecture and validation." },
+        { "title": "Development", "desc": "Agile iterations with regular deliveries." },
+        { "title": "Launch & support", "desc": "Go-live, training and follow-up." }
+      ]
+    },
+    "pricing": {
+      "title": "Transparent pricing",
+      "subtitle": "Offers tailored to each category — custom quote on request."
+    },
+    "faq": {
+      "title": "Frequently asked questions",
+      "items": [
+        { "q": "How much does a project cost?", "a": "Every project is unique. We provide a detailed quote after analyzing your needs — usually within 24h." },
+        { "q": "What are your timelines?", "a": "A landing page: 2–4 weeks. A mobile app or complex platform: 6–12 weeks depending on scope." },
+        { "q": "Do you offer maintenance?", "a": "Yes — support, updates and evolutions after delivery." },
+        { "q": "Do you work remotely?", "a": "Absolutely. We serve clients in Morocco and internationally." }
+      ]
+    },
+    "portfolio": {
+      "title": "Proof of our work",
+      "subtitle": "Real projects demonstrating our expertise."
+    },
+    "testimonials": {
+      "title": "What our clients say",
+      "subtitle": "Our partners' trust is our best reference.",
+      "placeholder": "Client testimonials coming soon — your review could appear here."
+    },
+    "cta": {
+      "title": "Ready to launch your project?",
+      "subtitle": "Contact D-GITALCODE — guaranteed response within 24h.",
+      "button": "Get a free quote"
+    }
+  },
+  "servicesPage": {
+    "hero": { "badge": "D-GITALCODE Service" },
+    "labels": {
+      "problem": "Problem",
+      "solution": "Solution",
+      "benefits": "Benefits",
+      "deliverables": "Deliverables",
+      "pricing": "Pricing",
+      "timeline": "Estimated timeline",
+      "faq": "FAQ"
+    },
+    "proof": {
+      "title": "Proof of expertise",
+      "subtitle": "Real projects illustrating our know-how."
+    },
+    "catalog": {
+      "title": "Our offers",
+      "subtitle": "Choose the right pack or request a custom solution."
+    },
+    "cta": {
+      "title": "Ready to get started?",
+      "subtitle": "Get a personalized quote — response within 24h."
+    },
+    "webDevelopment": {
+      "title": "Web Development",
+      "subtitle": "Websites, SaaS and high-performance eCommerce platforms.",
+      "problemTitle": "Your online presence doesn't convert",
+      "problem": "A slow, poorly structured or outdated site loses clients and hurts credibility.",
+      "solutionTitle": "Web experiences that perform",
+      "solution": "We build custom sites and applications — fast, SEO-ready and conversion-focused.",
+      "benefitsTitle": "What you gain",
+      "benefits": ["Optimized performance & Core Web Vitals", "Premium responsive design", "Scalable secure architecture", "Technical SEO built in"],
+      "deliverablesTitle": "What we deliver",
+      "deliverables": ["Responsive site or application", "CMS or admin dashboard", "Analytics & forms integration", "Documentation and training"],
+      "pricingTitle": "Investment",
+      "pricing": "Starting from our listed offers — custom quote for complex projects.",
+      "timeline": "2 to 8 weeks depending on scope",
+      "faq": [
+        { "q": "Do you use Next.js?", "a": "Yes — Next.js, React and TypeScript are core to our stack." },
+        { "q": "Do you handle hosting?", "a": "We recommend and configure Vercel, AWS or your preferred hosting." }
+      ]
+    },
+    "mobileApps": {
+      "title": "Mobile Applications",
+      "subtitle": "Native and cross-platform iOS & Android apps.",
+      "problemTitle": "Your customers are on mobile",
+      "problem": "Without a mobile app, you lose engagement, loyalty and direct sales channels.",
+      "solutionTitle": "Apps that engage and convert",
+      "solution": "We build high-performance mobile applications with premium UX.",
+      "benefitsTitle": "Key benefits",
+      "benefits": ["Native or cross-platform experience", "Push notifications & offline", "App Store & Play Store publishing", "Integrated analytics"],
+      "deliverablesTitle": "Deliverables",
+      "deliverables": ["iOS and/or Android application", "Backend API if needed", "Store assets and submission", "Technical documentation"],
+      "pricingTitle": "Pricing",
+      "pricing": "Custom quote based on features and platforms.",
+      "timeline": "6 to 12 weeks",
+      "faq": [
+        { "q": "React Native or native?", "a": "We choose the best approach based on budget, timeline and requirements." }
+      ]
+    },
+    "wordpressPlugins": {
+      "title": "WordPress Plugins",
+      "subtitle": "Professional WooCommerce extensions like WhatsFlow Pro.",
+      "problemTitle": "Your store lacks conversion tools",
+      "problem": "Without the right WooCommerce integrations, you leave sales on the table.",
+      "solutionTitle": "Custom plugins that boost sales",
+      "solution": "We develop secure, documented WordPress plugins focused on ROI.",
+      "benefitsTitle": "Benefits",
+      "benefits": ["WP standards compliant code", "WooCommerce compatible", "Support and updates", "Analytics and tracking"],
+      "deliverablesTitle": "Deliverables",
+      "deliverables": ["Tested functional plugin", "User documentation", "Post-launch support", "License and deployment"],
+      "pricingTitle": "Investment",
+      "pricing": "Licenses from $49 — custom development on quote.",
+      "timeline": "2 to 6 weeks",
+      "faq": [
+        { "q": "Do you offer WhatsFlow Pro?", "a": "Yes — our flagship WhatsApp + WooCommerce plugin. Demo available." }
+      ]
+    },
+    "wordpressTemplates": {
+      "title": "WordPress Templates",
+      "subtitle": "Premium themes optimized for conversion and SEO.",
+      "problemTitle": "Your theme doesn't reflect your brand",
+      "problem": "A generic template doesn't inspire trust and limits conversions.",
+      "solutionTitle": "Custom themes that sell",
+      "solution": "Premium, fast and customizable WordPress themes for your identity.",
+      "benefitsTitle": "Benefits",
+      "benefits": ["Unique design aligned with your brand", "Mobile and SEO optimized", "WooCommerce ready", "Installation included"],
+      "deliverablesTitle": "Deliverables",
+      "deliverables": ["Complete WordPress theme", "Key pages configured", "User guide", "Initial support"],
+      "pricingTitle": "Pricing",
+      "pricing": "Premium themes and custom development — quote on request.",
+      "timeline": "2 to 4 weeks",
+      "faq": [
+        { "q": "Elementor compatible?", "a": "We adapt to your tools — Elementor, Gutenberg or custom." }
+      ]
+    }
+  },
   "cta": {
     "title": "Ready to transform your business?",
     "subtitle": "Contact us via WhatsApp or form. Response within 24h.",
@@ -176,7 +381,28 @@
     "title": "Portfolio",
     "subtitle": "Discover our recent work",
     "viewProject": "View project",
-    "technologies": "Technologies"
+    "technologies": "Technologies",
+    "detail": {
+      "back": "Back to portfolio",
+      "client": "Client",
+      "overview": "Project overview",
+      "challenge": "The challenge",
+      "solution": "Our solution",
+      "features": "Features delivered",
+      "stack": "Tech stack",
+      "results": "Results",
+      "outcome": "Client outcome",
+      "gallery": "Gallery",
+      "viewCase": "View case study",
+      "ctaTitle": "Planning a similar project?",
+      "ctaSubtitle": "Let's discuss your goals — free quote and response within 24h.",
+      "ctaPrimary": "Start a similar project"
+    },
+    "listCta": {
+      "title": "Your project could be next",
+      "subtitle": "Contact D-GITALCODE to turn your idea into a high-performing digital product.",
+      "button": "Request a free quote"
+    }
   },
   "blog": {
     "title": "Blog",
@@ -204,19 +430,49 @@
   "contact": {
     "title": "Contact Us",
     "subtitle": "Let's talk about your project",
+    "headline": "Get a free quote — guaranteed response within 24h",
+    "promise": "Tell us about your project in a few lines. Our team will get back to you with a clear, no-obligation proposal.",
     "name": "Full name",
     "email": "Email",
-    "phone": "Phone",
-    "message": "Message",
-    "send": "Send message",
+    "phone": "Phone (optional)",
+    "message": "Describe your project",
+    "budgetRange": "Estimated budget",
+    "budgetPlaceholder": "Select a range (recommended)",
+    "serviceInterest": "Service of interest",
+    "serviceInterestPlaceholder": "Choose a service (optional)",
+    "send": "Get my free quote",
     "sending": "Sending...",
-    "success": "Message sent successfully!",
+    "success": "Thank you! We'll respond within 24 hours.",
     "error": "An error occurred. Please try again.",
     "whatsappTitle": "Quick WhatsApp Contact",
-    "whatsappDesc": "Chat directly with our team",
+    "whatsappDesc": "Chat directly with our team — ideal for an immediate response",
     "whatsappBtn": "Open WhatsApp",
     "connectTitle": "Connect with us",
-    "connectDesc": "Follow our updates, open-source projects and support D-GITALCODE."
+    "connectDesc": "Follow our updates, open-source projects and support D-GITALCODE.",
+    "trust": {
+      "responseTime": "Response within 24h",
+      "responseTimeDesc": "Fast quotes and follow-up on every request.",
+      "expertise": "Full-stack expertise",
+      "expertiseDesc": "Web, mobile and WordPress — a dedicated senior team.",
+      "confidential": "100% confidential",
+      "confidentialDesc": "Your data is never shared with third parties."
+    },
+    "microcopy": {
+      "formIntro": "2 minutes is all it takes — we'll handle the rest.",
+      "privacyNote": "By submitting this form, you agree to be contacted by D-GITALCODE."
+    }
+  },
+  "leads": {
+    "budget": {
+      "under_500": "Under €500",
+      "500_2000": "€500 – €2,000",
+      "2000_5000": "€2,000 – €5,000",
+      "5000_plus": "Over €5,000",
+      "not_sure": "Not sure yet"
+    }
+  },
+  "floatCta": {
+    "whatsapp": "WhatsApp"
   },
   "request": {
     "title": "Request this service",
@@ -288,9 +544,76 @@
     "empty": "Send your first message — we'll reply here.",
     "placeholder": "Type your message…",
     "send": "Send",
+    "sendError": "Could not send your message. Please try again.",
+    "connectionError": "Connection lost. Check your network and try again.",
+    "sessionExpired": "Your session has expired. Sign in again to continue.",
+    "retryConnection": "Retry",
     "sendHint": "Enter = new line · Ctrl+Enter = send",
     "loading": "Loading conversation…",
     "adminInbox": "Support",
+    "center": {
+      "metaTitle": "Support Center",
+      "metaDescription": "D-GITALCODE support — live chat, FAQ and priority contact with 24h response.",
+      "badge": "Client support center",
+      "heroTitle": "How can we help you?",
+      "heroSubtitle": "Our team assists with your projects, account and technical requests. Guaranteed response within 24 hours.",
+      "responseBadge": "24h response time",
+      "categoryTitle": "Request type",
+      "categorySubtitle": "Pick a category so your message reaches the right team.",
+      "chatTitle": "Live support chat",
+      "menuOpen": "Open support menu",
+      "menuClose": "Close menu",
+      "mobileMenuLabel": "Help & options",
+      "sidebarLabel": "Help center and resources",
+      "priorityTitle": "Priority contact",
+      "prioritySubtitle": "Need a faster response? Use a direct channel.",
+      "whatsappCta": "WhatsApp",
+      "whatsappDesc": "Fast direct reply",
+      "emailCta": "Email",
+      "emailSubject": "D-GITALCODE support request",
+      "faqTitle": "Frequently asked questions",
+      "faqSubtitle": "Answers to common questions before opening a ticket.",
+      "categories": {
+        "technical": {
+          "label": "Technical issue",
+          "desc": "Bug, access, integration or feature",
+          "subject": "Technical support"
+        },
+        "business": {
+          "label": "Business inquiry",
+          "desc": "Quote, billing or project scope",
+          "subject": "Business inquiry"
+        },
+        "bug": {
+          "label": "Bug report",
+          "desc": "Error, regression or unexpected behavior",
+          "subject": "Bug report"
+        },
+        "partnership": {
+          "label": "Partnership",
+          "desc": "Collaboration, reseller or joint project",
+          "subject": "Partnership inquiry"
+        }
+      },
+      "faq": [
+        {
+          "q": "What is the response time?",
+          "a": "We typically respond within 24 business hours. Urgent requests via WhatsApp are prioritized."
+        },
+        {
+          "q": "Can I attach files?",
+          "a": "Yes — screenshots, PDFs and documents up to 10 MB per file (5 files max per message)."
+        },
+        {
+          "q": "How do I track my request?",
+          "a": "The full conversation stays in this chat. You'll get a notification as soon as our team replies."
+        },
+        {
+          "q": "Who handles my messages?",
+          "a": "The D-GITALCODE team — senior developers and consultants, not a bot. Every request is read by a human."
+        }
+      ]
+    },
     "attachments": {
       "add": "Attach file",
       "camera": "Take photo",
@@ -298,6 +621,8 @@
       "dropHere": "Drop files here",
       "tooMany": "Maximum {{max}} files per message",
       "tooLarge": "Maximum size: {{max}} MB per file",
+      "uploadFailed": "Could not upload the attachment.",
+      "storageError": "File storage is unavailable. Contact support or try again without attachments.",
       "uploadedBy": "Uploaded by",
       "uploading": "Uploading…"
     }

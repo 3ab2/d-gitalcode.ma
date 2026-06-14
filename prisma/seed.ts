@@ -231,7 +231,73 @@ async function main() {
 
   await prisma.portfolioProject.upsert({
     where: { slug: "whatsflow-demo-store" },
-    update: {},
+    update: {
+      gallery: [],
+      translations: {
+        deleteMany: {},
+        create: [
+          {
+            locale: "fr",
+            title: "WhatsFlow Demo Store",
+            description:
+              "Boutique WooCommerce de démonstration avec WhatsFlow Pro intégré.",
+            overview:
+              "Une boutique eCommerce complète démontrant l'intégration WhatsFlow Pro — conversion WhatsApp, routage multi-agents et analytics en temps réel.",
+            challenge:
+              "Les boutiques WooCommerce perdent des ventes faute d'un canal de contact instantané adapté au marché marocain et MENA.",
+            solution:
+              "Intégration complète de WhatsFlow Pro avec boutons produit, popup sélecteur d'agent, messages pré-remplis et dashboard analytics.",
+            features: [
+              "Bouton WhatsApp par produit",
+              "Multi-Agent Routing",
+              "Popup Agent Selector",
+              "Click Tracking & Analytics",
+              "Export CSV",
+            ],
+            results:
+              "Augmentation mesurable des clics WhatsApp et du taux de contact client sur la boutique demo.",
+            outcome:
+              "Une vitrine eCommerce crédible qui convertit les visiteurs en conversations commerciales qualifiées.",
+            client: "D-GITALCODE",
+          },
+          {
+            locale: "en",
+            title: "WhatsFlow Demo Store",
+            description: "WooCommerce demo store with WhatsFlow Pro integrated.",
+            overview:
+              "A full eCommerce storefront showcasing WhatsFlow Pro — WhatsApp conversion, multi-agent routing and real-time analytics.",
+            challenge:
+              "WooCommerce stores lose sales without an instant contact channel suited to Moroccan and MENA markets.",
+            solution:
+              "Full WhatsFlow Pro integration with product buttons, agent selector popup, pre-filled messages and analytics dashboard.",
+            features: [
+              "Per-product WhatsApp button",
+              "Multi-Agent Routing",
+              "Agent Selector Popup",
+              "Click Tracking & Analytics",
+              "CSV Export",
+            ],
+            results:
+              "Measurable increase in WhatsApp clicks and qualified client conversations on the demo store.",
+            outcome:
+              "A credible eCommerce showcase that converts visitors into qualified sales conversations.",
+            client: "D-GITALCODE",
+          },
+          {
+            locale: "ar",
+            title: "متجر WhatsFlow التجريبي",
+            description: "متجر WooCommerce تجريبي مع WhatsFlow Pro مدمج.",
+            overview: "متجر تجارة إلكترونية يعرض WhatsFlow Pro — تحويل WhatsApp وتوجيه متعدد الوكلاء.",
+            challenge: "متاجر WooCommerce تفقد مبيعات بدون قناة اتصال فورية.",
+            solution: "تكامل WhatsFlow Pro كامل مع أزرار المنتجات ولوحة analytics.",
+            features: ["زر WhatsApp لكل منتج", "توجيه Multi-Agent", "تتبع النقرات", "تصدير CSV"],
+            results: "زيادة قابلة للقياس في نقرات WhatsApp.",
+            outcome: "واجهة eCommerce مقنعة تحوّل الزوار إلى محادثات مبيعات.",
+            client: "D-GITALCODE",
+          },
+        ],
+      },
+    },
     create: {
       slug: "whatsflow-demo-store",
       url: "https://whatsflow-demo.fwh.is",
@@ -245,20 +311,38 @@ async function main() {
             locale: "fr",
             title: "WhatsFlow Demo Store",
             description:
-              "Boutique WooCommerce de démonstration avec WhatsFlow Pro intégré. Multi-agent routing, analytics et popup selector.",
+              "Boutique WooCommerce de démonstration avec WhatsFlow Pro intégré.",
+            overview:
+              "Une boutique eCommerce complète démontrant WhatsFlow Pro.",
+            challenge: "Perte de ventes sans canal WhatsApp instantané.",
+            solution: "Intégration WhatsFlow Pro complète.",
+            features: ["Multi-Agent Routing", "Analytics", "Popup Selector"],
+            results: "Plus de clics WhatsApp qualifiés.",
+            outcome: "Vitrine eCommerce crédible et convertissante.",
             client: "D-GITALCODE",
           },
           {
             locale: "en",
             title: "WhatsFlow Demo Store",
-            description:
-              "WooCommerce demo store with WhatsFlow Pro integrated. Multi-agent routing, analytics and popup selector.",
+            description: "WooCommerce demo store with WhatsFlow Pro.",
+            overview: "Full eCommerce showcase for WhatsFlow Pro.",
+            challenge: "Lost sales without instant WhatsApp channel.",
+            solution: "Full WhatsFlow Pro integration.",
+            features: ["Multi-Agent Routing", "Analytics", "Popup Selector"],
+            results: "More qualified WhatsApp conversations.",
+            outcome: "Credible converting eCommerce showcase.",
             client: "D-GITALCODE",
           },
           {
             locale: "ar",
             title: "متجر WhatsFlow التجريبي",
-            description: "متجر WooCommerce تجريبي مع WhatsFlow Pro مدمج.",
+            description: "متجر WooCommerce تجريبي.",
+            overview: "عرض eCommerce لـ WhatsFlow Pro.",
+            challenge: "فقدان مبيعات بدون WhatsApp.",
+            solution: "تكامل WhatsFlow Pro.",
+            features: ["توجيه الوكلاء", "Analytics"],
+            results: "زيادة النقرات.",
+            outcome: "واجهة مقنعة.",
             client: "D-GITALCODE",
           },
         ],

@@ -5,7 +5,7 @@ import { logError } from "./logger";
 interface AuditParams {
   userId: string;
   userEmail?: string | null;
-  action: "CREATE" | "UPDATE" | "DELETE" | "REPLY" | "PUBLISH" | "UNPUBLISH";
+  action: "CREATE" | "UPDATE" | "DELETE" | "PUBLISH" | "UNPUBLISH";
   entity: string;
   entityId?: string;
   metadata?: Prisma.InputJsonValue;
