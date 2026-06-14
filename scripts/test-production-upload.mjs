@@ -94,6 +94,17 @@ async function main() {
     process.exit(1);
   }
 
+  const healthRes = await fetch(`${baseUrl}/api/admin/health/cloudinary`, {
+    headers: { Cookie: cookieHeader(jar) },
+  });
+  const healthData = await healthRes.json();
+  console.log("Health status:", healthRes.status);
+  console.log("Health response:", JSON.stringify(healthData, null, 2));
+
+  if (!healthRes.ok || !healthData.ok) {
+    process.exit(1);
+  }
+
   const pngBase64 =
     "iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAADUlEQVR42mP8z8BQDwAEhQGAhKmMIQAAAABJRU5ErkJggg==";
   const buffer = Buffer.from(pngBase64, "base64");
