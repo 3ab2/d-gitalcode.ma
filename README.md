@@ -394,11 +394,11 @@ This project is licensed under the [MIT License](./LICENSE).
 ## Author
 
 **Abdelhamid**  
-Founder of [D-GITALCODE](https://d-gitalcode.ma)
+Founder of [D-GITALCODE](https://d-gitalcodema.vercel.app/fr)
 
-- Website: [d-gitalcode.ma](https://d-gitalcode.ma)
+- Website: [d-gitalcode.ma](https://d-gitalcodema.vercel.app/fr)
 - GitHub: [@3ab2](https://github.com/3ab2)
-- Email: 3ab2uelkarch2006@gmail.com
+- Email: dgitalcode@gmail.com
 
 ---
 
