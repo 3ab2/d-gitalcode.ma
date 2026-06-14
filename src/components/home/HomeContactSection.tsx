@@ -2,21 +2,25 @@
 
 import { Mail, MessageCircle } from "lucide-react";
 import { useTranslation } from "react-i18next";
-import { ClientContactForm } from "@/components/contact/ClientContactForm";
+import { ContactLeadFormPanel } from "@/components/contact/ContactLeadFormPanel";
+import { ContactTrustSignals } from "@/components/contact/ContactTrustSignals";
 import { SocialLinks } from "@/components/social/SocialLinks";
 import { GlassCard } from "@/components/ui/GlassCard";
 import { Button } from "@/components/ui/Button";
 import { buildGeneralContactMessage, buildWhatsAppUrl } from "@/lib/whatsapp";
 import { usePublicSettings } from "@/components/providers/PublicSettingsProvider";
+import { type ContactServiceOption } from "@/lib/contact-form-options";
 import { type SocialLinkConfig } from "@/config/social-links";
 import { type Locale } from "@/lib/i18n/settings";
 
 export function HomeContactSection({
   locale,
   socialLinks,
+  serviceOptions,
 }: {
   locale: Locale;
   socialLinks: SocialLinkConfig[];
+  serviceOptions: ContactServiceOption[];
 }) {
   const { t } = useTranslation();
   const settings = usePublicSettings();
@@ -36,13 +40,17 @@ export function HomeContactSection({
           <p className="mt-4 text-lg text-white/60">{t("home.contact.subtitle")}</p>
         </div>
 
+        <div className="mt-10">
+          <ContactTrustSignals />
+        </div>
+
         <div className="mt-16 grid gap-8 lg:grid-cols-5">
           <GlassCard className="lg:col-span-3">
-            <h3 className="text-lg font-semibold text-white">{t("contact.title")}</h3>
-            <p className="mt-2 text-sm text-white/50">{t("contact.subtitle")}</p>
-            <div className="mt-8">
-              <ClientContactForm locale={locale} sourcePage="/#contact" />
-            </div>
+            <ContactLeadFormPanel
+              locale={locale}
+              sourcePage={`/${locale}#contact`}
+              serviceOptions={serviceOptions}
+            />
           </GlassCard>
 
           <div className="flex flex-col gap-6 lg:col-span-2">

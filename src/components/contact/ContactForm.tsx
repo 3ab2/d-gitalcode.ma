@@ -17,7 +17,7 @@ import {
 import { sendAnalyticsEvent } from "@/lib/analytics/client";
 import { type Locale } from "@/lib/i18n/settings";
 
-interface ServiceOption {
+export interface ContactFormServiceOption {
   id: string;
   name: string;
 }
@@ -28,7 +28,7 @@ interface ContactFormProps {
   serviceName?: string;
   type?: "GENERAL" | "SERVICE_REQUEST";
   sourcePage?: string;
-  serviceOptions?: ServiceOption[];
+  serviceOptions?: ContactFormServiceOption[];
   onSuccess?: () => void;
 }
 

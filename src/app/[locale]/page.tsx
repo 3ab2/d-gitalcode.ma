@@ -4,7 +4,8 @@ import { getTranslation } from "@/lib/i18n/server";
 import { type Locale } from "@/lib/i18n/settings";
 import { buildPublicPageMetadata } from "@/lib/seo/metadata";
 import { SiteJsonLd } from "@/components/seo/SiteJsonLd";
-import { getHomepageServiceCategories } from "@/lib/services";
+import { getHomepageServiceCategories, getAllServices } from "@/lib/services";
+import { toContactServiceOptions } from "@/lib/contact-form-options";
 import { getSocialLinks } from "@/lib/social-links";
 import { inferPortfolioCategory, estimateReadTime } from "@/lib/portfolio-category";
 import { Hero } from "@/components/home/Hero";
@@ -41,9 +42,10 @@ const defaultStats = [
 
 async function getHomeData(locale: Locale) {
   try {
-    const [stats, services, projects, posts, socialLinks] = await Promise.all([
+    const [stats, services, formServices, projects, posts, socialLinks] = await Promise.all([
       prisma.siteStat.findMany(),
       getHomepageServiceCategories(locale),
+      getAllServices(locale),
       prisma.portfolioProject.findMany({
         where: { published: true },
         orderBy: { order: "asc" },
@@ -69,6 +71,7 @@ async function getHomeData(locale: Locale) {
     return {
       stats: stats.length > 0 ? stats : defaultStats,
       services,
+      serviceOptions: toContactServiceOptions(formServices),
       projects: projects.map((p) => ({
         id: p.id,
         slug: p.slug,
@@ -101,6 +104,9 @@ async function getHomeData(locale: Locale) {
     return {
       stats: defaultStats,
       services: await getHomepageServiceCategories(locale).catch(() => []),
+      serviceOptions: toContactServiceOptions(
+        await getAllServices(locale).catch(() => [])
+      ),
       projects: [],
       posts: [],
       socialLinks: await getSocialLinks().catch(() => []),
@@ -126,7 +132,11 @@ export default async function HomePage({
       <PortfolioSection locale={locale as Locale} projects={data.projects} />
       <BlogPreviewSection locale={locale as Locale} posts={data.posts} />
       <AboutPreviewSection locale={locale as Locale} />
-      <HomeContactSection locale={locale as Locale} socialLinks={data.socialLinks} />
+      <HomeContactSection
+        locale={locale as Locale}
+        socialLinks={data.socialLinks}
+        serviceOptions={data.serviceOptions}
+      />
     </>
   );
 }

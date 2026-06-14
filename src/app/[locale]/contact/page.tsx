@@ -3,7 +3,7 @@ import { getTranslation } from "@/lib/i18n/server";
 import { type Locale } from "@/lib/i18n/settings";
 import { SectionHeading } from "@/components/ui/SectionHeading";
 import { Card } from "@/components/ui/Card";
-import { ClientContactForm } from "@/components/contact/ClientContactForm";
+import { ContactLeadFormPanel } from "@/components/contact/ContactLeadFormPanel";
 import { ContactTrustSignals } from "@/components/contact/ContactTrustSignals";
 import { buildGeneralContactMessage, buildWhatsAppUrl } from "@/lib/whatsapp";
 import { MessageCircle } from "lucide-react";
@@ -11,7 +11,8 @@ import { Button } from "@/components/ui/Button";
 import { SocialConnect } from "@/components/social/SocialConnect";
 import { getSocialLinks } from "@/lib/social-links";
 import { getSiteSettings } from "@/lib/settings";
-import { getAllServices, mapService } from "@/lib/services";
+import { getAllServices } from "@/lib/services";
+import { toContactServiceOptions } from "@/lib/contact-form-options";
 import { buildPublicPageMetadata } from "@/lib/seo/metadata";
 
 export async function generateMetadata({
@@ -47,10 +48,7 @@ export default async function ContactPage({
     buildGeneralContactMessage(loc),
     settings.whatsappNumber
   );
-  const serviceOptions = services.map((service) => ({
-    id: service.id,
-    name: mapService(service).title,
-  }));
+  const serviceOptions = toContactServiceOptions(services);
 
   return (
     <section className="pt-10 pb-16 md:pt-12">
@@ -66,10 +64,9 @@ export default async function ContactPage({
 
         <div className="mt-16 grid grid-cols-1 lg:grid-cols-2 gap-8">
           <Card>
-            <p className="mb-6 text-sm text-white/60">{t("contact.promise")}</p>
-            <ClientContactForm
+            <ContactLeadFormPanel
               locale={loc}
-              sourcePage="/contact"
+              sourcePage={`/${loc}/contact`}
               serviceOptions={serviceOptions}
             />
           </Card>
