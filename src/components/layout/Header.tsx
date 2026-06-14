@@ -74,8 +74,13 @@ export function Header({ locale }: { locale: Locale }) {
   }, [closeMenu]);
 
   useEffect(() => {
-    queueMicrotask(closeMenu);
-  }, [pathname, closeMenu]);
+    const timer = window.setTimeout(() => {
+      setMobileOpen(false);
+      setServicesOpen(false);
+    }, 0);
+
+    return () => window.clearTimeout(timer);
+  }, [pathname]);
 
   useEffect(() => {
     if (!mobileOpen) return;

@@ -43,6 +43,10 @@ type PwaInstallContextValue = {
 
 const PwaInstallContext = createContext<PwaInstallContextValue | null>(null);
 
+function subscribeNoop() {
+  return () => {};
+}
+
 export function usePwaInstall() {
   const ctx = useContext(PwaInstallContext);
   if (!ctx) {
@@ -54,24 +58,29 @@ export function usePwaInstall() {
 export function PwaInstallProvider({ children }: { children: React.ReactNode }) {
   const [deferredPrompt, setDeferredPrompt] =
     useState<BeforeInstallPromptEvent | null>(null);
-  const [isInstalled, setIsInstalled] = useState(false);
-  const [iosSafari, setIosSafari] = useState(false);
   const [nativeModalOpen, setNativeModalOpen] = useState(false);
   const [iosModalOpen, setIosModalOpen] = useState(false);
-  const hydrated = useSyncExternalStore(
-    () => () => {},
-    () => true,
+
+  const isInstalled = useSyncExternalStore(
+    (onStoreChange) => {
+      const onVisibility = () => {
+        if (document.visibilityState === "visible") onStoreChange();
+      };
+      window.addEventListener("appinstalled", onStoreChange);
+      document.addEventListener("visibilitychange", onVisibility);
+      return () => {
+        window.removeEventListener("appinstalled", onStoreChange);
+        document.removeEventListener("visibilitychange", onVisibility);
+      };
+    },
+    isPwaInstalled,
     () => false
   );
 
-  useEffect(() => {
-    let cancelled = false;
-    void Promise.resolve().then(() => {
-      if (cancelled) return;
-      setIsInstalled(isPwaInstalled());
-      setIosSafari(isIosSafari());
-    });
+  const iosSafari = useSyncExternalStore(subscribeNoop, isIosSafari, () => false);
+  const hydrated = useSyncExternalStore(subscribeNoop, () => true, () => false);
 
+  useEffect(() => {
     const onBeforeInstall = (event: Event) => {
       event.preventDefault();
       setDeferredPrompt(event as BeforeInstallPromptEvent);
@@ -79,33 +88,18 @@ export function PwaInstallProvider({ children }: { children: React.ReactNode }) 
 
     const onInstalled = () => {
       markPwaInstalled();
-      setIsInstalled(true);
       setDeferredPrompt(null);
       setNativeModalOpen(false);
       setIosModalOpen(false);
       trackPwaInstallEvent("install_accepted", { source: "appinstalled" });
     };
 
-    const onVisibility = () => {
-      if (document.visibilityState === "visible") {
-        const installed = isPwaInstalled();
-        setIsInstalled(installed);
-        if (installed) {
-          setNativeModalOpen(false);
-          setIosModalOpen(false);
-        }
-      }
-    };
-
     window.addEventListener("beforeinstallprompt", onBeforeInstall);
     window.addEventListener("appinstalled", onInstalled);
-    document.addEventListener("visibilitychange", onVisibility);
 
     return () => {
-      cancelled = true;
       window.removeEventListener("beforeinstallprompt", onBeforeInstall);
       window.removeEventListener("appinstalled", onInstalled);
-      document.removeEventListener("visibilitychange", onVisibility);
     };
   }, []);
 
@@ -130,7 +124,6 @@ export function PwaInstallProvider({ children }: { children: React.ReactNode }) 
     if (outcome === "accepted") {
       markPwaInstalled();
       setDeferredPrompt(null);
-      setIsInstalled(true);
       setNativeModalOpen(false);
       trackPwaInstallEvent("install_accepted", { source: "prompt", platform: "android" });
       return true;

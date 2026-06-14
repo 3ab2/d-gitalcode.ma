@@ -17,6 +17,8 @@ function createI18nInstance(locale: Locale, messages: Record<string, unknown>): 
     ns: ["common"],
     interpolation: { escapeValue: false },
     react: { useSuspense: false },
+    // Synchronous init avoids react-i18next async updates during first child render (React 19).
+    initAsync: false,
   });
 
   return instance;

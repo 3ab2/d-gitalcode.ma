@@ -1,7 +1,7 @@
 "use client";
 
 import { useCallback, useEffect, useState, useSyncExternalStore } from "react";
-import { useReducedMotion } from "framer-motion";
+import { useMediaQuery } from "@/hooks/useMediaQuery";
 
 const SKIP_STORAGE_KEY = "dgitalcode-hero-intro-skipped";
 const INTRO_DURATION_MS = 2200;
@@ -16,7 +16,7 @@ function readStoredSkip(): boolean {
 }
 
 export function useHeroIntro() {
-  const reducedMotion = useReducedMotion();
+  const prefersReducedMotion = useMediaQuery("(prefers-reduced-motion: reduce)");
   const [manuallySkipped, setManuallySkipped] = useState(false);
   const storedSkipped = useSyncExternalStore(
     subscribeNoop,
@@ -26,13 +26,12 @@ export function useHeroIntro() {
   const hydrated = useSyncExternalStore(subscribeNoop, () => true, () => false);
 
   const skipped = storedSkipped || manuallySkipped;
-  const prefersReducedMotion = Boolean(reducedMotion);
   const [timedComplete, setTimedComplete] = useState(
     () => storedSkipped || prefersReducedMotion
   );
 
   useEffect(() => {
-    if (!hydrated || skipped || reducedMotion) return;
+    if (!hydrated || skipped || prefersReducedMotion) return;
 
     const isCoarsePointer = window.matchMedia("(pointer: coarse)").matches;
     const delay = isCoarsePointer ? INTRO_DURATION_MOBILE_MS : INTRO_DURATION_MS;
@@ -42,7 +41,7 @@ export function useHeroIntro() {
     }, delay);
 
     return () => window.clearTimeout(timer);
-  }, [hydrated, skipped, reducedMotion]);
+  }, [hydrated, skipped, prefersReducedMotion]);
 
   const skipIntro = useCallback(() => {
     setManuallySkipped(true);
@@ -51,7 +50,7 @@ export function useHeroIntro() {
   }, []);
 
   const introComplete = skipped || prefersReducedMotion || timedComplete;
-  const animateIntro = hydrated && !skipped && !reducedMotion && !introComplete;
+  const animateIntro = hydrated && !skipped && !prefersReducedMotion && !introComplete;
 
   return {
     hydrated,

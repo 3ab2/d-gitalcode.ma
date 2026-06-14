@@ -78,14 +78,21 @@ export function AdminSidebar() {
   const [newLeadsCount, setNewLeadsCount] = useState(0);
 
   useEffect(() => {
+    let cancelled = false;
+
     void fetch("/api/admin/submissions/stats")
       .then((res) => (res.ok ? res.json() : null))
       .then((data) => {
-        if (data?.newLeads != null) setNewLeadsCount(data.newLeads);
+        if (cancelled || data?.newLeads == null) return;
+        setNewLeadsCount(data.newLeads);
       })
       .catch(() => {
         /* optional badge */
       });
+
+    return () => {
+      cancelled = true;
+    };
   }, [pathname]);
 
   const closeMobile = () => setMobileOpen(false);

@@ -1,4 +1,4 @@
-import { isDeliverableClientEmail } from "@/lib/email";
+import { isDeliverableClientEmail } from "@/lib/email-validation";
 
 const MIN_WHATSAPP_DIGITS = 8;
 const MAX_WHATSAPP_DIGITS = 15;

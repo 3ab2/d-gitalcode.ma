@@ -7,6 +7,7 @@ import {
 } from "@/lib/seo/metadata";
 import { getSiteSettings } from "@/lib/settings";
 import { SerwistProvider } from "@/components/providers/SerwistProvider";
+import { I18nBootstrap } from "@/components/providers/I18nBootstrap";
 import { PwaInstallProvider } from "@/components/pwa/PwaInstallProvider";
 import "./globals.css";
 
@@ -114,9 +115,11 @@ export default function RootLayout({
       data-scroll-behavior="smooth"
     >
       <body className="min-h-full flex flex-col antialiased">
-        <SerwistProvider>
-          <PwaInstallProvider>{children}</PwaInstallProvider>
-        </SerwistProvider>
+        <I18nBootstrap>
+          <SerwistProvider>
+            <PwaInstallProvider>{children}</PwaInstallProvider>
+          </SerwistProvider>
+        </I18nBootstrap>
       </body>
     </html>
   );

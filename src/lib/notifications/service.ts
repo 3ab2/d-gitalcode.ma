@@ -1,6 +1,12 @@
-import type { NotificationType, Prisma } from "@prisma/client";
+import { Prisma, type NotificationType } from "@prisma/client";
 import { prisma } from "@/lib/prisma";
+import { logError } from "@/lib/logger";
 import { dispatchToChannels } from "./channels";
+import {
+  ensureLegacyNotificationsPurged,
+  isLegacyNotificationEnumError,
+  purgeLegacyNotificationRows,
+} from "./cleanup";
 import type {
   NotificationListResponse,
   NotificationMetadata,
@@ -8,6 +14,19 @@ import type {
 } from "./types";
 
 const PAGE_SIZE = 20;
+
+async function withNotificationQueryGuard<T>(fn: () => Promise<T>): Promise<T> {
+  await ensureLegacyNotificationsPurged();
+
+  try {
+    return await fn();
+  } catch (error) {
+    if (!isLegacyNotificationEnumError(error)) throw error;
+    logError("notifications", error, { event: "legacy_enum_retry" });
+    await purgeLegacyNotificationRows();
+    return fn();
+  }
+}
 
 export function serializeNotification(
   row: {
@@ -54,9 +73,11 @@ export async function createNotification(input: {
 }
 
 export async function getUnreadCount(userId: string): Promise<number> {
-  return prisma.notification.count({
-    where: { userId, isRead: false },
-  });
+  return withNotificationQueryGuard(() =>
+    prisma.notification.count({
+      where: { userId, isRead: false },
+    })
+  );
 }
 
 export async function listNotifications(
@@ -65,27 +86,43 @@ export async function listNotifications(
 ): Promise<NotificationListResponse> {
   const limit = options?.limit ?? PAGE_SIZE;
 
-  const items = await prisma.notification.findMany({
-    where: { userId },
-    orderBy: { createdAt: "desc" },
-    take: limit + 1,
-    ...(options?.cursor
-      ? {
-          cursor: { id: options.cursor },
-          skip: 1,
-        }
-      : {}),
-  });
+  const queryPage = async (cursor?: string) => {
+    const items = await prisma.notification.findMany({
+      where: { userId },
+      orderBy: { createdAt: "desc" },
+      take: limit + 1,
+      ...(cursor
+        ? {
+            cursor: { id: cursor },
+            skip: 1,
+          }
+        : {}),
+    });
 
-  const hasMore = items.length > limit;
-  const page = hasMore ? items.slice(0, limit) : items;
-  const unreadCount = await getUnreadCount(userId);
+    const hasMore = items.length > limit;
+    const page = hasMore ? items.slice(0, limit) : items;
+    const unreadCount = await getUnreadCount(userId);
 
-  return {
-    items: page.map(serializeNotification),
-    nextCursor: hasMore ? page[page.length - 1]?.id ?? null : null,
-    unreadCount,
+    return {
+      items: page.map(serializeNotification),
+      nextCursor: hasMore ? page[page.length - 1]?.id ?? null : null,
+      unreadCount,
+    };
   };
+
+  try {
+    return await withNotificationQueryGuard(() => queryPage(options?.cursor));
+  } catch (error) {
+    if (
+      options?.cursor &&
+      error instanceof Prisma.PrismaClientKnownRequestError &&
+      error.code === "P2025"
+    ) {
+      logError("notifications", error, { event: "invalid_cursor_fallback" });
+      return queryPage();
+    }
+    throw error;
+  }
 }
 
 export async function markNotificationRead(
@@ -111,12 +148,14 @@ export async function getNotificationsSince(
   userId: string,
   since: Date
 ): Promise<SerializedNotification[]> {
-  const rows = await prisma.notification.findMany({
-    where: {
-      userId,
-      createdAt: { gt: since },
-    },
-    orderBy: { createdAt: "asc" },
-  });
+  const rows = await withNotificationQueryGuard(() =>
+    prisma.notification.findMany({
+      where: {
+        userId,
+        createdAt: { gt: since },
+      },
+      orderBy: { createdAt: "asc" },
+    })
+  );
   return rows.map(serializeNotification);
 }

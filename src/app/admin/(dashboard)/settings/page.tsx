@@ -12,6 +12,7 @@ import { InstagramIcon } from "@/components/social/InstagramIcon";
 import { KofiIcon } from "@/components/social/KofiIcon";
 import { LinkedInIcon } from "@/components/social/LinkedInIcon";
 import { CURRENCY_OPTIONS, type CurrencyCode } from "@/lib/currency";
+import { broadcastCurrencyUpdate } from "@/lib/currency/broadcast";
 import type { SiteSettings } from "@/lib/site-settings";
 
 interface SocialLinkForm {
@@ -37,6 +38,7 @@ export default function AdminSettingsPage() {
   const [socialLinks, setSocialLinks] = useState<SocialLinkForm[]>([]);
   const [loading, setLoading] = useState(true);
   const [saving, setSaving] = useState(false);
+  const [currencySaving, setCurrencySaving] = useState(false);
   const [message, setMessage] = useState<{ type: "success" | "error"; text: string } | null>(null);
 
   useEffect(() => {
@@ -78,6 +80,48 @@ export default function AdminSettingsPage() {
     );
   };
 
+  const handleCurrencyChange = async (currency: CurrencyCode) => {
+    if (!settings || settings.defaultCurrency === currency) return;
+
+    const previous = settings.defaultCurrency;
+    setSettings({ ...settings, defaultCurrency: currency });
+    setCurrencySaving(true);
+    setMessage(null);
+
+    try {
+      const res = await fetch("/api/admin/settings/currency", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ currency }),
+      });
+
+      if (!res.ok) {
+        throw new Error("Currency update failed");
+      }
+
+      const data = (await res.json()) as { currency: CurrencyCode };
+      setSettings((current) =>
+        current ? { ...current, defaultCurrency: data.currency } : current
+      );
+      broadcastCurrencyUpdate(data.currency);
+      setMessage({
+        type: "success",
+        text: `Currency updated to ${data.currency}. All prices across the site now use the new symbol.`,
+      });
+      router.refresh();
+    } catch {
+      setSettings((current) =>
+        current ? { ...current, defaultCurrency: previous } : current
+      );
+      setMessage({
+        type: "error",
+        text: "Failed to update currency. Please try again.",
+      });
+    } finally {
+      setCurrencySaving(false);
+    }
+  };
+
   const handleSave = async (e: React.FormEvent) => {
     e.preventDefault();
     if (!settings) return;
@@ -99,8 +143,10 @@ export default function AdminSettingsPage() {
     ]);
 
     if (settingsRes.ok && socialRes.ok) {
+      const savedSettings = await settingsRes.json();
+      setSettings(savedSettings);
+      broadcastCurrencyUpdate(savedSettings.defaultCurrency);
       setMessage({ type: "success", text: "Settings saved successfully." });
-      setSettings(await settingsRes.json());
       router.refresh();
     } else {
       setMessage({ type: "error", text: "Failed to save settings. Please try again." });
@@ -181,13 +227,11 @@ export default function AdminSettingsPage() {
             <select
               id="defaultCurrency"
               value={settings.defaultCurrency}
+              disabled={currencySaving}
               onChange={(e) =>
-                setSettings({
-                  ...settings,
-                  defaultCurrency: e.target.value as CurrencyCode,
-                })
+                void handleCurrencyChange(e.target.value as CurrencyCode)
               }
-              className="min-h-11 w-full appearance-none rounded-xl border border-white/10 bg-white/5 px-4 py-3 text-base text-white transition-colors focus:border-brand-green/50 focus:outline-none focus:ring-2 focus:ring-brand-green/20"
+              className="min-h-11 w-full appearance-none rounded-xl border border-white/10 bg-white/5 px-4 py-3 text-base text-white transition-colors focus:border-brand-green/50 focus:outline-none focus:ring-2 focus:ring-brand-green/20 disabled:opacity-60"
             >
               {CURRENCY_OPTIONS.map((option) => (
                 <option key={option.code} value={option.code} className="bg-brand-dark">
@@ -195,6 +239,9 @@ export default function AdminSettingsPage() {
                 </option>
               ))}
             </select>
+            {currencySaving && (
+              <p className="text-xs text-white/45">Applying currency globally…</p>
+            )}
           </div>
         </section>
 

@@ -1,9 +1,12 @@
 import { v2 as cloudinary } from "cloudinary";
 import {
   getCloudinaryConfig,
+  getCloudinaryConfigStatus,
   isCloudinaryEnvConfigured,
 } from "@/config/cloudinary";
 import { logError } from "@/lib/logger";
+
+const CLOUDINARY_SDK_VERSION = "2.10.0";
 
 let configured = false;
 
@@ -17,11 +20,29 @@ function ensureCloudinaryConfigured(): boolean {
       api_key: apiKey,
       api_secret: apiSecret,
       secure: true,
+      sdk_semver: CLOUDINARY_SDK_VERSION,
     });
     configured = true;
   }
 
   return true;
+}
+
+function buildManualOptimizedUrl(
+  publicId: string,
+  options?: { width?: number; height?: number; crop?: string }
+): string {
+  const { cloudName } = getCloudinaryConfig();
+  if (!cloudName || !publicId) return "";
+
+  const transforms = ["f_auto", "q_auto"];
+  if (options?.width) transforms.push(`w_${options.width}`);
+  if (options?.height) transforms.push(`h_${options.height}`);
+  if (options?.crop) transforms.push(`c_${options.crop}`);
+
+  const transformSegment = transforms.join(",");
+  const normalizedId = publicId.replace(/^\/+/, "");
+  return `https://res.cloudinary.com/${cloudName}/image/upload/${transformSegment}/${normalizedId}`;
 }
 
 export const CLOUDINARY_UPLOAD_TIMEOUT_MS = 30_000;
@@ -80,16 +101,27 @@ export function buildOptimizedImageUrl(
   publicId: string,
   options?: { width?: number; height?: number; crop?: string }
 ): string {
-  if (!ensureCloudinaryConfigured()) return "";
+  if (!ensureCloudinaryConfigured()) {
+    return buildManualOptimizedUrl(publicId, options);
+  }
 
-  return cloudinary.url(publicId, {
-    secure: true,
-    fetch_format: "auto",
-    quality: "auto",
-    width: options?.width,
-    height: options?.height,
-    crop: options?.crop,
-  });
+  try {
+    return cloudinary.url(publicId, {
+      secure: true,
+      fetch_format: "auto",
+      quality: "auto",
+      width: options?.width,
+      height: options?.height,
+      crop: options?.crop,
+      // Next.js bundling breaks SDK analytics (sdk_semver); disable to avoid 500s.
+      analytics: false,
+      urlAnalytics: false,
+      sdk_semver: CLOUDINARY_SDK_VERSION,
+    });
+  } catch (error) {
+    logError("cloudinary", error, { event: "optimized_url_fallback", publicId });
+    return buildManualOptimizedUrl(publicId, options);
+  }
 }
 
 export async function getImageResourceDetails(
@@ -150,6 +182,57 @@ export type CloudinaryUploadResult = {
   resourceType: "image" | "raw";
 };
 
+export type CloudinaryUploadFailureReason =
+  | "not_configured"
+  | "timeout"
+  | "invalid_credentials"
+  | "upload_failed";
+
+export type CloudinaryBufferUploadResult =
+  | {
+      ok: true;
+      secureUrl: string;
+      publicId: string;
+      resourceType: "image" | "raw";
+    }
+  | {
+      ok: false;
+      reason: CloudinaryUploadFailureReason;
+      message?: string;
+    };
+
+function classifyCloudinaryError(error: unknown): {
+  reason: CloudinaryUploadFailureReason;
+  message?: string;
+} {
+  const text =
+    error instanceof Error
+      ? error.message
+      : typeof error === "object" && error !== null
+        ? JSON.stringify(error)
+        : String(error);
+
+  if (text.includes("upload_timeout")) {
+    return { reason: "timeout" };
+  }
+
+  if (
+    text.includes("Invalid cloud_name") ||
+    text.includes("Invalid API Key") ||
+    text.includes("http_code\":401") ||
+    text.includes("http_code\":403") ||
+    text.includes("http_code: 401") ||
+    text.includes("http_code: 403")
+  ) {
+    return {
+      reason: "invalid_credentials",
+      message: "Cloudinary rejected the credentials. Check CLOUDINARY_* in .env.",
+    };
+  }
+
+  return { reason: "upload_failed", message: text.slice(0, 200) };
+}
+
 export async function uploadAttachmentBuffer(
   buffer: Buffer,
   options: {
@@ -157,14 +240,16 @@ export async function uploadAttachmentBuffer(
     mimeType: string;
     originalName?: string;
   }
-): Promise<CloudinaryUploadResult | null> {
-  if (!ensureCloudinaryConfigured()) return null;
+): Promise<CloudinaryBufferUploadResult> {
+  if (!ensureCloudinaryConfigured()) {
+    return { ok: false, reason: "not_configured" };
+  }
 
   const resourceType = attachmentResourceType(options.mimeType);
 
   try {
     const result = await withUploadTimeout((setAbortHandler) => {
-      return new Promise<CloudinaryUploadResult>((resolve, reject) => {
+      return new Promise<CloudinaryBufferUploadResult>((resolve, reject) => {
         const upload = cloudinary.uploader.upload_stream(
           {
             folder: options.folder,
@@ -182,6 +267,7 @@ export async function uploadAttachmentBuffer(
               return;
             }
             resolve({
+              ok: true,
               secureUrl: uploadResult.secure_url,
               publicId: uploadResult.public_id,
               resourceType,
@@ -203,13 +289,13 @@ export async function uploadAttachmentBuffer(
 
     return result;
   } catch (error) {
-    const message = error instanceof Error ? error.message : "unknown";
-    if (message.includes("upload_timeout")) {
+    const classified = classifyCloudinaryError(error);
+    if (classified.reason === "timeout") {
       logError("cloudinary", error, { event: "attachment_upload_timeout" });
     } else {
       logError("cloudinary", error, { event: "attachment_upload_failed" });
     }
-    return null;
+    return { ok: false, ...classified };
   }
 }
 

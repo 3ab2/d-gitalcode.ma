@@ -39,11 +39,14 @@ The public site is multilingual (French, English, Arabic with RTL), SEO-optimize
 |------|------------|
 | **Admin Leads** | Dedicated leads inbox with search, filters, status workflow (`NEW` → `CLOSED`), daily stats, and deep-link support from notifications |
 | **Lead replies** | One-click **Reply via WhatsApp** and **Reply via Email** with professional pre-filled messages (opens native apps — no in-app email tracking) |
+| **Currency settings** | Admin-configurable default currency (MAD, USD, EUR) with live site-wide price formatting via `FormattedPrice` and broadcast sync |
+| **Cloudinary uploads** | Hardened admin image uploads — MIME/size validation, 30s timeout, optimized delivery URLs, and clearer error feedback |
+| **Notifications** | Legacy notification cleanup for removed enum types; improved SSE stream reliability and unread-count handling |
 | **Removed** | In-app Resend reply tracking (`SubmissionReply`), client support chat, user registration/login, and admin messaging — simplified to admin-only + external reply channels |
 | **Portfolio** | Individual project detail pages with case-study sections, technologies, and conversion CTAs |
 | **Services** | Category landing pages, service request modals, and WhatsApp conversion flows |
 | **Homepage** | Interactive agency map (3D on desktop, mobile fallback), trust section, hero intro animation with reduced-motion support |
-| **Mobile** | iOS Safari fixes, touch-safe modals, responsive admin sidebar, coarse-pointer hero timing |
+| **Mobile** | iOS Safari fixes, touch-safe modals, responsive admin sidebar, coarse-pointer hero timing, PWA i18n bootstrap |
 | **Infrastructure** | Upstash Redis rate limiting (required in production), security headers, Serwist PWA |
 
 ---
@@ -58,7 +61,8 @@ The public site is multilingual (French, English, Arabic with RTL), SEO-optimize
 | **Portfolio** | Project grid, detail pages, technologies, live/demo links |
 | **Blog** | 50+ SEO articles, categories, tags, cover images, dynamic OG images, CTA analytics |
 | **Leads** | Contact & service-request forms, duplicate detection, admin inbox, WhatsApp/email replies |
-| **Admin** | Dashboard, CMS (services, portfolio, blog, social), leads, settings, audit log |
+| **Admin** | Dashboard, CMS (services, portfolio, blog, social), leads, settings (currency, contact, social), audit log |
+| **Currency** | Global MAD / USD / EUR setting with cached public API and client-side live updates |
 | **Notifications** | Real-time SSE notification center for new leads |
 | **PWA** | Serwist service worker, offline page, iOS install instructions |
 | **SEO** | Metadata, JSON-LD, sitemap, robots.txt, semantic HTML |
@@ -107,7 +111,7 @@ d-gitalcode.ma/
 │   ├── app/
 │   │   ├── [locale]/          # Public pages (home, services, portfolio, blog, contact, about)
 │   │   ├── admin/             # Admin dashboard & login
-│   │   ├── api/               # REST routes (CMS, auth, contact, notifications, analytics)
+│   │   ├── api/               # REST routes (CMS, auth, contact, notifications, analytics, settings)
 │   │   ├── manifest.ts        # PWA manifest
 │   │   ├── offline/           # Offline fallback page
 │   │   └── serwist/           # Service worker routes
@@ -117,6 +121,7 @@ d-gitalcode.ma/
 │   │   ├── brand/             # Logo, hero illustration
 │   │   ├── contact/           # Contact forms, trust signals
 │   │   ├── conversion/        # Conversion CTAs
+│   │   ├── currency/          # FormattedPrice and currency display
 │   │   ├── home/              # Hero, agency map, sections
 │   │   ├── layout/            # Header, footer, conversion float
 │   │   ├── notifications/     # Notification bell & center (SSE)
@@ -131,7 +136,8 @@ d-gitalcode.ma/
 │   │   ├── agency-map/        # Agency map node config
 │   │   ├── analytics/         # Blog & CTA analytics
 │   │   ├── leads/             # Lead stats & duplicate detection
-│   │   ├── i18n/              # Server/client i18n helpers
+│   │   ├── currency/          # Currency settings, broadcast sync
+│   │   ├── i18n/              # Server/client i18n helpers (incl. PWA bootstrap)
 │   │   └── ...                # auth, email, prisma, seo, whatsapp, etc.
 │   └── middleware.ts          # Locale routing, legacy redirects, admin paths
 ├── docker-compose.yml         # Local PostgreSQL (optional)
@@ -325,6 +331,8 @@ npx prisma db seed
 - [ ] Contact form sends notification email
 - [ ] Admin login and leads inbox work on mobile
 - [ ] WhatsApp reply opens with pre-filled message
+- [ ] Default currency updates reflect across services pages
+- [ ] Admin image uploads succeed via Cloudinary
 - [ ] PWA install works on iOS Safari
 
 ---

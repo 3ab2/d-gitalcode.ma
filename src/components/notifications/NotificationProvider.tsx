@@ -6,6 +6,7 @@ import {
   useContext,
   useEffect,
   useMemo,
+  useRef,
   useState,
 } from "react";
 import { useSession } from "next-auth/react";
@@ -41,6 +42,14 @@ export function NotificationProvider({ children }: { children: React.ReactNode }
   const [unreadCount, setUnreadCount] = useState(0);
   const [loading, setLoading] = useState(false);
   const [nextCursor, setNextCursor] = useState<string | null>(null);
+  const mountedRef = useRef(false);
+
+  useEffect(() => {
+    mountedRef.current = true;
+    return () => {
+      mountedRef.current = false;
+    };
+  }, []);
 
   const fetchPage = useCallback(async (cursor?: string) => {
     const url = cursor
@@ -113,12 +122,17 @@ export function NotificationProvider({ children }: { children: React.ReactNode }
         }
       })();
     } else {
-      void Promise.resolve().then(() => {
+      const timer = window.setTimeout(() => {
         if (cancelled) return;
         setNotifications([]);
         setUnreadCount(0);
         setNextCursor(null);
-      });
+      }, 0);
+
+      return () => {
+        cancelled = true;
+        window.clearTimeout(timer);
+      };
     }
 
     return () => {
@@ -126,19 +140,34 @@ export function NotificationProvider({ children }: { children: React.ReactNode }
     };
   }, [enabled, fetchPage]);
 
+  const handleConnected = useCallback((count: number) => {
+    if (mountedRef.current) setUnreadCount(count);
+  }, []);
+
+  const handleUnreadCount = useCallback((count: number) => {
+    if (mountedRef.current) setUnreadCount(count);
+  }, []);
+
+  const handleNotification = useCallback((notification: SerializedNotification) => {
+    if (!mountedRef.current) return;
+    setNotifications((prev) => {
+      if (prev.some((n) => n.id === notification.id)) return prev;
+      return [notification, ...prev];
+    });
+    if (!notification.isRead) {
+      setUnreadCount((c) => c + 1);
+    }
+  }, []);
+
+  const handleFallback = useCallback(() => {
+    if (mountedRef.current) void refresh();
+  }, [refresh]);
+
   useNotificationStream(enabled, {
-    onConnected: setUnreadCount,
-    onUnreadCount: setUnreadCount,
-    onNotification: (notification) => {
-      setNotifications((prev) => {
-        if (prev.some((n) => n.id === notification.id)) return prev;
-        return [notification, ...prev];
-      });
-      if (!notification.isRead) {
-        setUnreadCount((c) => c + 1);
-      }
-    },
-    onFallback: () => void refresh(),
+    onConnected: handleConnected,
+    onUnreadCount: handleUnreadCount,
+    onNotification: handleNotification,
+    onFallback: handleFallback,
   });
 
   const value = useMemo(

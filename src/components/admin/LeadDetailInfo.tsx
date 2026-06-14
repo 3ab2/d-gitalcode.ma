@@ -3,7 +3,7 @@
 import type { ComponentType } from "react";
 import { Mail, MessageSquare, Phone, User, Wrench } from "lucide-react";
 import { getLeadRequestedService, type LeadResponseInput } from "@/lib/lead-response";
-import { isDeliverableClientEmail } from "@/lib/email";
+import { isDeliverableClientEmail } from "@/lib/email-validation";
 
 interface LeadDetailInfoProps {
   lead: LeadResponseInput & {

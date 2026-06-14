@@ -2,9 +2,11 @@ import {
   CONTACT_EMAIL,
   EMAIL_DOMAIN,
   EMAIL_FROM_DEFAULT,
-  INVALID_CLIENT_EMAILS,
 } from "@/config/contact";
+import { isDeliverableClientEmail } from "@/lib/email-validation";
 import { Resend } from "resend";
+
+export { isDeliverableClientEmail } from "@/lib/email-validation";
 
 function getResendApiKey(): string | null {
   const apiKey = process.env.RESEND_API_KEY?.trim();
@@ -43,12 +45,6 @@ function getAdminNotifyEmail(): string {
 
 export function isResendConfigured(): boolean {
   return getResendClient() !== null;
-}
-
-export function isDeliverableClientEmail(email: string): boolean {
-  const normalized = email.trim().toLowerCase();
-  if (INVALID_CLIENT_EMAILS.has(normalized)) return false;
-  return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(normalized);
 }
 
 export type EmailSendResult =

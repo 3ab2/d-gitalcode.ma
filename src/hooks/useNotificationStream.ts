@@ -53,15 +53,17 @@ export function useNotificationStream(
             unreadCount?: number;
           };
 
-          if (data.type === "connected" && typeof data.unreadCount === "number") {
-            handlersRef.current.onConnected?.(data.unreadCount);
-          }
-          if (data.type === "notification" && data.notification) {
-            handlersRef.current.onNotification?.(data.notification);
-          }
-          if (data.type === "unread_count" && typeof data.count === "number") {
-            handlersRef.current.onUnreadCount?.(data.count);
-          }
+          window.setTimeout(() => {
+            if (data.type === "connected" && typeof data.unreadCount === "number") {
+              handlersRef.current.onConnected?.(data.unreadCount);
+            }
+            if (data.type === "notification" && data.notification) {
+              handlersRef.current.onNotification?.(data.notification);
+            }
+            if (data.type === "unread_count" && typeof data.count === "number") {
+              handlersRef.current.onUnreadCount?.(data.count);
+            }
+          }, 0);
         } catch {
           /* ignore malformed events */
         }

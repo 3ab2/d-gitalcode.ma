@@ -13,7 +13,7 @@ import { buildServiceRequestMessage, buildWhatsAppUrl } from "@/lib/whatsapp";
 import { SectionHeading } from "@/components/ui/SectionHeading";
 import { ServiceCard } from "@/components/services/ServiceCard";
 import { ConversionCTA } from "@/components/conversion/ConversionCTA";
-import { formatPrice } from "@/lib/currency";
+import { FormattedPrice } from "@/components/currency/FormattedPrice";
 
 const SLUG_I18N_KEYS: Record<string, string> = {
   "web-development": "webDevelopment",
@@ -150,12 +150,12 @@ export async function ServiceCategoryConversion({
           </FunnelSection>
 
           <FunnelSection label={t("servicesPage.labels.pricing")} title={t(`${prefix}.pricingTitle`)}>
-            <p className="text-3xl font-bold text-brand-green">
-              {cheapest?.priceLabel ||
-                (cheapest?.price != null
-                  ? formatPrice(cheapest.price, settings.defaultCurrency, locale)
-                  : t("home.services.custom"))}
-            </p>
+            <FormattedPrice
+              amount={cheapest?.price}
+              priceLabel={cheapest?.priceLabel}
+              locale={locale}
+              className="text-3xl font-bold text-brand-green"
+            />
             <p className="mt-3">{t(`${prefix}.pricing`)}</p>
             <p className="mt-4 text-sm text-white/45">
               {t("servicesPage.labels.timeline")}: {timeline}

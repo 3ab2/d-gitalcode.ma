@@ -462,6 +462,7 @@ async function main() {
       value:
         "développement web, WooCommerce, WhatsApp, WordPress plugins, agence digitale Maroc",
     },
+    { key: "default_currency", value: "MAD" },
   ];
 
   for (const setting of siteSettingsSeed) {

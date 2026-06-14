@@ -25,7 +25,8 @@ const EXTENSION_MIME_MAP: Record<string, string[]> = {
 
 const ADMIN_IMAGE_EXTENSIONS = new Set(["png", "jpg", "jpeg", "webp"]);
 const ADMIN_IMAGE_MIMES = new Set(["image/png", "image/jpeg", "image/webp"]);
-const MAX_ADMIN_IMAGE_BYTES = 10 * 1024 * 1024;
+/** Vercel/serverless request body limit is ~4.5 MB — keep uploads safely below that. */
+export const MAX_ADMIN_IMAGE_BYTES = 4 * 1024 * 1024;
 
 function sanitizeBasename(name: string): string {
   const base = name.split(/[/\\]/).pop() ?? name;

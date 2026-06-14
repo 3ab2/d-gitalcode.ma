@@ -65,6 +65,18 @@ export function formatPrice(
   }
 }
 
+/** Prefer explicit priceLabel; otherwise format numeric amount with global currency. */
+export function resolveDisplayPrice(
+  amount: number | null | undefined,
+  priceLabel: string | null | undefined,
+  currency: CurrencyCode = DEFAULT_CURRENCY,
+  locale = "fr-FR"
+): string | null {
+  if (priceLabel?.trim()) return priceLabel.trim();
+  if (amount == null) return null;
+  return formatPrice(amount, currency, locale);
+}
+
 const NOT_SURE_LABELS: Record<Locale, string> = {
   fr: "Je ne sais pas encore",
   en: "Not sure yet",
