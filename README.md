@@ -9,7 +9,7 @@
 </p>
 
 <p align="center">
-  <a href="https://d-gitalcode.ma">Live site</a> ·
+  <a href="https://d-gitalcodema.vercel.app/fr">Live site</a> ·
   <a href="https://github.com/3ab2/d-gitalcode.ma">Repository</a> ·
   <a href="#installation">Installation</a> ·
   <a href="#deployment">Deployment</a>
