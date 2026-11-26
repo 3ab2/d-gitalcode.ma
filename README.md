@@ -266,6 +266,19 @@ See [docs/RESEND-DNS.md](./docs/RESEND-DNS.md) for Resend domain verification.
 
 ---
 
+## Tests
+
+```bash
+npm run lint && npm run type-check
+npm test                                   # unit tests
+npm run build && npm start                 # then, in another terminal:
+npm run test:smoke -- http://localhost:3000
+```
+
+`.github/workflows/ci.yml` runs the same steps against its own database. State and open items: [docs/RELEASE_READINESS.md](docs/RELEASE_READINESS.md).
+
+---
+
 ## Deployment
 
 ### GitHub
@@ -298,7 +311,7 @@ npm run build
 | Environment | URL |
 |-------------|-----|
 | Vercel | `https://d-gitalcodema.vercel.app` |
-| Custom domain | `https://d-gitalcode.ma` |
+| Custom domain | None active; use `https://d-gitalcodema.vercel.app` |
 
 Set `AUTH_URL`, `NEXTAUTH_URL`, and `NEXT_PUBLIC_SITE_URL` to your production domain.
 

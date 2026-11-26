@@ -41,7 +41,8 @@ async function getPostForMeta(slug: string, locale: Locale) {
 }
 
 export async function generateStaticParams() {
-  const posts = await getPublishedPostSlugs();
+  // Pages are also rendered on demand, so a build without a database still succeeds.
+  const posts = await getPublishedPostSlugs().catch(() => []);
   return locales.flatMap((locale) =>
     posts.map((post) => ({ locale, slug: post.slug }))
   );
@@ -124,7 +125,7 @@ export default async function BlogPostPage({
       featured: r.featured,
       publishedAt: r.publishedAt,
       translation: tr
-        ? { title: tr.title, excerpt: tr.excerpt, content: tr.content }
+        ? { title: tr.title, excerpt: tr.excerpt, readMinutes: getReadTimeMinutes(tr.content) }
         : undefined,
       categories: r.categories,
       tags: r.tags,
@@ -175,7 +176,7 @@ export default async function BlogPostPage({
                   {translation?.title}
                 </h1>
 
-                <div className="mt-4 flex flex-wrap items-center gap-4 text-sm text-white/40">
+                <div className="mt-4 flex flex-wrap items-center gap-4 text-sm text-white/60">
                   <span className="inline-flex items-center gap-1.5">
                     <User className="h-4 w-4" />
                     {AUTHOR}

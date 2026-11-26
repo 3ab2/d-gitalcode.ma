@@ -3,7 +3,7 @@ import {
   EMAIL_DOMAIN,
   EMAIL_FROM_DEFAULT,
 } from "@/config/contact";
-import { isDeliverableClientEmail } from "@/lib/email-validation";
+import { leadRecipients } from "@/lib/lead-recipients";
 import { Resend } from "resend";
 
 export { isDeliverableClientEmail } from "@/lib/email-validation";
@@ -72,7 +72,11 @@ export async function sendContactNotification(
   options?: { notifyEmail?: string }
 ): Promise<EmailSendResult> {
   const client = getResendClient();
-  const adminEmail = options?.notifyEmail?.trim() || getAdminNotifyEmail();
+  const recipients = leadRecipients(
+    options?.notifyEmail,
+    getAdminNotifyEmail(),
+    CONTACT_EMAIL
+  );
 
   if (!client) {
     console.warn("[email] RESEND_API_KEY missing or invalid — skipping notification");
@@ -96,24 +100,28 @@ export async function sendContactNotification(
     <p>${escapeHtml(data.message).replace(/\n/g, "<br>")}</p>
   `;
 
-  const { data: result, error } = await client.emails.send({
-    from: getEmailFrom(),
-    to: adminEmail,
-    replyTo: data.email,
-    subject,
-    html,
-  });
+  let failure: EmailSendResult = { success: false, reason: "invalid_recipient" };
 
-  if (error) {
+  for (const to of recipients) {
+    const { data: result, error } = await client.emails.send({
+      from: getEmailFrom(),
+      to,
+      replyTo: data.email,
+      subject,
+      html,
+    });
+
+    if (!error) return { success: true, id: result?.id };
+
     console.error("[email] Contact notification failed:", error);
-    return {
+    failure = {
       success: false,
       reason: "send_failed",
       error: formatResendError(error),
     };
   }
 
-  return { success: true, id: result?.id };
+  return failure;
 }
 
 function formatResendError(error: {

@@ -4,6 +4,7 @@ import {
   publisherLogoUrl,
   SITE_NAME,
 } from "@/lib/seo/metadata";
+import { serializeJsonLd } from "@/lib/seo/json-ld";
 
 type PortfolioJsonLdProps = {
   locale: string;
@@ -54,7 +55,7 @@ export function PortfolioJsonLd({
   return (
     <script
       type="application/ld+json"
-      dangerouslySetInnerHTML={{ __html: JSON.stringify(schema) }}
+      dangerouslySetInnerHTML={{ __html: serializeJsonLd(schema) }}
     />
   );
 }

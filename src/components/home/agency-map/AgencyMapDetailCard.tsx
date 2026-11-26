@@ -59,9 +59,9 @@ export function AgencyMapDetailCard({
           </p>
 
           <Link href={getNodeHref(locale, node)} className="mt-5 block">
-            <Button size="md" className="hero-cta-glow w-full">
+            <Button as="span" size="md" className="hero-cta-glow w-full">
               {t("home.agencyMap.exploreService")}
-              <ArrowRight className="h-4 w-4" />
+              <ArrowRight className="rtl:rotate-180 h-4 w-4" />
             </Button>
           </Link>
         </motion.div>

@@ -1,5 +1,6 @@
 import { ImageResponse } from "next/og";
 import { getBlogImage } from "@/lib/blog-images";
+import { getSiteUrl } from "@/lib/seo/metadata";
 
 export const alt = "D-GITALCODE Blog";
 export const size = { width: 1200, height: 630 };
@@ -61,7 +62,7 @@ export default async function OgImage({
           }}
         >
           <span>Professional Development Agency</span>
-          <span>d-gitalcode.ma</span>
+          <span>{new URL(getSiteUrl()).host}</span>
         </div>
       </div>
     ),

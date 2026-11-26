@@ -27,7 +27,7 @@ function StepCard({
       </span>
       <span className="min-w-0 pt-0.5">
         <span className="block text-sm font-medium text-white">{label}</span>
-        <span className="mt-0.5 block text-xs leading-relaxed text-white/45">
+        <span className="mt-0.5 block text-xs leading-relaxed text-white/60">
           {detail}
         </span>
       </span>

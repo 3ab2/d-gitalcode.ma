@@ -1,4 +1,9 @@
-export type SocialPlatform = "instagram" | "linkedin" | "github" | "kofi";
+export type SocialPlatform =
+  | "instagram"
+  | "linkedin"
+  | "github"
+  | "youtube"
+  | "kofi";
 
 export interface SocialLinkConfig {
   platform: SocialPlatform;
@@ -11,6 +16,7 @@ export const SOCIAL_PLATFORMS: SocialPlatform[] = [
   "instagram",
   "linkedin",
   "github",
+  "youtube",
   "kofi",
 ];
 
@@ -23,14 +29,20 @@ export const DEFAULT_SOCIAL_LINKS: SocialLinkConfig[] = [
   },
   {
     platform: "linkedin",
-    url: "https://www.linkedin.com/in/d-gitalcode-elkarch-abdelhamid-0604583bb/",
+    url: "https://www.linkedin.com/in/dgitalcode-org-0604583bb/",
     label: "LinkedIn",
     enabled: true,
   },
   {
     platform: "github",
-    url: "https://github.com/3ab2",
+    url: "https://github.com/dgitalcode",
     label: "GitHub",
+    enabled: true,
+  },
+  {
+    platform: "youtube",
+    url: "https://www.youtube.com/@d-gitalcode",
+    label: "YouTube",
     enabled: true,
   },
   {
@@ -44,3 +56,15 @@ export const DEFAULT_SOCIAL_LINKS: SocialLinkConfig[] = [
 export const defaultSocialLinkMap = Object.fromEntries(
   DEFAULT_SOCIAL_LINKS.map((link) => [link.platform, link])
 ) as Record<SocialPlatform, SocialLinkConfig>;
+
+/** Old addresses that may still be stored in the database. */
+const RETIRED_URLS = new Set([
+  "https://www.linkedin.com/in/d-gitalcode-elkarch-abdelhamid-0604583bb",
+]);
+
+/** The stored address, or the current default when the stored one is retired. */
+export function currentSocialUrl(platform: SocialPlatform, stored: string): string {
+  return RETIRED_URLS.has(stored.replace(/\/+$/, ""))
+    ? defaultSocialLinkMap[platform].url
+    : stored;
+}

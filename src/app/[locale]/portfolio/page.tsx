@@ -9,6 +9,7 @@ import { SectionHeading } from "@/components/ui/SectionHeading";
 import { Card } from "@/components/ui/Card";
 import { Badge } from "@/components/ui/Badge";
 import { buildPublicPageMetadata } from "@/lib/seo/metadata";
+import { publicRepositoryUrl } from "@/config/verified-facts";
 import { getPublishedProjects } from "@/lib/portfolio";
 import { ConversionCTA } from "@/components/conversion/ConversionCTA";
 import { getSiteSettings } from "@/lib/settings";
@@ -52,6 +53,7 @@ export default async function PortfolioPage({
     <section className="pt-10 pb-20 md:pt-12">
       <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
         <SectionHeading
+          as="h1"
           title={t("portfolio.title")}
           subtitle={t("portfolio.subtitle")}
         />
@@ -59,6 +61,7 @@ export default async function PortfolioPage({
         <div className="mt-16 grid grid-cols-1 gap-6 md:grid-cols-2 lg:grid-cols-3">
           {projects.map((project) => {
             const translation = project.translations[0];
+            const repositoryUrl = publicRepositoryUrl(project.githubUrl);
             return (
               <Card key={project.id} className="overflow-hidden p-0 transition hover:border-brand-green/20">
                 <Link href={`${basePath}/portfolio/${project.slug}`} className="block">
@@ -73,11 +76,11 @@ export default async function PortfolioPage({
                     </div>
                   )}
                   <div className="p-6">
-                    <h3 className="text-lg font-semibold text-white hover:text-brand-green">
+                    <h2 className="text-lg font-semibold text-white hover:text-brand-green">
                       {translation?.title || project.slug}
-                    </h3>
+                    </h2>
                     {translation?.client && (
-                      <p className="mt-1 text-sm text-white/40">{translation.client}</p>
+                      <p className="mt-1 text-sm text-white/60">{translation.client}</p>
                     )}
                     <p className="mt-3 line-clamp-3 text-sm text-white/50">
                       {translation?.description}
@@ -94,7 +97,7 @@ export default async function PortfolioPage({
                     </span>
                   </div>
                 </Link>
-                {(project.url || project.githubUrl) && (
+                {(project.url || repositoryUrl) && (
                   <div className="flex flex-wrap items-center gap-4 border-t border-white/5 px-6 pb-6">
                     {project.url && (
                       <a
@@ -107,9 +110,9 @@ export default async function PortfolioPage({
                         <ExternalLink className="h-4 w-4" />
                       </a>
                     )}
-                    {project.githubUrl && (
+                    {repositoryUrl && (
                       <a
-                        href={project.githubUrl}
+                        href={repositoryUrl}
                         target="_blank"
                         rel="noopener noreferrer"
                         className="inline-flex items-center gap-2 text-sm text-white/50 hover:text-white"

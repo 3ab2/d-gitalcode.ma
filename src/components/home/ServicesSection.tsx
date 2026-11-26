@@ -91,7 +91,7 @@ export function ServicesSection({
 
                 <div className="mt-auto flex flex-wrap items-center justify-between gap-4 pt-8">
                   <div>
-                    <p className="text-xs uppercase tracking-wider text-white/40">
+                    <p className="text-xs uppercase tracking-wider text-white/60">
                       {t("services.from")}
                     </p>
                     <p className="text-2xl font-bold text-brand-green">
@@ -102,9 +102,9 @@ export function ServicesSection({
                     </p>
                   </div>
                   <Link href={`${basePath}/services/${service.slug}`}>
-                    <Button size="sm">
+                    <Button as="span" size="sm">
                       {t("services.request")}
-                      <ArrowRight className="h-4 w-4" />
+                      <ArrowRight className="rtl:rotate-180 h-4 w-4" />
                     </Button>
                   </Link>
                 </div>

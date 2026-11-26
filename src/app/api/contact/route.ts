@@ -149,7 +149,7 @@ export async function POST(request: NextRequest) {
     return NextResponse.json({
       success: true,
       id: submission.id,
-      emailNotification,
+      emailNotification: { sent: emailNotification.sent },
     });
   } catch (error) {
     if (error instanceof z.ZodError) {

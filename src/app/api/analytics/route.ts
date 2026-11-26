@@ -2,6 +2,7 @@ import { NextRequest, NextResponse } from "next/server";
 import { prisma } from "@/lib/prisma";
 import { requireAdmin } from "@/lib/auth";
 import { aggregateBlogAnalytics } from "@/lib/analytics/aggregate-blog";
+import { analyticsEventSchema } from "@/lib/analytics/validation";
 import { enforceRateLimit, RATE_LIMITS } from "@/lib/rate-limit";
 import { logError } from "@/lib/logger";
 
@@ -37,7 +38,7 @@ export async function GET() {
       prisma.contactSubmission.count({ where: { status: "NEW" } }),
       prisma.contactSubmission.count({ where: { createdAt: { gte: today } } }),
       prisma.analyticsEvent.count({ where: { event: "whatsapp_click" } }),
-      prisma.analyticsEvent.count({ where: { event: "form_submit" } }),
+      prisma.contactSubmission.count({ where: { method: "FORM" } }),
       prisma.analyticsEvent.findMany({
         where: { createdAt: { gte: thirtyDaysAgo } },
         orderBy: { createdAt: "desc" },
@@ -120,10 +121,11 @@ export async function POST(request: NextRequest) {
   if (limited) return limited;
 
   try {
-    const { event, page, metadata } = await request.json();
-    await prisma.analyticsEvent.create({
-      data: { event, page, metadata },
-    });
+    const parsed = analyticsEventSchema.safeParse(await request.json());
+    if (!parsed.success) {
+      return NextResponse.json({ error: "Validation failed" }, { status: 400 });
+    }
+    await prisma.analyticsEvent.create({ data: parsed.data });
     return NextResponse.json({ success: true });
   } catch {
     return NextResponse.json({ error: "Failed" }, { status: 500 });

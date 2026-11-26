@@ -48,9 +48,9 @@ export function AboutPreviewSection({ locale }: { locale: Locale }) {
 
         <div className="mt-12 text-center">
           <Link href={`${basePath}/about`}>
-            <Button variant="outline" size="lg">
+            <Button as="span" variant="outline" size="lg">
               {t("home.about.cta")}
-              <ArrowRight className="h-5 w-5" />
+              <ArrowRight className="rtl:rotate-180 h-5 w-5" />
             </Button>
           </Link>
         </div>

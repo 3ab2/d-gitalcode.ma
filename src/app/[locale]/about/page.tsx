@@ -10,6 +10,7 @@ import {
   ArrowRight,
   CheckCircle2,
 } from "lucide-react";
+import { verifiedStats } from "@/config/verified-facts";
 import { prisma } from "@/lib/prisma";
 import { getTranslation } from "@/lib/i18n/server";
 import { type Locale } from "@/lib/i18n/settings";
@@ -56,14 +57,9 @@ const techStack = [
 
 async function getStats() {
   try {
-    return await prisma.siteStat.findMany();
+    return verifiedStats(await prisma.siteStat.findMany());
   } catch {
-    return [
-      { key: "projects", value: "50+" },
-      { key: "clients", value: "30+" },
-      { key: "technologies", value: "20+" },
-      { key: "support", value: "24/7" },
-    ];
+    return [];
   }
 }
 
@@ -187,6 +183,7 @@ export default async function AboutPage({
         </div>
       </section>
 
+      {stats.length > 0 && (
       <section className="py-16 lg:py-24">
         <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
           <div className="grid grid-cols-2 gap-4 md:grid-cols-4">
@@ -204,6 +201,7 @@ export default async function AboutPage({
           </div>
         </div>
       </section>
+      )}
 
       <section className="pb-24">
         <div className="mx-auto max-w-4xl px-4 text-center sm:px-6 lg:px-8">
@@ -211,9 +209,9 @@ export default async function AboutPage({
             <h2 className="text-2xl font-bold text-white md:text-3xl">{t("about.cta.title")}</h2>
             <p className="mt-4 text-white/60">{t("about.cta.subtitle")}</p>
             <Link href={`${basePath}/contact`} className="mt-8 inline-block">
-              <Button size="lg">
+              <Button as="span" size="lg">
                 {t("about.cta.button")}
-                <ArrowRight className="h-5 w-5" />
+                <ArrowRight className="rtl:rotate-180 h-5 w-5" />
               </Button>
             </Link>
           </GlassCard>

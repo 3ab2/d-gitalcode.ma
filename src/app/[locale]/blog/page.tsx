@@ -4,7 +4,12 @@ import { type Locale } from "@/lib/i18n/settings";
 import { SectionHeading } from "@/components/ui/SectionHeading";
 import { BlogListClient } from "@/components/blog/BlogListClient";
 import { buildPublicPageMetadata } from "@/lib/seo/metadata";
-import { getPublishedPosts, getPostTranslation, resolvePostImage } from "@/lib/blog";
+import {
+  getPublishedPosts,
+  getPostTranslation,
+  getReadTimeMinutes,
+  resolvePostImage,
+} from "@/lib/blog";
 
 export const revalidate = 3600;
 
@@ -48,7 +53,7 @@ export default async function BlogPage({
         ? {
             title: translation.title,
             excerpt: translation.excerpt,
-            content: translation.content,
+            readMinutes: getReadTimeMinutes(translation.content),
           }
         : undefined,
       categories: post.categories,
@@ -59,7 +64,7 @@ export default async function BlogPage({
   return (
     <section className="pt-10 pb-16 md:pt-12">
       <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
-        <SectionHeading title={t("blog.title")} subtitle={t("blog.subtitle")} />
+        <SectionHeading as="h1" title={t("blog.title")} subtitle={t("blog.subtitle")} />
         <BlogListClient
           posts={serialized}
           basePath={basePath}

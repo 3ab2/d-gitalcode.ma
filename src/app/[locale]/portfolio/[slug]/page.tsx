@@ -18,9 +18,13 @@ import { buildServiceRequestMessage, buildWhatsAppUrl } from "@/lib/whatsapp";
 import { Badge } from "@/components/ui/Badge";
 import { ConversionCTA } from "@/components/conversion/ConversionCTA";
 import { PortfolioJsonLd } from "@/components/portfolio/PortfolioJsonLd";
+import { ReleaseFacts } from "@/components/portfolio/ReleaseFacts";
+import { getProjectRelease } from "@/config/releases";
+import { publicRepositoryUrl } from "@/config/verified-facts";
 
 export async function generateStaticParams() {
-  const projects = await getPublishedProjectSlugs();
+  // Pages are also rendered on demand, so a build without a database still succeeds.
+  const projects = await getPublishedProjectSlugs().catch(() => []);
   return locales.flatMap((locale) =>
     projects
       .filter((p) => p.translations.some((t) => t.locale === locale))
@@ -96,6 +100,8 @@ export default async function PortfolioDetailPage({
   const translation = getProjectTranslation(project, loc);
   if (!translation) notFound();
 
+  const release = getProjectRelease(slug);
+  const repositoryUrl = publicRepositoryUrl(project.githubUrl);
   const basePath = `/${locale}`;
   const category = getProjectCategory(project.technologies);
   const overview = translation.overview || translation.description;
@@ -127,7 +133,7 @@ export default async function PortfolioDetailPage({
             href={`${basePath}/portfolio`}
             className="inline-flex min-h-11 items-center gap-2 text-sm text-white/50 transition-colors hover:text-brand-green"
           >
-            <ArrowLeft className="h-4 w-4" />
+            <ArrowLeft className="rtl:rotate-180 h-4 w-4" />
             {t("portfolio.detail.back")}
           </Link>
 
@@ -140,7 +146,7 @@ export default async function PortfolioDetailPage({
                 {translation.title}
               </h1>
               {translation.client && (
-                <p className="mt-3 text-sm text-white/45">
+                <p className="mt-3 text-sm text-white/60">
                   {t("portfolio.detail.client")}: {translation.client}
                 </p>
               )}
@@ -165,9 +171,9 @@ export default async function PortfolioDetailPage({
                     <ExternalLink className="h-4 w-4" />
                   </a>
                 )}
-                {project.githubUrl && (
+                {repositoryUrl && (
                   <a
-                    href={project.githubUrl}
+                    href={repositoryUrl}
                     target="_blank"
                     rel="noopener noreferrer"
                     className="inline-flex min-h-11 items-center gap-2 rounded-xl border border-white/10 px-5 py-2.5 text-sm text-white/70 transition hover:border-white/20 hover:text-white"
@@ -194,6 +200,8 @@ export default async function PortfolioDetailPage({
           </header>
 
           <div className="mt-16 space-y-6">
+            {release && <ReleaseFacts release={release} locale={loc} t={t} />}
+
             <DetailSection title={t("portfolio.detail.overview")}>
               <p>{overview}</p>
             </DetailSection>

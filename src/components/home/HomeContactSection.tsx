@@ -63,7 +63,7 @@ export function HomeContactSection({
                   <h3 className="font-semibold text-white">{t("contact.whatsappTitle")}</h3>
                   <p className="mt-1 text-sm text-white/50">{t("contact.whatsappDesc")}</p>
                   <a href={whatsappUrl} target="_blank" rel="noopener noreferrer" className="mt-4 inline-block">
-                    <Button variant="whatsapp" size="sm">
+                    <Button as="span" variant="whatsapp" size="sm">
                       {t("contact.whatsappBtn")}
                     </Button>
                   </a>

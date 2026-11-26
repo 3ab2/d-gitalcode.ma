@@ -80,7 +80,7 @@ export const submissionStatusSchema = z.object({
 export const socialLinksUpdateSchema = z.object({
   links: z.array(
     z.object({
-      platform: z.enum(["instagram", "linkedin", "github", "kofi"]),
+      platform: z.enum(["instagram", "linkedin", "github", "youtube", "kofi"]),
       url: z.string().url(),
       label: z.string().min(1).max(80),
       enabled: z.boolean(),

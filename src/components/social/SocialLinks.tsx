@@ -6,6 +6,7 @@ import { GitHubIcon } from "./GitHubIcon";
 import { InstagramIcon } from "./InstagramIcon";
 import { KofiIcon } from "./KofiIcon";
 import { LinkedInIcon } from "./LinkedInIcon";
+import { YouTubeIcon } from "./YouTubeIcon";
 import { cn } from "@/lib/utils";
 
 const platformStyles: Record<
@@ -28,6 +29,11 @@ const platformStyles: Record<
     hover: "hover:border-white/30 hover:bg-white/10",
     ring: "group-hover:shadow-white/10",
   },
+  youtube: {
+    icon: "text-white/70 group-hover:text-[#FF0033]",
+    hover: "hover:border-[#FF0033]/40 hover:bg-[#FF0033]/10",
+    ring: "group-hover:shadow-[#FF0033]/20",
+  },
   kofi: {
     icon: "text-white/70 group-hover:text-[#FF5E5B]",
     hover: "hover:border-[#FF5E5B]/40 hover:bg-[#FF5E5B]/10",
@@ -44,6 +50,8 @@ function SocialIcon({ platform, className }: { platform: SocialPlatform; classNa
       return <LinkedInIcon {...props} />;
     case "github":
       return <GitHubIcon {...props} />;
+    case "youtube":
+      return <YouTubeIcon {...props} />;
     case "kofi":
       return <KofiIcon {...props} />;
   }

@@ -14,7 +14,6 @@ import {
   contactFormClientSchema,
   type ContactFormClientInput,
 } from "@/lib/contact-validation";
-import { sendAnalyticsEvent } from "@/lib/analytics/client";
 import { type Locale } from "@/lib/i18n/settings";
 
 export interface ContactFormServiceOption {
@@ -86,12 +85,6 @@ export function ContactForm({
         });
 
         if (!res.ok) throw new Error("Failed");
-
-        sendAnalyticsEvent("lead_form_submit", sourcePage, {
-          type,
-          locale,
-          serviceName: serviceName ?? data.serviceInterest,
-        });
 
         setStatus("success");
         formLoadedAt.current = Date.now();
@@ -180,7 +173,7 @@ export function ContactForm({
         {...register("message")}
       />
 
-      <p className="text-xs text-white/40">{t("contact.microcopy.privacyNote")}</p>
+      <p className="text-xs text-white/60">{t("contact.microcopy.privacyNote")}</p>
 
       <div className="sr-only" aria-hidden="true">
         <label htmlFor="website-honeypot">Leave blank</label>

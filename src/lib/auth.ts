@@ -57,10 +57,9 @@ export const { handlers, auth, signIn, signOut } = NextAuth({
           where: { id: token.sub },
           select: { role: true, active: true },
         });
-        if (dbUser) {
-          token.role = dbUser.role;
-          token.active = dbUser.active;
-        }
+        // A deleted account must lose access, not keep the role in its old token.
+        token.role = dbUser?.role;
+        token.active = dbUser?.active ?? false;
       }
       return token;
     },

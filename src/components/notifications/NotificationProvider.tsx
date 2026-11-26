@@ -55,8 +55,9 @@ export function NotificationProvider({ children }: { children: React.ReactNode }
     const url = cursor
       ? `/api/notifications?cursor=${encodeURIComponent(cursor)}`
       : "/api/notifications";
-    const res = await fetch(url);
-    if (!res.ok) return null;
+    // Navigation cancels the request; that is not an error.
+    const res = await fetch(url).catch(() => null);
+    if (!res?.ok) return null;
     return res.json() as Promise<{
       items: SerializedNotification[];
       nextCursor: string | null;

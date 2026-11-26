@@ -34,20 +34,7 @@ async function main() {
     },
   });
 
-  const stats = [
-    { key: "projects", value: "50+", label: "Projets livrés" },
-    { key: "clients", value: "30+", label: "Clients satisfaits" },
-    { key: "plugins", value: "5+", label: "Plugins vendus" },
-    { key: "experience", value: "8+", label: "Années d'expérience" },
-  ];
-
-  for (const stat of stats) {
-    await prisma.siteStat.upsert({
-      where: { key: stat.key },
-      update: { value: stat.value },
-      create: stat,
-    });
-  }
+  // Site statistics are entered in the admin panel once the figures are confirmed.
 
   const whatsflowPro = await prisma.service.upsert({
     where: { slug: "whatsflow-pro" },

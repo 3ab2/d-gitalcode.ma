@@ -42,7 +42,7 @@ export function BlogShare({
 
   return (
     <div className="flex flex-wrap items-center gap-2">
-      <span className="text-xs font-medium text-white/40">{label}</span>
+      <span className="text-xs font-medium text-white/60">{label}</span>
       <a
         href={`https://twitter.com/intent/tweet?url=${encoded}&text=${encodedTitle}`}
         target="_blank"

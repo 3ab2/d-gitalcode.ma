@@ -11,6 +11,8 @@ interface ButtonProps extends Omit<HTMLMotionProps<"button">, "ref" | "children"
   variant?: Variant;
   size?: Size;
   isLoading?: boolean;
+  /** Use "span" inside a link; a <button> inside an <a> is invalid and adds a second tab stop. */
+  as?: "button" | "span";
   children?: React.ReactNode;
 }
 
@@ -23,7 +25,7 @@ const variants: Record<Variant, string> = {
     "border border-white/20 text-white hover:bg-white/5 hover:border-brand-green/50",
   ghost: "text-white/70 hover:text-white hover:bg-white/5",
   whatsapp:
-    "bg-[#25D366] text-white font-semibold hover:bg-[#20bd5a] shadow-lg shadow-[#25D366]/20",
+    "bg-[#25D366] text-brand-dark font-semibold hover:bg-[#20bd5a] shadow-lg shadow-[#25D366]/20",
 };
 
 const sizes: Record<Size, string> = {
@@ -39,13 +41,18 @@ export const Button = forwardRef<HTMLButtonElement, ButtonProps>(
       variant = "primary",
       size = "md",
       isLoading,
+      as = "button",
       children,
       disabled,
       ...props
     },
     ref
-  ) => (
-    <motion.button
+  ) => {
+    // Both elements accept the same motion and class props; only button takes `disabled`.
+    const Element = (as === "span" ? motion.span : motion.button) as typeof motion.button;
+
+    return (
+    <Element
       ref={ref}
       whileHover={{ scale: disabled || isLoading ? 1 : 1.02 }}
       whileTap={{ scale: disabled || isLoading ? 1 : 0.98 }}
@@ -55,15 +62,16 @@ export const Button = forwardRef<HTMLButtonElement, ButtonProps>(
         sizes[size],
         className
       )}
-      disabled={disabled || isLoading}
+      disabled={as === "span" ? undefined : disabled || isLoading}
       {...props}
     >
       {isLoading ? (
         <span className="h-4 w-4 animate-spin rounded-full border-2 border-current border-t-transparent" />
       ) : null}
       {children}
-    </motion.button>
-  )
+    </Element>
+    );
+  }
 );
 
 Button.displayName = "Button";

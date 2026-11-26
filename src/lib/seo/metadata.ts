@@ -6,7 +6,16 @@ import {
 } from "@/lib/i18n/settings";
 
 export const SITE_NAME = "D-GITALCODE";
-export const DEFAULT_OG_IMAGE = "/icons/android-chrome-512x512.png";
+/** 1200x630 share image for pages without their own. */
+export const DEFAULT_OG_IMAGE = "/og/default.png";
+export const DEFAULT_OG_SIZE = { width: 1200, height: 630 };
+export const LOGO_IMAGE = "/icons/android-chrome-512x512.png";
+
+/**
+ * Used only when NEXT_PUBLIC_SITE_URL is unset. It must resolve: canonical links,
+ * the sitemap, and share images are built from it.
+ */
+export const FALLBACK_SITE_URL = "https://d-gitalcodema.vercel.app";
 
 /** Strip redundant site suffix; root layout template appends `| D-GITALCODE`. */
 export function normalizePageTitle(title: string): string {
@@ -25,10 +34,21 @@ const IN_LANGUAGE: Record<Locale, string> = {
   ar: "ar",
 };
 
+/** Open Graph wants language_TERRITORY, not a BCP 47 tag. */
+const OG_LOCALE: Record<Locale, string> = {
+  fr: "fr_FR",
+  en: "en_US",
+  ar: "ar_MA",
+};
+
+export function localeToOgLocale(locale: Locale): string {
+  return OG_LOCALE[locale];
+}
+
 /** Canonical public site origin (no trailing slash). */
 export function getSiteUrl(): string {
   return (
-    process.env.NEXT_PUBLIC_SITE_URL || "https://d-gitalcode.ma"
+    process.env.NEXT_PUBLIC_SITE_URL || FALLBACK_SITE_URL
   ).replace(/\/$/, "");
 }
 
@@ -93,14 +113,18 @@ export function buildPublicPageMetadata({
   const pageTitle = normalizePageTitle(title);
 
   return {
-    title: pageTitle,
+    // The layout template appends the brand; skip it when the title already has it.
+    title: pageTitle.includes(SITE_NAME) ? { absolute: pageTitle } : pageTitle,
     description,
     alternates,
     robots,
     openGraph: {
       type: "website",
       siteName: SITE_NAME,
-      locale: localeToInLanguage(locale),
+      locale: localeToOgLocale(locale),
+      alternateLocale: locales
+        .filter((l) => l !== locale)
+        .map(localeToOgLocale),
       title: pageTitle,
       description,
       url: canonical,
@@ -108,8 +132,7 @@ export function buildPublicPageMetadata({
       images: openGraph?.images ?? [
         {
           url: DEFAULT_OG_IMAGE,
-          width: 512,
-          height: 512,
+          ...DEFAULT_OG_SIZE,
           alt: SITE_NAME,
         },
       ],
@@ -124,5 +147,5 @@ export function buildPublicPageMetadata({
 }
 
 export function publisherLogoUrl(): string {
-  return `${getSiteUrl()}${DEFAULT_OG_IMAGE}`;
+  return `${getSiteUrl()}${LOGO_IMAGE}`;
 }

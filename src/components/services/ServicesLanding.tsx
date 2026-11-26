@@ -98,13 +98,13 @@ export function ServicesLanding({
             </p>
             <div className="mt-10 flex flex-wrap gap-4">
               <Link href={`${basePath}/contact`}>
-                <Button size="lg">
+                <Button as="span" size="lg">
                   {t("servicesLanding.hero.cta")}
-                  <ArrowRight className="h-5 w-5" />
+                  <ArrowRight className="rtl:rotate-180 h-5 w-5" />
                 </Button>
               </Link>
               <a href={whatsappUrl} target="_blank" rel="noopener noreferrer">
-                <Button variant="whatsapp" size="lg">
+                <Button as="span" variant="whatsapp" size="lg">
                   {t("cta.whatsapp")}
                 </Button>
               </a>
@@ -161,7 +161,7 @@ export function ServicesLanding({
                   </ul>
                   <div className="mt-auto flex flex-wrap items-end justify-between gap-4 pt-8">
                     <div>
-                      <p className="text-xs uppercase tracking-wider text-white/40">
+                      <p className="text-xs uppercase tracking-wider text-white/60">
                         {t("services.from")}
                       </p>
                       <p className="text-2xl font-bold text-brand-green">
@@ -172,9 +172,9 @@ export function ServicesLanding({
                       </p>
                     </div>
                     <Link href={`${basePath}/services/${service.slug}`}>
-                      <Button size="sm">
+                      <Button as="span" size="sm">
                         {t("services.learnMore")}
-                        <ArrowRight className="h-4 w-4" />
+                        <ArrowRight className="rtl:rotate-180 h-4 w-4" />
                       </Button>
                     </Link>
                   </div>
@@ -221,7 +221,7 @@ export function ServicesLanding({
                   key={step.title}
                   className="relative rounded-2xl border border-white/10 bg-white/[0.02] p-6"
                 >
-                  <span className="text-3xl font-bold text-brand-green/30">
+                  <span className="text-3xl font-bold text-brand-green/70">
                     {String(index + 1).padStart(2, "0")}
                   </span>
                   <h3 className="mt-4 font-semibold text-white">{step.title}</h3>
@@ -281,7 +281,7 @@ export function ServicesLanding({
                 >
                   <summary className="flex cursor-pointer list-none items-center justify-between gap-4 font-medium text-white">
                     {item.q}
-                    <ChevronDown className="h-5 w-5 shrink-0 text-white/40 transition group-open:rotate-180" />
+                    <ChevronDown className="h-5 w-5 shrink-0 text-white/60 transition group-open:rotate-180" />
                   </summary>
                   <p className="mt-4 text-sm leading-relaxed text-white/60">{item.a}</p>
                 </details>
@@ -336,19 +336,6 @@ export function ServicesLanding({
         </section>
       )}
 
-      {/* Testimonials placeholder */}
-      <section className="border-y border-white/[0.06] bg-white/[0.02] py-16 lg:py-24">
-        <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 text-center">
-          <SectionHeading
-            title={t("servicesLanding.testimonials.title")}
-            subtitle={t("servicesLanding.testimonials.subtitle")}
-          />
-          <p className="mx-auto mt-8 max-w-xl rounded-2xl border border-dashed border-white/15 px-6 py-10 text-sm text-white/40">
-            {t("servicesLanding.testimonials.placeholder")}
-          </p>
-        </div>
-      </section>
-
       {/* Final CTA */}
       <section className="py-16 lg:py-24">
         <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
@@ -361,10 +348,10 @@ export function ServicesLanding({
             </p>
             <div className="mt-8 flex flex-wrap justify-center gap-4">
               <Link href={`${basePath}/contact`}>
-                <Button size="lg">{t("servicesLanding.cta.button")}</Button>
+                <Button as="span" size="lg">{t("servicesLanding.cta.button")}</Button>
               </Link>
               <a href={whatsappUrl} target="_blank" rel="noopener noreferrer">
-                <Button variant="whatsapp" size="lg">
+                <Button as="span" variant="whatsapp" size="lg">
                   {t("cta.whatsapp")}
                 </Button>
               </a>

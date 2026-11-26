@@ -1,3 +1,5 @@
+import { getSiteUrl } from "@/lib/seo/metadata";
+
 export type BlogImageMapping = {
   slug: string;
   image: string;
@@ -264,7 +266,7 @@ export function getBlogImageAbsoluteUrl(
   imagePath: string,
   siteUrl?: string
 ): string {
-  const base = siteUrl || process.env.NEXT_PUBLIC_SITE_URL || "https://d-gitalcode.ma";
+  const base = siteUrl || getSiteUrl();
   if (imagePath.startsWith("http")) return imagePath;
   return `${base.replace(/\/$/, "")}${imagePath.startsWith("/") ? imagePath : `/${imagePath}`}`;
 }
