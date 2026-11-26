@@ -67,7 +67,7 @@ export async function Hero({ locale, stats, featured }: HeroProps) {
           <figure className="rise lg:col-span-5" style={step(2)}>
             <Link href={`${basePath}/portfolio/${featured.slug}`} className="group block">
               <FacetFrame size="lg" className="transition-colors duration-200 group-hover:bg-white/30">
-                <div className="relative aspect-[4/3]">
+                <div className="relative aspect-[16/10]">
                   {featured.image ? (
                     <Image
                       src={featured.image}
