@@ -11,6 +11,7 @@ import { GitHubIcon } from "@/components/social/GitHubIcon";
 import { InstagramIcon } from "@/components/social/InstagramIcon";
 import { KofiIcon } from "@/components/social/KofiIcon";
 import { LinkedInIcon } from "@/components/social/LinkedInIcon";
+import { YouTubeIcon } from "@/components/social/YouTubeIcon";
 import { CURRENCY_OPTIONS, type CurrencyCode } from "@/lib/currency";
 import { broadcastCurrencyUpdate } from "@/lib/currency/broadcast";
 import type { SiteSettings } from "@/lib/site-settings";
@@ -29,6 +30,7 @@ const platformMeta: Record<
   instagram: { name: "Instagram", color: "text-pink-400", Icon: InstagramIcon },
   linkedin: { name: "LinkedIn", color: "text-[#0A66C2]", Icon: LinkedInIcon },
   github: { name: "GitHub", color: "text-white", Icon: GitHubIcon },
+  youtube: { name: "YouTube", color: "text-[#FF0033]", Icon: YouTubeIcon },
   kofi: { name: "Ko-fi", color: "text-[#FF5E5B]", Icon: KofiIcon },
 };
 

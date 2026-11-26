@@ -5,6 +5,7 @@ import {
   SITE_NAME,
   localizedUrl,
 } from "@/lib/seo/metadata";
+import { serializeJsonLd } from "@/lib/seo/json-ld";
 import type { Locale } from "@/lib/i18n/settings";
 
 export function BlogJsonLd({
@@ -107,7 +108,7 @@ export function BlogJsonLd({
   return (
     <script
       type="application/ld+json"
-      dangerouslySetInnerHTML={{ __html: JSON.stringify(schema) }}
+      dangerouslySetInnerHTML={{ __html: serializeJsonLd(schema) }}
     />
   );
 }

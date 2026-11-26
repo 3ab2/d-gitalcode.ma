@@ -67,7 +67,7 @@ export function BlogPreviewSection({
                   {featured.excerpt && (
                     <p className="mt-3 line-clamp-2 text-white/60">{featured.excerpt}</p>
                   )}
-                  <div className="mt-4 flex flex-wrap items-center gap-4 text-xs text-white/45">
+                  <div className="mt-4 flex flex-wrap items-center gap-4 text-xs text-white/60">
                     {featured.publishedAt && (
                       <time>{formatDate(featured.publishedAt, locale)}</time>
                     )}
@@ -105,7 +105,7 @@ export function BlogPreviewSection({
                     <h4 className="mt-1 font-semibold text-white group-hover:text-brand-green transition-colors line-clamp-2">
                       {post.title}
                     </h4>
-                    <div className="mt-2 flex items-center gap-3 text-xs text-white/40">
+                    <div className="mt-2 flex items-center gap-3 text-xs text-white/60">
                       {post.publishedAt && (
                         <time>{formatDate(post.publishedAt, locale)}</time>
                       )}
@@ -115,7 +115,7 @@ export function BlogPreviewSection({
                       </span>
                     </div>
                   </div>
-                  <ArrowRight className="h-5 w-5 shrink-0 self-center text-white/30 group-hover:text-brand-green" />
+                  <ArrowRight className="rtl:rotate-180 h-5 w-5 shrink-0 self-center text-white/60 group-hover:text-brand-green" />
                 </GlassCard>
               </Link>
             ))}

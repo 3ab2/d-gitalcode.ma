@@ -96,7 +96,7 @@ export async function ServiceCategoryConversion({
             <Link href={`${basePath}/contact`}>
               <span className="inline-flex min-h-12 items-center gap-2 rounded-xl bg-brand-green px-8 py-3 text-sm font-semibold text-brand-dark shadow-lg shadow-brand-green/20">
                 {t("services.request")}
-                <ArrowRight className="h-5 w-5" />
+                <ArrowRight className="rtl:rotate-180 h-5 w-5" />
               </span>
             </Link>
             <a
@@ -157,7 +157,7 @@ export async function ServiceCategoryConversion({
               className="text-3xl font-bold text-brand-green"
             />
             <p className="mt-3">{t(`${prefix}.pricing`)}</p>
-            <p className="mt-4 text-sm text-white/45">
+            <p className="mt-4 text-sm text-white/60">
               {t("servicesPage.labels.timeline")}: {timeline}
             </p>
           </FunnelSection>
@@ -175,7 +175,7 @@ export async function ServiceCategoryConversion({
                 >
                   <summary className="flex cursor-pointer list-none items-center justify-between gap-4 font-medium text-white">
                     {item.q}
-                    <ChevronDown className="h-5 w-5 shrink-0 text-white/40 transition group-open:rotate-180" />
+                    <ChevronDown className="h-5 w-5 shrink-0 text-white/60 transition group-open:rotate-180" />
                   </summary>
                   <p className="mt-4 text-sm leading-relaxed text-white/60">{item.a}</p>
                 </details>

@@ -41,9 +41,9 @@ export function TrustSection({ locale }: { locale: Locale }) {
               );
             })}
         </div>
-        <p className="mt-10 text-center text-sm text-white/45">
+        <p className="mt-10 text-center text-sm text-white/60">
           {t("home.trust.footer")}{" "}
-          <Link href={`${basePath}/about`} className="text-brand-green hover:underline">
+          <Link href={`${basePath}/about`} className="text-brand-green underline underline-offset-4">
             {t("home.about.cta")} →
           </Link>
         </p>

@@ -5,7 +5,6 @@ import Link from "next/link";
 import { Clock } from "lucide-react";
 import { Badge } from "@/components/ui/Badge";
 import { Card } from "@/components/ui/Card";
-import { getReadTimeMinutes } from "@/lib/blog";
 import { cn, formatDate } from "@/lib/utils";
 
 export type BlogCardPost = {
@@ -17,7 +16,7 @@ export type BlogCardPost = {
   translation?: {
     title: string;
     excerpt: string | null;
-    content: string;
+    readMinutes: number;
   };
   categories: Array<{
     category: {
@@ -44,9 +43,7 @@ export function BlogCard({
   featured?: boolean;
 }) {
   const translation = post.translation;
-  const readTime = translation?.content
-    ? getReadTimeMinutes(translation.content)
-    : 3;
+  const readTime = translation?.readMinutes ?? 3;
 
   return (
     <Link href={`${basePath}/blog/${post.slug}`} className="group block h-full">
@@ -89,7 +86,7 @@ export function BlogCard({
           )}
         </div>
         <div className="flex flex-col p-6">
-          <div className="flex flex-wrap items-center gap-2 text-xs text-white/40">
+          <div className="flex flex-wrap items-center gap-2 text-xs text-white/60">
             {post.publishedAt && (
               <time>{formatDate(post.publishedAt, locale)}</time>
             )}

@@ -39,27 +39,27 @@ export function ConversionCTA({
         <div className="mt-8 flex flex-col items-stretch justify-center gap-3 sm:flex-row sm:items-center">
           {primaryHref ? (
             <Link href={primaryHref.startsWith("/") ? primaryHref : `${basePath}/${primaryHref}`}>
-              <Button size="lg" className="w-full min-w-[200px] sm:w-auto">
+              <Button as="span" size="lg" className="w-full min-w-[200px] sm:w-auto">
                 {primaryLabel}
-                <ArrowRight className="h-5 w-5" />
+                <ArrowRight className="rtl:rotate-180 h-5 w-5" />
               </Button>
             </Link>
           ) : (
             <Link href={contactLink}>
-              <Button size="lg" className="w-full min-w-[200px] sm:w-auto">
+              <Button as="span" size="lg" className="w-full min-w-[200px] sm:w-auto">
                 {primaryLabel}
-                <ArrowRight className="h-5 w-5" />
+                <ArrowRight className="rtl:rotate-180 h-5 w-5" />
               </Button>
             </Link>
           )}
           <a href={whatsappUrl} target="_blank" rel="noopener noreferrer" className="inline-flex">
-            <Button variant="whatsapp" size="lg" className="w-full min-w-[200px] sm:w-auto">
+            <Button as="span" variant="whatsapp" size="lg" className="w-full min-w-[200px] sm:w-auto">
               <MessageCircle className="h-5 w-5" />
               {whatsappLabel}
             </Button>
           </a>
           <Link href={contactLink}>
-            <Button variant="outline" size="lg" className="w-full min-w-[200px] sm:w-auto">
+            <Button as="span" variant="outline" size="lg" className="w-full min-w-[200px] sm:w-auto">
               {contactLabel}
             </Button>
           </Link>

@@ -27,7 +27,7 @@ export async function generateMetadata({
     locale: loc,
     path: "contact",
     title: t("contact.title"),
-    description: t("contact.subtitle"),
+    description: t("contact.headline"),
   });
 }
 
@@ -54,6 +54,7 @@ export default async function ContactPage({
     <section className="pt-10 pb-16 md:pt-12">
       <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
         <SectionHeading
+          as="h1"
           title={t("contact.title")}
           subtitle={t("contact.headline")}
         />
@@ -75,9 +76,9 @@ export default async function ContactPage({
             <div className="flex h-16 w-16 items-center justify-center rounded-2xl bg-[#25D366]/10 text-[#25D366] mb-6">
               <MessageCircle className="h-8 w-8" />
             </div>
-            <h3 className="text-xl font-semibold text-white">
+            <h2 className="text-xl font-semibold text-white">
               {t("contact.whatsappTitle")}
-            </h3>
+            </h2>
             <p className="mt-2 text-white/50">{t("contact.whatsappDesc")}</p>
             <a
               href={`mailto:${settings.contactEmail}`}
@@ -97,7 +98,7 @@ export default async function ContactPage({
               rel="noopener noreferrer"
               className="mt-6"
             >
-              <Button variant="whatsapp" size="lg">
+              <Button as="span" variant="whatsapp" size="lg">
                 {t("contact.whatsappBtn")}
               </Button>
             </a>

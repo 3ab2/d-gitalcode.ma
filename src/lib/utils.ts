@@ -7,11 +7,23 @@ export function cn(...inputs: ClassValue[]) {
 
 export { formatPrice, formatBudgetRangeLabel, getCurrencySymbol, resolveDisplayPrice } from "@/lib/currency";
 
+/** Regional tags: plain "ar" picks different digits in Node and in some browsers. */
+const INTL_LOCALE: Record<string, string> = {
+  fr: "fr-FR",
+  en: "en-US",
+  ar: "ar-MA",
+};
+
+/**
+ * UTC gives the server and every browser the same day, so hydration matches. A regional
+ * zone is not safe: tz databases disagree on Morocco's offset (Node tz 2026e and Chrome).
+ */
 export function formatDate(date: Date | string, locale = "fr-FR"): string {
-  return new Intl.DateTimeFormat(locale, {
+  return new Intl.DateTimeFormat(INTL_LOCALE[locale] ?? locale, {
     year: "numeric",
     month: "long",
     day: "numeric",
+    timeZone: "UTC",
   }).format(new Date(date));
 }
 

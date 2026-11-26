@@ -8,6 +8,7 @@ import { getHomepageServiceCategories, getAllServices } from "@/lib/services";
 import { toContactServiceOptions } from "@/lib/contact-form-options";
 import { getSocialLinks } from "@/lib/social-links";
 import { inferPortfolioCategory, estimateReadTime } from "@/lib/portfolio-category";
+import { verifiedStats } from "@/config/verified-facts";
 import { Hero } from "@/components/home/Hero";
 import { AgencyMapSection } from "@/components/home/agency-map/AgencyMapSection";
 import { TrustSection } from "@/components/home/TrustSection";
@@ -32,13 +33,6 @@ export async function generateMetadata({
     description: t("hero.subtitle"),
   });
 }
-
-const defaultStats = [
-  { key: "projects", value: "50+", label: "" },
-  { key: "clients", value: "30+", label: "" },
-  { key: "technologies", value: "20+", label: "" },
-  { key: "support", value: "24/7", label: "" },
-];
 
 async function getHomeData(locale: Locale) {
   try {
@@ -69,7 +63,7 @@ async function getHomeData(locale: Locale) {
     ]);
 
     return {
-      stats: stats.length > 0 ? stats : defaultStats,
+      stats: verifiedStats(stats),
       services,
       serviceOptions: toContactServiceOptions(formServices),
       projects: projects.map((p) => ({
@@ -102,7 +96,7 @@ async function getHomeData(locale: Locale) {
     };
   } catch {
     return {
-      stats: defaultStats,
+      stats: [],
       services: await getHomepageServiceCategories(locale).catch(() => []),
       serviceOptions: toContactServiceOptions(
         await getAllServices(locale).catch(() => [])

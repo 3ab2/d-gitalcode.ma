@@ -1,5 +1,6 @@
 import { prisma } from "./prisma";
 import {
+  currentSocialUrl,
   DEFAULT_SOCIAL_LINKS,
   SOCIAL_PLATFORMS,
   type SocialLinkConfig,
@@ -23,7 +24,7 @@ function mergeWithDefaults(
       return {
         id: dbLink.id,
         platform: defaultLink.platform,
-        url: dbLink.url,
+        url: currentSocialUrl(defaultLink.platform, dbLink.url),
         label: dbLink.label,
         enabled: dbLink.enabled,
       };

@@ -95,7 +95,7 @@ export function ServiceCard({ locale, service }: ServiceCardProps) {
               </Button>
               {service.demoUrl && (
                 <a href={service.demoUrl} target="_blank" rel="noopener noreferrer">
-                  <Button variant="outline" size="md">
+                  <Button as="span" variant="outline" size="md">
                     <ExternalLink className="h-4 w-4" />
                   </Button>
                 </a>

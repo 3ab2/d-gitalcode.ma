@@ -45,7 +45,7 @@ export function BlogCTA({
             <Sparkles className="h-3.5 w-3.5" aria-hidden />
             D-GITALCODE
           </span>
-          <span className="text-xs text-white/40">{labels.badge}</span>
+          <span className="text-xs text-white/60">{labels.badge}</span>
         </div>
 
         <h2
@@ -64,9 +64,9 @@ export function BlogCTA({
             onClick={() => trackBlogCtaClick("quote", slug, locale)}
             className="inline-flex"
           >
-            <Button size="lg" className="w-full sm:w-auto">
+            <Button as="span" size="lg" className="w-full sm:w-auto">
               {labels.quote}
-              <ArrowRight className="h-4 w-4" aria-hidden />
+              <ArrowRight className="rtl:rotate-180 h-4 w-4" aria-hidden />
             </Button>
           </Link>
         </div>

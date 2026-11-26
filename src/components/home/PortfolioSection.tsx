@@ -85,7 +85,7 @@ export function PortfolioSection({
                     className="object-cover transition-transform duration-500 group-hover:scale-105"
                   />
                 ) : (
-                  <div className="flex h-full items-center justify-center bg-gradient-to-br from-brand-green/10 to-brand-purple/10 text-white/30">
+                  <div className="flex h-full items-center justify-center bg-gradient-to-br from-brand-green/10 to-brand-purple/10 text-white/60">
                     D-GITALCODE
                   </div>
                 )}
@@ -113,12 +113,6 @@ export function PortfolioSection({
                   </div>
                 )}
                 <div className="mt-6 flex flex-wrap gap-3">
-                  <Link
-                    href={`${basePath}/portfolio/${project.slug}`}
-                    className="inline-flex min-h-11 touch-manipulation items-center gap-2 text-sm font-medium text-brand-green hover:underline"
-                  >
-                    {t("portfolio.viewProject")}
-                  </Link>
                   {project.url && (
                     <a
                       href={project.url}

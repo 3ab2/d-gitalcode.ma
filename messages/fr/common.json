@@ -22,7 +22,7 @@
     "cta": "Demander un devis gratuit",
     "ctaSecondary": "Voir le portfolio",
     "ctaServices": "Découvrir nos services",
-    "trust": ["Réponse sous 24h", "Équipe senior dédiée", "Support & maintenance"],
+    "trust": ["Réponse sous 24h", "Suivi dédié", "Support & maintenance"],
     "skipIntro": "Passer l'intro",
     "stats": {
       "projects": "Projets réalisés",
@@ -76,7 +76,7 @@
     },
     "portfolio": {
       "title": "Réalisations qui inspirent confiance",
-      "subtitle": "Découvrez une sélection de projets web, mobile et WordPress livrés pour nos clients.",
+      "subtitle": "Découvrez une sélection de nos réalisations web et WordPress, avec des démos en ligne lorsque c'est possible.",
       "viewAll": "Voir tout le portfolio",
       "details": "En savoir plus",
       "filters": {
@@ -116,14 +116,14 @@
       "subtitle": "Parlez-nous de votre vision. Nous vous répondons sous 24h avec une proposition claire."
     },
     "trust": {
-      "title": "Pourquoi les clients nous font confiance",
+      "title": "Notre façon de travailler avec vous",
       "subtitle": "D-GITALCODE combine expertise technique, design premium et accompagnement orienté résultats.",
       "footer": "En savoir plus sur notre agence :",
       "items": [
         { "title": "Expertise prouvée", "desc": "Des projets web, mobile et WordPress livrés avec excellence technique." },
         { "title": "Réponse rapide", "desc": "Devis et support sous 24h — communication claire à chaque étape." },
         { "title": "Partenariat humain", "desc": "ELKARCH ABDELHAMID et l'équipe D-GITALCODE vous accompagnent de A à Z." },
-        { "title": "Résultats mesurables", "desc": "Conversion, performance et SEO intégrés dès la conception." }
+        { "title": "Conçu pour être mesuré", "desc": "Conversion, performance et SEO intégrés dès la conception." }
       ]
     }
   },
@@ -270,7 +270,7 @@
     },
     "cta": {
       "title": "Prêt à lancer votre projet ?",
-      "subtitle": "Contactez D-GITALCODE — réponse garantie sous 24h.",
+      "subtitle": "Contactez D-GITALCODE — réponse sous 24h.",
       "button": "Obtenir un devis gratuit"
     }
   },
@@ -430,7 +430,7 @@
   "contact": {
     "title": "Contactez-nous",
     "subtitle": "Parlons de votre projet",
-    "headline": "Obtenez un devis gratuit — réponse garantie sous 24h",
+    "headline": "Obtenez un devis gratuit — réponse sous 24h",
     "promise": "Décrivez votre projet en quelques lignes. Notre équipe vous recontacte avec une proposition claire et sans engagement.",
     "name": "Nom complet",
     "email": "Email",
@@ -495,6 +495,7 @@
     "followUs": "Suivez-nous"
   },
   "social": {
+    "youtube": "YouTube",
     "instagram": "Instagram",
     "linkedin": "LinkedIn",
     "github": "GitHub",
@@ -655,5 +656,30 @@
     "iosStep3Title": "Ajouter",
     "iosStep3Detail": "Appuyez sur « Ajouter » pour terminer l'installation.",
     "gotIt": "Compris"
+  },
+  "a11y": {
+    "skipToContent": "Aller au contenu",
+    "openMenu": "Ouvrir le menu",
+    "closeMenu": "Fermer le menu",
+    "mainNavigation": "Navigation principale"
+  },
+  "pageError": {
+    "title": "Une erreur est survenue",
+    "description": "La page n'a pas pu être affichée. Réessayez ou revenez à l'accueil.",
+    "retry": "Réessayer",
+    "back": "Retour à l'accueil"
+  },
+  "pageLoading": {
+    "message": "Chargement"
+  },
+  "release": {
+    "title": "Version publiée",
+    "version": "Version",
+    "commit": "Commit",
+    "released": "Publiée le",
+    "tests": "Preuves de test",
+    "notes": "Notes de version",
+    "video": "Voir la démo",
+    "announcement": "Lire l'annonce"
   }
 }

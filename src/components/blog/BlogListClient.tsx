@@ -56,16 +56,16 @@ export function BlogListClient({
     <div className="mt-12 space-y-10">
       <div className="flex flex-col gap-4 lg:flex-row lg:items-center lg:justify-between">
         <div className="relative max-w-md flex-1">
-          <Search className="absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-white/35" />
+          <Search className="absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-white/60" />
           <input
             type="search"
             value={query}
             onChange={(e) => setQuery(e.target.value)}
             placeholder={labels.search}
-            className="w-full rounded-xl border border-white/10 bg-white/[0.03] py-2.5 pl-10 pr-4 text-sm text-white placeholder:text-white/35 focus:border-brand-green/40 focus:outline-none"
+            className="w-full rounded-xl border border-white/10 bg-white/[0.03] py-2.5 pl-10 pr-4 text-sm text-white placeholder:text-white/55 focus:border-brand-green/40 focus:outline-none"
           />
         </div>
-        <p className="text-sm text-white/40">
+        <p className="text-sm text-white/60">
           {filtered.length} {labels.articles}
         </p>
       </div>
@@ -134,7 +134,7 @@ export function BlogListClient({
       )}
 
       {filtered.length === 0 && (
-        <p className="py-16 text-center text-white/45">{labels.empty}</p>
+        <p className="py-16 text-center text-white/60">{labels.empty}</p>
       )}
     </div>
   );

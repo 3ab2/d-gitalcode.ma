@@ -1,7 +1,6 @@
 import { v2 as cloudinary } from "cloudinary";
 import {
   getCloudinaryConfig,
-  getCloudinaryConfigStatus,
   isCloudinaryEnvConfigured,
 } from "@/config/cloudinary";
 import { logError } from "@/lib/logger";

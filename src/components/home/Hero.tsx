@@ -166,24 +166,25 @@ export function Hero({ locale, stats }: HeroProps) {
             className="mt-10 flex flex-col gap-3 sm:flex-row sm:flex-wrap sm:gap-4"
           >
             <Link href={`${basePath}/contact`} className="w-full sm:w-auto">
-              <Button size="lg" className="hero-cta-glow min-h-12 w-full px-8 sm:w-auto">
+              <Button as="span" size="lg" className="hero-cta-glow min-h-12 w-full px-8 sm:w-auto">
                 {t("hero.cta")}
-                <ArrowRight className="h-5 w-5" />
+                <ArrowRight className="rtl:rotate-180 h-5 w-5" />
               </Button>
             </Link>
             <Link href={`${basePath}/services`} className="w-full sm:w-auto">
-              <Button variant="outline" size="lg" className="min-h-12 w-full px-8 sm:w-auto">
+              <Button as="span" variant="outline" size="lg" className="min-h-12 w-full px-8 sm:w-auto">
                 {t("hero.ctaServices")}
               </Button>
             </Link>
             <Link href={`${basePath}/portfolio`} className="w-full sm:w-auto">
-              <Button variant="ghost" size="lg" className="min-h-12 w-full px-8 sm:w-auto">
+              <Button as="span" variant="ghost" size="lg" className="min-h-12 w-full px-8 sm:w-auto">
                 {t("hero.ctaSecondary")}
               </Button>
             </Link>
           </motion.div>
         </motion.div>
 
+        {stats.length > 0 && (
         <motion.div
           className="hero-stats-row mt-10 border-t border-white/[0.08] pt-8 lg:mt-12"
           initial={prefersReducedMotion || motionReady ? false : { opacity: 1, y: 20 }}
@@ -207,6 +208,7 @@ export function Hero({ locale, stats }: HeroProps) {
             ))}
           </div>
         </motion.div>
+        )}
       </div>
     </section>
   );

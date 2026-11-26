@@ -40,7 +40,7 @@ export function TableOfContents({
       aria-label={title}
       className="rounded-2xl border border-white/10 bg-white/[0.03] p-4"
     >
-      <p className="text-xs font-semibold uppercase tracking-wider text-white/40">
+      <p className="text-xs font-semibold uppercase tracking-wider text-white/60">
         {title}
       </p>
       <ul className="mt-3 space-y-2">

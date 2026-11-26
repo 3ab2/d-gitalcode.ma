@@ -32,10 +32,10 @@ export function CtaSection({ locale }: { locale: Locale }) {
           <p className="mt-4 text-lg text-white/60">{t("cta.subtitle")}</p>
           <div className="mt-8 flex flex-wrap justify-center gap-4">
             <Link href={`${basePath}/contact`}>
-              <Button size="lg">{t("cta.button")}</Button>
+              <Button as="span" size="lg">{t("cta.button")}</Button>
             </Link>
             <a href={whatsappUrl} target="_blank" rel="noopener noreferrer">
-              <Button variant="whatsapp" size="lg">
+              <Button as="span" variant="whatsapp" size="lg">
                 {t("cta.whatsapp")}
               </Button>
             </a>

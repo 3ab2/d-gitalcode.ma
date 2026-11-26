@@ -83,7 +83,7 @@ export function Header({ locale }: { locale: Locale }) {
   }, [pathname]);
 
   useEffect(() => {
-    if (!mobileOpen) return;
+    if (!mobileOpen && !servicesOpen) return;
 
     const onKeyDown = (event: KeyboardEvent) => {
       if (event.key === "Escape") closeMenu();
@@ -91,19 +91,20 @@ export function Header({ locale }: { locale: Locale }) {
 
     document.addEventListener("keydown", onKeyDown);
     return () => document.removeEventListener("keydown", onKeyDown);
-  }, [mobileOpen, closeMenu]);
+  }, [mobileOpen, servicesOpen, closeMenu]);
 
   const mobileMenuPanel = mobileOpen && !isDesktop && (
     <>
       <button
         type="button"
-        aria-label="Close menu overlay"
+        aria-label={t("a11y.closeMenu")}
         className="site-menu-overlay fixed inset-x-0 bottom-0 cursor-pointer bg-black/60 touch-manipulation lg:hidden"
         style={{ top: headerHeight, zIndex: 10101 }}
         onClick={handleOverlayClose}
       />
       <nav
         id="mobile-navigation"
+        aria-label={t("a11y.mainNavigation")}
         className="site-mobile-nav fixed inset-x-0 overflow-y-auto overscroll-contain border-t border-white/10 bg-brand-dark lg:hidden"
         style={{ top: headerHeight, zIndex: 10102, maxHeight: `calc(100dvh - ${headerHeight}px)` }}
       >
@@ -156,6 +157,9 @@ export function Header({ locale }: { locale: Locale }) {
               <Link
                 key={l}
                 href={switchLocale(l)}
+                hrefLang={l}
+                lang={l}
+                aria-current={l === locale ? "true" : undefined}
                 onClick={handleMobileNavClick}
                 className={cn(
                   "min-h-11 flex-1 cursor-pointer touch-manipulation rounded-lg border py-3 text-center text-xs",
@@ -173,7 +177,7 @@ export function Header({ locale }: { locale: Locale }) {
             onClick={handleMobileNavClick}
             className="mt-4 block touch-manipulation"
           >
-            <Button className="w-full">{t("nav.contact")}</Button>
+            <Button as="span" className="w-full">{t("nav.contact")}</Button>
           </Link>
         </div>
       </nav>
@@ -200,7 +204,7 @@ export function Header({ locale }: { locale: Locale }) {
               type="button"
               className="menu-toggle relative z-[2] flex h-11 min-h-11 w-11 min-w-11 shrink-0 cursor-pointer touch-manipulation items-center justify-center rounded-lg text-white/90 transition-colors hover:bg-white/10 active:bg-white/15"
               onClick={toggleMenu}
-              aria-label={mobileOpen ? "Close menu" : "Open menu"}
+              aria-label={mobileOpen ? t("a11y.closeMenu") : t("a11y.openMenu")}
               aria-expanded={mobileOpen}
               aria-controls="mobile-navigation"
             >
@@ -222,18 +226,38 @@ export function Header({ locale }: { locale: Locale }) {
               <Logo size="md" priority />
             </Link>
 
-            <nav className="flex flex-1 items-center justify-center gap-0.5">
+            <nav
+              aria-label={t("a11y.mainNavigation")}
+              className="flex flex-1 items-center justify-center gap-0.5"
+            >
               {navLinks.map((link) =>
                 link.children ? (
-                  <div key={link.label} className="group relative">
+                  <div
+                    key={link.label}
+                    className="group relative"
+                    onBlur={(event) => {
+                      if (!event.currentTarget.contains(event.relatedTarget)) {
+                        setServicesOpen(false);
+                      }
+                    }}
+                  >
                     <button
                       type="button"
+                      aria-expanded={servicesOpen}
+                      aria-controls="services-menu"
+                      onClick={() => setServicesOpen((open) => !open)}
                       className="flex cursor-pointer items-center gap-1 px-3.5 py-2 text-sm font-medium text-white/65 transition-colors hover:text-white"
                     >
                       {link.label}
                       <ChevronDown className="h-4 w-4" />
                     </button>
-                    <div className="invisible absolute left-0 top-full pt-2 opacity-0 transition-all group-hover:visible group-hover:opacity-100">
+                    <div
+                      id="services-menu"
+                      className={cn(
+                        "absolute start-0 top-full pt-2 transition-all motion-reduce:transition-none group-hover:visible group-hover:opacity-100",
+                        servicesOpen ? "visible opacity-100" : "invisible opacity-0"
+                      )}
+                    >
                       <div className="min-w-[220px] rounded-xl border border-white/10 bg-brand-dark/95 p-2 shadow-xl backdrop-blur-xl">
                         {link.children.map((child) => (
                           <Link
@@ -251,6 +275,7 @@ export function Header({ locale }: { locale: Locale }) {
                   <Link
                     key={link.href}
                     href={link.href!}
+                    aria-current={pathname === link.href ? "page" : undefined}
                     className={cn(
                       "rounded-lg px-3.5 py-2 text-sm font-medium transition-colors",
                       pathname === link.href
@@ -270,6 +295,9 @@ export function Header({ locale }: { locale: Locale }) {
                   <Link
                     key={l}
                     href={switchLocale(l)}
+                    hrefLang={l}
+                    aria-label={localeNames[l]}
+                    aria-current={l === locale ? "true" : undefined}
                     className={cn(
                       "rounded-md px-2 py-1 text-xs transition-colors",
                       l === locale
@@ -283,7 +311,7 @@ export function Header({ locale }: { locale: Locale }) {
               </div>
 
               <Link href={`${basePath}/contact`}>
-                <Button size="sm">{t("nav.contact")}</Button>
+                <Button as="span" size="sm">{t("nav.contact")}</Button>
               </Link>
             </div>
           </div>

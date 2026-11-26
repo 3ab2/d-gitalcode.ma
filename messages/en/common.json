@@ -22,7 +22,7 @@
     "cta": "Request a Free Quote",
     "ctaSecondary": "View Portfolio",
     "ctaServices": "Explore our services",
-    "trust": ["Response within 24h", "Senior dedicated team", "Support & maintenance"],
+    "trust": ["Response within 24h", "Dedicated follow-up", "Support & maintenance"],
     "skipIntro": "Skip intro",
     "stats": {
       "projects": "Projects completed",
@@ -76,7 +76,7 @@
     },
     "portfolio": {
       "title": "Work that builds trust",
-      "subtitle": "Explore a selection of web, mobile and WordPress projects delivered for our clients.",
+      "subtitle": "Explore a selection of our web and WordPress work, with live demos where available.",
       "viewAll": "View full portfolio",
       "details": "Learn more",
       "filters": {
@@ -116,14 +116,14 @@
       "subtitle": "Tell us about your vision. We respond within 24h with a clear proposal."
     },
     "trust": {
-      "title": "Why clients trust us",
+      "title": "How we work with you",
       "subtitle": "D-GITALCODE combines technical expertise, premium design and results-driven partnership.",
       "footer": "Learn more about our agency:",
       "items": [
         { "title": "Proven expertise", "desc": "Web, mobile and WordPress projects delivered with technical excellence." },
         { "title": "Fast response", "desc": "Quotes and support within 24h — clear communication at every step." },
         { "title": "Human partnership", "desc": "ELKARCH ABDELHAMID and the D-GITALCODE team guide you from A to Z." },
-        { "title": "Measurable results", "desc": "Conversion, performance and SEO built in from day one." }
+        { "title": "Built to be measured", "desc": "Conversion, performance and SEO built in from day one." }
       ]
     }
   },
@@ -270,7 +270,7 @@
     },
     "cta": {
       "title": "Ready to launch your project?",
-      "subtitle": "Contact D-GITALCODE — guaranteed response within 24h.",
+      "subtitle": "Contact D-GITALCODE — we reply within 24h.",
       "button": "Get a free quote"
     }
   },
@@ -430,7 +430,7 @@
   "contact": {
     "title": "Contact Us",
     "subtitle": "Let's talk about your project",
-    "headline": "Get a free quote — guaranteed response within 24h",
+    "headline": "Get a free quote — we reply within 24h",
     "promise": "Tell us about your project in a few lines. Our team will get back to you with a clear, no-obligation proposal.",
     "name": "Full name",
     "email": "Email",
@@ -495,6 +495,7 @@
     "followUs": "Follow Us"
   },
   "social": {
+    "youtube": "YouTube",
     "instagram": "Instagram",
     "linkedin": "LinkedIn",
     "github": "GitHub",
@@ -655,5 +656,30 @@
     "iosStep3Title": "Add",
     "iosStep3Detail": "Tap \"Add\" to finish installing the app.",
     "gotIt": "Got it"
+  },
+  "a11y": {
+    "skipToContent": "Skip to content",
+    "openMenu": "Open menu",
+    "closeMenu": "Close menu",
+    "mainNavigation": "Main navigation"
+  },
+  "pageError": {
+    "title": "Something went wrong",
+    "description": "The page could not be displayed. Try again, or go back to the home page.",
+    "retry": "Try again",
+    "back": "Back to home"
+  },
+  "pageLoading": {
+    "message": "Loading"
+  },
+  "release": {
+    "title": "Release",
+    "version": "Version",
+    "commit": "Commit",
+    "released": "Released",
+    "tests": "Test evidence",
+    "notes": "Release notes",
+    "video": "Watch the demo",
+    "announcement": "Read the announcement"
   }
 }

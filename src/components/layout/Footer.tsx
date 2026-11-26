@@ -131,7 +131,7 @@ export function Footer({
           </div>
         </div>
 
-        <div className="mt-14 flex flex-col items-center gap-3 border-t border-white/[0.06] pt-8 text-center text-sm text-white/40 sm:flex-row sm:justify-between">
+        <div className="mt-14 flex flex-col items-center gap-3 border-t border-white/[0.06] pt-8 text-center text-sm text-white/60 sm:flex-row sm:justify-between">
           <p>© {year} D-GITALCODE. {t("footer.rights")}</p>
           <Link
             href={`${basePath}/privacy-policy`}

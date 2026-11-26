@@ -3,7 +3,7 @@
 import Image from "next/image";
 import Link from "next/link";
 import { RefreshCw, WifiOff } from "lucide-react";
-import { useMemo } from "react";
+import { useSyncExternalStore } from "react";
 
 const copy = {
   fr: {
@@ -26,8 +26,9 @@ const copy = {
   },
 } as const;
 
+const subscribe = () => () => {};
+
 function resolveLocale(): keyof typeof copy {
-  if (typeof navigator === "undefined") return "fr";
   const lang = navigator.language.toLowerCase();
   if (lang.startsWith("ar")) return "ar";
   if (lang.startsWith("en")) return "en";
@@ -35,12 +36,17 @@ function resolveLocale(): keyof typeof copy {
 }
 
 export default function OfflinePage() {
-  const locale = useMemo(() => resolveLocale(), []);
+  // The server renders French; the browser language applies after hydration.
+  const locale = useSyncExternalStore(subscribe, resolveLocale, () => "fr" as const);
   const t = copy[locale];
   const homeHref = `/${locale}`;
 
   return (
-    <div className="flex min-h-[100dvh] flex-col items-center justify-center bg-brand-dark px-6 text-center">
+    <main
+      lang={locale}
+      dir={locale === "ar" ? "rtl" : "ltr"}
+      className="flex min-h-[100dvh] flex-col items-center justify-center bg-brand-dark px-6 text-center"
+    >
       <div className="mb-8 flex h-20 w-20 items-center justify-center rounded-2xl border border-white/10 bg-white/[0.03] shadow-xl shadow-black/30">
         <WifiOff className="h-9 w-9 text-brand-green" aria-hidden />
       </div>
@@ -73,6 +79,6 @@ export default function OfflinePage() {
           {t.home}
         </Link>
       </div>
-    </div>
+    </main>
   );
 }

@@ -4,6 +4,8 @@ import {
   SITE_NAME,
   localizedUrl,
 } from "@/lib/seo/metadata";
+import { serializeJsonLd } from "@/lib/seo/json-ld";
+import { DEFAULT_SOCIAL_LINKS } from "@/config/social-links";
 import type { Locale } from "@/lib/i18n/settings";
 
 export function SiteJsonLd({ locale }: { locale: Locale }) {
@@ -22,6 +24,9 @@ export function SiteJsonLd({ locale }: { locale: Locale }) {
           "@type": "ImageObject",
           url: publisherLogoUrl(),
         },
+        sameAs: DEFAULT_SOCIAL_LINKS.filter((l) => l.enabled !== false).map(
+          (l) => l.url
+        ),
       },
       {
         "@type": "WebSite",
@@ -45,7 +50,7 @@ export function SiteJsonLd({ locale }: { locale: Locale }) {
   return (
     <script
       type="application/ld+json"
-      dangerouslySetInnerHTML={{ __html: JSON.stringify(schema) }}
+      dangerouslySetInnerHTML={{ __html: serializeJsonLd(schema) }}
     />
   );
 }
