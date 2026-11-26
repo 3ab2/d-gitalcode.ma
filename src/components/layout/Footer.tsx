@@ -131,8 +131,14 @@ export function Footer({
           </div>
         </div>
 
-        <div className="mt-14 border-t border-white/[0.06] pt-8 text-center text-sm text-white/40">
-          © {year} D-GITALCODE. {t("footer.rights")}
+        <div className="mt-14 flex flex-col items-center gap-3 border-t border-white/[0.06] pt-8 text-center text-sm text-white/40 sm:flex-row sm:justify-between">
+          <p>© {year} D-GITALCODE. {t("footer.rights")}</p>
+          <Link
+            href={`${basePath}/privacy-policy`}
+            className="transition-colors hover:text-brand-green"
+          >
+            {t("footer.privacyPolicy")}
+          </Link>
         </div>
       </div>
     </footer>
