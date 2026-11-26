@@ -1,5 +1,12 @@
 @import "tailwindcss";
 
+/*
+ * D-GITALCODE design tokens.
+ * Brand values come from DGITALCODE-HQ/brand/brand.json (VERIFIED): background #0a0f14, card #121a21,
+ * text #ffffff, green #25d366, purple #6c4cf1. Every other value below is a role derived from them.
+ * Contrast (WCAG 2.1, measured on --color-bg and --color-surface): ink 19:1, ink-2 > 10:1, ink-3 > 6:1,
+ * action on bg 9.6:1, on-action on action 9.6:1, accent-ink 7.9:1. Purple itself (3.6:1) is never used for text.
+ */
 :root {
   --background: #0a0f14;
   --foreground: #ffffff;
@@ -7,192 +14,156 @@
   --brand-purple: #6c4cf1;
   --brand-dark: #0a0f14;
   --brand-card: #121a21;
-  --header-height: 5rem;
-  --hero-viewport-height: 100vh;
-  --hero-viewport-height: 100svh;
-  --hero-viewport-height: 100dvh;
-  --hero-content-min-height: calc(var(--hero-viewport-height) - var(--header-height, 5rem));
+  --header-height: 4.5rem;
 }
 
 @theme inline {
+  /* Brand (kept for existing classes such as bg-brand-dark, text-brand-green) */
   --color-background: var(--background);
   --color-foreground: var(--foreground);
   --color-brand-green: var(--brand-green);
   --color-brand-purple: var(--brand-purple);
   --color-brand-dark: var(--brand-dark);
   --color-brand-card: var(--brand-card);
-  --font-sans: var(--font-geist-sans);
-  --font-mono: var(--font-geist-mono);
+
+  /* Roles */
+  --color-bg: #0a0f14;
+  --color-surface: #121a21;
+  --color-surface-2: #18222b;
+  --color-line: rgb(255 255 255 / 0.08);
+  --color-line-strong: rgb(255 255 255 / 0.16);
+  --color-ink: #ffffff;
+  --color-ink-2: rgb(255 255 255 / 0.74);
+  --color-ink-3: rgb(255 255 255 / 0.6);
+  --color-action: #25d366;
+  --color-action-hover: #45dd80;
+  --color-on-action: #0a0f14;
+  --color-accent: #6c4cf1;
+  --color-accent-ink: #b3a6fa;
+
+  /* Type: Geist for everything; Noto Sans Arabic covers Arabic script, which Geist does not include */
+  --font-sans: var(--font-geist-sans), var(--font-arabic), system-ui, sans-serif;
+  --font-mono: var(--font-geist-mono), ui-monospace, monospace;
+
+  --text-display: clamp(2.375rem, 1.25rem + 3.3vw, 4.25rem);
+  --text-display--line-height: 1.04;
+  --text-display--letter-spacing: -0.035em;
+  --text-display--font-weight: 600;
+  --text-title: clamp(2.25rem, 1.55rem + 2.8vw, 3.75rem);
+  --text-title--line-height: 1.06;
+  --text-title--letter-spacing: -0.03em;
+  --text-title--font-weight: 600;
+  --text-heading: clamp(1.875rem, 1.35rem + 2vw, 2.875rem);
+  --text-heading--line-height: 1.1;
+  --text-heading--letter-spacing: -0.026em;
+  --text-heading--font-weight: 600;
+  --text-subheading: 1.375rem;
+  --text-subheading--line-height: 1.3;
+  --text-subheading--letter-spacing: -0.015em;
+  --text-subheading--font-weight: 600;
+  --text-lead: clamp(1.0625rem, 0.98rem + 0.4vw, 1.3125rem);
+  --text-lead--line-height: 1.6;
+
+  /* Shape: small radii echo the cut corners of the logo mark */
+  --radius-control: 0.5rem;
+  --radius-panel: 0.75rem;
+
+  --shadow-overlay: 0 24px 60px -24px rgb(0 0 0 / 0.7);
+
+  --ease-out-soft: cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+/* Layout */
+@utility container-site {
+  width: 100%;
+  max-width: 76rem;
+  margin-inline: auto;
+  padding-inline: clamp(1.25rem, 4vw, 2.5rem);
+}
+
+@utility section-y {
+  padding-block: clamp(4.5rem, 2.8rem + 6vw, 8.5rem);
+}
+
+/* The facet: one corner cut at 45 degrees, taken from the logo mark. Mirrors in right-to-left pages. */
+@utility facet {
+  --facet: 1.25rem;
+  clip-path: polygon(0 0, calc(100% - var(--facet)) 0, 100% var(--facet), 100% 100%, 0 100%);
+  &:where([dir="rtl"], [dir="rtl"] *) {
+    clip-path: polygon(var(--facet) 0, 100% 0, 100% 100%, 0 100%, 0 var(--facet));
+  }
 }
 
 html {
-  scroll-behavior: smooth;
+  color-scheme: dark;
+  -webkit-text-size-adjust: 100%;
+}
+
+@media (prefers-reduced-motion: no-preference) {
+  html {
+    scroll-behavior: smooth;
+  }
 }
 
 body {
   background: var(--background);
   color: var(--foreground);
-  font-family: var(--font-sans), system-ui, sans-serif;
+  font-family: var(--font-sans);
+  font-feature-settings: "ss01", "cv11";
+  text-rendering: optimizeLegibility;
+  -webkit-font-smoothing: antialiased;
+}
+
+/* Arabic reads better with more line height and without negative tracking */
+:lang(ar) body,
+[dir="rtl"] body {
+  letter-spacing: 0;
+}
+
+:lang(ar) :where(h1, h2, h3, .text-display, .text-title, .text-heading) {
+  letter-spacing: 0;
+  line-height: 1.3;
 }
 
 :where(a, button, input, select, textarea, summary, [tabindex]):focus-visible {
   outline: 2px solid var(--brand-green);
   outline-offset: 3px;
+  border-radius: 4px;
 }
 
-.brand-logo {
-  background: transparent;
+::selection {
+  background: rgb(37 211 102 / 0.3);
+  color: white;
 }
 
-.premium-grid {
-  position: relative;
-  isolation: isolate;
-}
-
-.premium-grid::before {
-  content: "";
-  position: absolute;
-  inset: 0;
-  z-index: 0;
-  pointer-events: none;
-  background-image:
-    linear-gradient(rgba(255, 255, 255, 0.025) 1px, transparent 1px),
-    linear-gradient(90deg, rgba(255, 255, 255, 0.025) 1px, transparent 1px);
-  background-size: 64px 64px;
-  mask-image: radial-gradient(ellipse 100% 80% at 50% 20%, black 50%, transparent 100%);
-  -webkit-mask-image: radial-gradient(ellipse 100% 80% at 50% 20%, black 50%, transparent 100%);
-}
-
-.hero-section {
-  position: relative;
-  z-index: 0;
-  min-height: calc(100vh - var(--header-height, 5rem));
-  min-height: calc(100svh - var(--header-height, 5rem));
-  min-height: var(--hero-content-min-height);
-  overflow: hidden;
-  isolation: isolate;
-  touch-action: pan-y pinch-zoom;
-}
-
-.hero-section.hero-cinematic {
-  padding-top: 0;
-}
-
-.hero-ambient {
-  position: absolute;
-  inset: 0;
-  z-index: 2;
-  pointer-events: none;
-  overflow: hidden;
-}
-
-.hero-ambient-glow {
-  position: absolute;
-  border-radius: 9999px;
-  filter: blur(120px);
-  pointer-events: none;
-}
-
-.hero-content {
-  position: relative;
-  z-index: 10;
-  pointer-events: auto;
-  touch-action: pan-y pinch-zoom;
-  min-height: calc(100vh - var(--header-height, 5rem));
-  min-height: calc(100svh - var(--header-height, 5rem));
-  min-height: var(--hero-content-min-height);
-}
-
-.hero-cinematic-backdrop {
-  position: absolute;
-  inset: 0;
-  z-index: 0;
-  overflow: hidden;
-  pointer-events: none;
-}
-
-.hero-cinematic-overlay {
-  position: absolute;
-  inset: 0;
-  z-index: 1;
-  pointer-events: none;
-  background:
-    radial-gradient(ellipse 100% 90% at 15% 50%, rgba(10, 15, 20, 0.55), transparent 58%),
-    radial-gradient(ellipse 80% 60% at 85% 20%, rgba(108, 76, 241, 0.08), transparent 50%),
-    linear-gradient(to bottom, rgba(10, 15, 20, 0.25), rgba(10, 15, 20, 0.88));
-}
-
-.hero-code-rain {
-  z-index: 3;
-  filter: blur(0.2px);
-  mix-blend-mode: screen;
-  pointer-events: none;
-  touch-action: none;
-}
-
-.hero-particles {
-  z-index: 4;
-  opacity: 0.55;
-  pointer-events: none;
-  touch-action: none;
-}
-
-.hero-intro-controls {
-  z-index: 20;
-  pointer-events: none;
-}
-
-.hero-headline {
-  text-shadow: 0 0 60px rgba(37, 211, 102, 0.15), 0 2px 24px rgba(0, 0, 0, 0.45);
-}
-
-.hero-stat-item {
-  min-width: 0;
-}
-
-.hero-cta-glow {
-  box-shadow: 0 0 0 rgba(37, 211, 102, 0);
-  transition: box-shadow 0.35s ease, transform 0.25s ease;
-}
-
-.hero-cta-glow:hover {
-  box-shadow: 0 0 28px rgba(37, 211, 102, 0.35), 0 0 60px rgba(37, 211, 102, 0.12);
-  transform: translateY(-1px);
-}
-
-.brand-hero-illustration {
-  background: transparent;
-  object-fit: contain;
-  object-position: center;
-  filter: drop-shadow(0 20px 40px rgba(37, 211, 102, 0.2))
-    drop-shadow(0 8px 24px rgba(108, 76, 241, 0.1));
-}
-
-.hero-fade-in {
-  animation: hero-fade-in 0.6s ease-out both;
-}
-
-.hero-fade-in-delay {
-  animation: hero-fade-in 0.7s ease-out 0.15s both;
-}
-
-@keyframes hero-fade-in {
+/* One entrance sequence, on the home hero only */
+@keyframes rise {
   from {
     opacity: 0;
-    transform: translateY(12px);
+    transform: translateY(14px);
   }
   to {
     opacity: 1;
-    transform: translateY(0);
+    transform: none;
   }
 }
 
+.rise {
+  animation: rise 0.7s var(--ease-out-soft) both;
+  animation-delay: calc(var(--rise-step, 0) * 90ms);
+}
+
 @media (prefers-reduced-motion: reduce) {
-  .hero-fade-in,
-  .hero-fade-in-delay {
+  .rise {
     animation: none;
-    opacity: 1;
-    transform: none;
+  }
+
+  *,
+  *::before,
+  *::after {
+    transition-duration: 0.01ms !important;
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
   }
 }
 
@@ -201,52 +172,11 @@ body {
   touch-action: pan-y pinch-zoom;
 }
 
-@keyframes notification-panel-in {
-  from {
-    opacity: 0;
-    transform: translateY(-6px) scale(0.98);
-  }
-  to {
-    opacity: 1;
-    transform: translateY(0) scale(1);
-  }
+.brand-logo {
+  background: transparent;
 }
 
-.notification-panel-animate {
-  animation: notification-panel-in 0.2s ease-out forwards;
-}
-
-.agency-map-section {
-  position: relative;
-  z-index: 1;
-  isolation: isolate;
-}
-
-.agency-map-mobile-fallback,
-.agency-map-mobile-card {
-  opacity: 1;
-  visibility: visible;
-  pointer-events: auto;
-  touch-action: manipulation;
-}
-
-.agency-map-mobile-card button,
-.agency-map-mobile-card a {
-  -webkit-tap-highlight-color: transparent;
-}
-
-.agency-map-stage {
-  contain: layout paint style;
-}
-
-.agency-map-node-label {
-  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.35);
-}
-
-.agency-map-detail {
-  box-shadow: 0 20px 50px rgba(0, 0, 0, 0.45);
-}
-
+/* Header */
 .site-header {
   position: fixed;
   inset-inline: 0;
@@ -256,18 +186,12 @@ body {
   isolation: isolate;
   pointer-events: auto;
   touch-action: manipulation;
-  -webkit-transform: translate3d(0, 0, 0);
   transform: translate3d(0, 0, 0);
   padding-top: env(safe-area-inset-top, 0px);
 }
 
 .site-chrome {
-  -webkit-backface-visibility: hidden;
   backface-visibility: hidden;
-}
-
-.site-header-mobile {
-  background-color: var(--brand-dark);
 }
 
 .site-header-bar {
@@ -279,7 +203,6 @@ body {
   z-index: 2;
   pointer-events: auto !important;
   touch-action: manipulation;
-  -webkit-user-select: none;
   user-select: none;
 }
 
@@ -306,33 +229,21 @@ body {
   .site-header-bar {
     background-color: var(--brand-dark);
   }
+}
 
-  @media (min-width: 1024px) {
-    .site-header-bar {
-      background-color: rgba(10, 15, 20, 0.95);
-    }
+@keyframes notification-panel-in {
+  from {
+    opacity: 0;
+    transform: translateY(-6px) scale(0.98);
   }
-
-  .hero-section,
-  .hero-content {
-    min-height: calc(-webkit-fill-available - var(--header-height, 5rem));
-  }
-
-  .hero-code-rain {
-    mix-blend-mode: normal;
-    opacity: 0.72;
-  }
-
-  .hero-fade-in,
-  .hero-fade-in-delay {
+  to {
     opacity: 1;
-    transform: translateY(0);
+    transform: translateY(0) scale(1);
   }
 }
 
-::selection {
-  background: rgba(37, 211, 102, 0.3);
-  color: white;
+.notification-panel-animate {
+  animation: notification-panel-in 0.2s ease-out forwards;
 }
 
 ::-webkit-scrollbar {
@@ -344,38 +255,56 @@ body {
 }
 
 ::-webkit-scrollbar-thumb {
-  background: rgba(255, 255, 255, 0.1);
+  background: rgb(255 255 255 / 0.1);
   border-radius: 4px;
 }
 
 ::-webkit-scrollbar-thumb:hover {
-  background: rgba(37, 211, 102, 0.3);
+  background: rgb(37 211 102 / 0.3);
+}
+
+/* Blog article body */
+.prose-blog {
+  font-size: 1.0625rem;
+  line-height: 1.75;
 }
 
 .prose-blog h2 {
-  @apply text-2xl font-bold text-white mt-8 mb-4;
+  @apply mt-12 mb-4 text-2xl font-semibold tracking-tight text-white;
 }
 
 .prose-blog h3 {
-  @apply text-xl font-semibold text-white mt-6 mb-3;
+  @apply mt-8 mb-3 text-xl font-semibold text-white;
 }
 
 .prose-blog p {
-  @apply text-white/70 leading-relaxed mb-4;
+  @apply mb-5 text-ink-2;
 }
 
 .prose-blog ul {
-  @apply list-disc list-inside text-white/70 space-y-2 mb-4;
+  @apply mb-5 list-disc space-y-2 ps-5 text-ink-2;
+}
+
+.prose-blog ol {
+  @apply mb-5 list-decimal space-y-2 ps-5 text-ink-2;
 }
 
 .prose-blog a {
-  @apply text-brand-green hover:underline;
+  @apply text-action underline decoration-action/40 underline-offset-4 hover:decoration-action;
 }
 
 .prose-blog code {
-  @apply bg-white/5 px-2 py-0.5 rounded text-brand-green text-sm;
+  @apply rounded bg-white/5 px-1.5 py-0.5 font-mono text-[0.9em] text-white;
 }
 
 .prose-blog pre {
-  @apply bg-white/5 p-4 rounded-xl overflow-x-auto mb-4;
+  @apply mb-6 overflow-x-auto rounded-panel border border-line bg-surface p-4;
+}
+
+.prose-blog pre code {
+  @apply bg-transparent p-0;
+}
+
+.prose-blog blockquote {
+  @apply my-6 border-s-2 border-accent ps-5 text-ink-2;
 }

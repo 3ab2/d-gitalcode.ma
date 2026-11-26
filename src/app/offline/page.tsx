@@ -47,8 +47,8 @@ export default function OfflinePage() {
       dir={locale === "ar" ? "rtl" : "ltr"}
       className="flex min-h-[100dvh] flex-col items-center justify-center bg-brand-dark px-6 text-center"
     >
-      <div className="mb-8 flex h-20 w-20 items-center justify-center rounded-2xl border border-white/10 bg-white/[0.03] shadow-xl shadow-black/30">
-        <WifiOff className="h-9 w-9 text-brand-green" aria-hidden />
+      <div className="mb-8 flex h-20 w-20 items-center justify-center rounded-panel border border-line bg-surface shadow-xl shadow-black/30">
+        <WifiOff className="h-9 w-9 text-action" aria-hidden />
       </div>
 
       <Image
@@ -61,20 +61,20 @@ export default function OfflinePage() {
       />
 
       <h1 className="text-2xl font-bold text-white">{t.title}</h1>
-      <p className="mt-3 max-w-sm text-sm leading-relaxed text-white/50">{t.subtitle}</p>
+      <p className="mt-3 max-w-sm text-sm leading-relaxed text-ink-3">{t.subtitle}</p>
 
       <div className="mt-8 flex flex-col gap-3 sm:flex-row">
         <button
           type="button"
           onClick={() => window.location.reload()}
-          className="inline-flex items-center justify-center gap-2 rounded-xl bg-brand-green px-6 py-3 text-sm font-semibold text-brand-dark transition hover:bg-brand-green/90"
+          className="inline-flex items-center justify-center gap-2 rounded-control bg-brand-green px-6 py-3 text-sm font-semibold text-brand-dark transition hover:bg-brand-green/90"
         >
           <RefreshCw className="h-4 w-4" />
           {t.retry}
         </button>
         <Link
           href={homeHref}
-          className="inline-flex items-center justify-center rounded-xl border border-white/15 px-6 py-3 text-sm font-medium text-white/80 transition hover:border-brand-green/30 hover:text-white"
+          className="inline-flex items-center justify-center rounded-control border border-white/15 px-6 py-3 text-sm font-medium text-ink-2 transition hover:border-brand-green/30 hover:text-white"
         >
           {t.home}
         </Link>

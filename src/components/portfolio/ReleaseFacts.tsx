@@ -27,17 +27,17 @@ export function ReleaseFacts({
   ];
 
   return (
-    <section className="rounded-2xl border border-white/10 bg-white/[0.02] p-6 sm:p-8">
-      <h2 className="text-lg font-semibold text-white sm:text-xl">
+    <section className="rounded-panel border border-line bg-surface p-6 sm:p-8">
+      <h2 className="text-subheading text-ink">
         {t("release.title")}
       </h2>
-      <dl className="mt-4 grid gap-4 text-sm text-white/65 sm:grid-cols-3">
+      <dl className="mt-5 grid gap-5 text-sm text-ink-2 sm:grid-cols-3">
         <div>
-          <dt className="text-white/60">{t("release.version")}</dt>
-          <dd className="mt-1 text-white">{release.version}</dd>
+          <dt className="text-ink-3">{t("release.version")}</dt>
+          <dd className="mt-1 text-ink">{release.version}</dd>
         </div>
         <div>
-          <dt className="text-white/60">{t("release.commit")}</dt>
+          <dt className="text-ink-3">{t("release.commit")}</dt>
           <dd className="mt-1 font-mono" dir="ltr">
             <a
               href={`${release.repositoryUrl}/commit/${release.commit}`}
@@ -50,8 +50,8 @@ export function ReleaseFacts({
           </dd>
         </div>
         <div>
-          <dt className="text-white/60">{t("release.released")}</dt>
-          <dd className="mt-1 text-white">
+          <dt className="text-ink-3">{t("release.released")}</dt>
+          <dd className="mt-1 text-ink">
             <time dateTime={release.releasedOn}>{date}</time>
           </dd>
         </div>

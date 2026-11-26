@@ -1,13 +1,10 @@
-"use client";
-
 import { forwardRef } from "react";
-import { motion, type HTMLMotionProps } from "framer-motion";
 import { cn } from "@/lib/utils";
 
 type Variant = "primary" | "secondary" | "outline" | "ghost" | "whatsapp";
 type Size = "sm" | "md" | "lg";
 
-interface ButtonProps extends Omit<HTMLMotionProps<"button">, "ref" | "children"> {
+interface ButtonProps extends Omit<React.ButtonHTMLAttributes<HTMLButtonElement>, "children"> {
   variant?: Variant;
   size?: Size;
   isLoading?: boolean;
@@ -17,59 +14,61 @@ interface ButtonProps extends Omit<HTMLMotionProps<"button">, "ref" | "children"
 }
 
 const variants: Record<Variant, string> = {
-  primary:
-    "bg-brand-green text-brand-dark font-semibold hover:bg-brand-green/90 shadow-lg shadow-brand-green/20",
-  secondary:
-    "bg-brand-purple text-white font-semibold hover:bg-brand-purple/90 shadow-lg shadow-brand-purple/20",
-  outline:
-    "border border-white/20 text-white hover:bg-white/5 hover:border-brand-green/50",
-  ghost: "text-white/70 hover:text-white hover:bg-white/5",
-  whatsapp:
-    "bg-[#25D366] text-brand-dark font-semibold hover:bg-[#20bd5a] shadow-lg shadow-[#25D366]/20",
+  primary: "bg-action text-on-action font-semibold hover:bg-action-hover",
+  secondary: "bg-accent text-white font-semibold hover:bg-accent/90",
+  outline: "border border-line-strong text-ink hover:border-white/40 hover:bg-white/[0.04]",
+  ghost: "text-ink-2 hover:bg-white/[0.05] hover:text-ink",
+  whatsapp: "bg-action text-on-action font-semibold hover:bg-action-hover",
 };
 
 const sizes: Record<Size, string> = {
-  sm: "px-4 py-2 text-sm rounded-lg",
-  md: "px-6 py-3 text-sm rounded-xl",
-  lg: "px-8 py-4 text-base rounded-xl",
+  sm: "h-9 px-3.5 text-sm",
+  md: "h-11 px-5 text-[0.9375rem]",
+  lg: "h-12 px-6 text-base",
 };
 
+/** Base classes, shared with links styled as buttons. */
+export function buttonClasses(variant: Variant = "primary", size: Size = "md", className?: string) {
+  return cn(
+    "inline-flex select-none items-center justify-center gap-2 whitespace-nowrap rounded-control transition-colors duration-200 disabled:cursor-not-allowed disabled:opacity-50",
+    variants[variant],
+    sizes[size],
+    className
+  );
+}
+
 export const Button = forwardRef<HTMLButtonElement, ButtonProps>(
-  (
-    {
-      className,
-      variant = "primary",
-      size = "md",
-      isLoading,
-      as = "button",
-      children,
-      disabled,
-      ...props
-    },
-    ref
-  ) => {
-    // Both elements accept the same motion and class props; only button takes `disabled`.
-    const Element = (as === "span" ? motion.span : motion.button) as typeof motion.button;
+  ({ className, variant = "primary", size = "md", isLoading, as = "button", children, disabled, ...props }, ref) => {
+    const content = (
+      <>
+        {isLoading ? (
+          <span
+            aria-hidden
+            className="h-4 w-4 animate-spin rounded-full border-2 border-current border-t-transparent"
+          />
+        ) : null}
+        {children}
+      </>
+    );
+
+    if (as === "span") {
+      return (
+        <span className={buttonClasses(variant, size, className)} {...(props as React.HTMLAttributes<HTMLSpanElement>)}>
+          {content}
+        </span>
+      );
+    }
 
     return (
-    <Element
-      ref={ref}
-      whileHover={{ scale: disabled || isLoading ? 1 : 1.02 }}
-      whileTap={{ scale: disabled || isLoading ? 1 : 0.98 }}
-      className={cn(
-        "inline-flex items-center justify-center gap-2 transition-all duration-200 disabled:opacity-50 disabled:cursor-not-allowed",
-        variants[variant],
-        sizes[size],
-        className
-      )}
-      disabled={as === "span" ? undefined : disabled || isLoading}
-      {...props}
-    >
-      {isLoading ? (
-        <span className="h-4 w-4 animate-spin rounded-full border-2 border-current border-t-transparent" />
-      ) : null}
-      {children}
-    </Element>
+      <button
+        ref={ref}
+        className={buttonClasses(variant, size, className)}
+        disabled={disabled || isLoading}
+        aria-busy={isLoading || undefined}
+        {...props}
+      >
+        {content}
+      </button>
     );
   }
 );

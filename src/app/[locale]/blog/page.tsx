@@ -1,7 +1,7 @@
 import type { Metadata } from "next";
 import { getTranslation } from "@/lib/i18n/server";
 import { type Locale } from "@/lib/i18n/settings";
-import { SectionHeading } from "@/components/ui/SectionHeading";
+import { PageHero } from "@/components/ui/PageHero";
 import { BlogListClient } from "@/components/blog/BlogListClient";
 import { buildPublicPageMetadata } from "@/lib/seo/metadata";
 import {
@@ -62,9 +62,10 @@ export default async function BlogPage({
   });
 
   return (
-    <section className="pt-10 pb-16 md:pt-12">
-      <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
-        <SectionHeading as="h1" title={t("blog.title")} subtitle={t("blog.subtitle")} />
+    <>
+      <PageHero title={t("blog.title")} lead={t("blog.subtitle")} />
+      <section className="pt-12 pb-24 lg:pt-16 lg:pb-32">
+        <div className="container-site">
         <BlogListClient
           posts={serialized}
           basePath={basePath}
@@ -79,7 +80,8 @@ export default async function BlogPage({
             articles: t("blog.articleCount"),
           }}
         />
-      </div>
-    </section>
+        </div>
+      </section>
+    </>
   );
 }

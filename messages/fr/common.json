@@ -454,7 +454,7 @@
       "responseTimeDesc": "Devis et retour rapide sur chaque demande.",
       "expertise": "Expertise full-stack",
       "expertiseDesc": "Web, mobile et WordPress — une équipe senior dédiée.",
-      "confidential": "100% confidentiel",
+      "confidential": "Confidentialité",
       "confidentialDesc": "Vos données ne sont jamais partagées avec des tiers."
     },
     "microcopy": {
@@ -661,7 +661,8 @@
     "skipToContent": "Aller au contenu",
     "openMenu": "Ouvrir le menu",
     "closeMenu": "Fermer le menu",
-    "mainNavigation": "Navigation principale"
+    "mainNavigation": "Navigation principale",
+    "language": "Langue"
   },
   "pageError": {
     "title": "Une erreur est survenue",

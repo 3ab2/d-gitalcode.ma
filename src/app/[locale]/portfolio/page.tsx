@@ -5,9 +5,8 @@ import { ExternalLink } from "lucide-react";
 import { GitHubIcon } from "@/components/social/GitHubIcon";
 import { getTranslation } from "@/lib/i18n/server";
 import { type Locale } from "@/lib/i18n/settings";
-import { SectionHeading } from "@/components/ui/SectionHeading";
-import { Card } from "@/components/ui/Card";
-import { Badge } from "@/components/ui/Badge";
+import { PageHero } from "@/components/ui/PageHero";
+import { FacetFrame } from "@/components/ui/FacetFrame";
 import { buildPublicPageMetadata } from "@/lib/seo/metadata";
 import { publicRepositoryUrl } from "@/config/verified-facts";
 import { getPublishedProjects } from "@/lib/portfolio";
@@ -50,89 +49,95 @@ export default async function PortfolioPage({
   );
 
   return (
-    <section className="pt-10 pb-20 md:pt-12">
-      <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
-        <SectionHeading
-          as="h1"
-          title={t("portfolio.title")}
-          subtitle={t("portfolio.subtitle")}
-        />
+    <>
+      <PageHero title={t("portfolio.title")} lead={t("portfolio.subtitle")} />
 
-        <div className="mt-16 grid grid-cols-1 gap-6 md:grid-cols-2 lg:grid-cols-3">
-          {projects.map((project) => {
-            const translation = project.translations[0];
-            const repositoryUrl = publicRepositoryUrl(project.githubUrl);
-            return (
-              <Card key={project.id} className="overflow-hidden p-0 transition hover:border-brand-green/20">
-                <Link href={`${basePath}/portfolio/${project.slug}`} className="block">
-                  {project.image && (
-                    <div className="relative h-48">
-                      <Image
-                        src={project.image}
-                        alt={translation?.title || project.slug}
-                        fill
-                        className="object-cover transition duration-500 hover:scale-105"
-                      />
-                    </div>
-                  )}
-                  <div className="p-6">
-                    <h2 className="text-lg font-semibold text-white hover:text-brand-green">
-                      {translation?.title || project.slug}
-                    </h2>
-                    {translation?.client && (
-                      <p className="mt-1 text-sm text-white/60">{translation.client}</p>
-                    )}
-                    <p className="mt-3 line-clamp-3 text-sm text-white/50">
-                      {translation?.description}
-                    </p>
-                    {project.technologies.length > 0 && (
-                      <div className="mt-4 flex flex-wrap gap-2">
-                        {project.technologies.slice(0, 4).map((tech) => (
-                          <Badge key={tech}>{tech}</Badge>
-                        ))}
+      <section className="section-y">
+        <div className="container-site">
+          {projects.length === 0 ? (
+            <p className="text-ink-2">{t("portfolio.subtitle")}</p>
+          ) : (
+            <ul className="grid gap-x-10 gap-y-20 md:grid-cols-2">
+              {projects.map((project) => {
+                const translation = project.translations[0];
+                const title = translation?.title || project.slug;
+                const caseHref = `${basePath}/portfolio/${project.slug}`;
+                const repositoryUrl = publicRepositoryUrl(project.githubUrl);
+                return (
+                  <li key={project.id}>
+                    <article>
+                      <Link href={caseHref} className="group block" tabIndex={-1} aria-hidden>
+                        <FacetFrame size="md" className="transition-colors duration-200 group-hover:bg-white/30">
+                          <div className="relative aspect-[16/10]">
+                            {project.image ? (
+                              <Image
+                                src={project.image}
+                                alt=""
+                                fill
+                                sizes="(max-width: 768px) 100vw, 50vw"
+                                className="object-cover object-top"
+                              />
+                            ) : (
+                              <div className="flex h-full items-center justify-center px-6 text-center text-ink-3">{title}</div>
+                            )}
+                          </div>
+                        </FacetFrame>
+                      </Link>
+                      <h2 className="mt-6 text-lg font-medium text-ink">
+                        <Link href={caseHref} className="hover:underline hover:underline-offset-4">
+                          {title}
+                        </Link>
+                      </h2>
+                      {translation?.client && <p className="mt-1 text-sm text-ink-3">{translation.client}</p>}
+                      {translation?.description && (
+                        <p className="mt-3 line-clamp-3 max-w-xl text-ink-2">{translation.description}</p>
+                      )}
+                      {project.technologies.length > 0 && (
+                        <p className="mt-4 font-mono text-xs text-ink-3">
+                          {project.technologies.slice(0, 5).join("  /  ")}
+                        </p>
+                      )}
+                      <div className="mt-6 flex flex-wrap items-center gap-x-6 gap-y-3 text-sm">
+                        <Link
+                          href={caseHref}
+                          className="font-medium text-action underline decoration-action/40 underline-offset-4 hover:decoration-action"
+                        >
+                          {t("portfolio.detail.viewCase")}
+                        </Link>
+                        {project.url && (
+                          <a
+                            href={project.url}
+                            target="_blank"
+                            rel="noopener noreferrer"
+                            className="inline-flex items-center gap-1.5 text-ink-2 transition-colors hover:text-ink"
+                          >
+                            {t("portfolio.viewProject")}
+                            <ExternalLink aria-hidden className="h-3.5 w-3.5" />
+                          </a>
+                        )}
+                        {repositoryUrl && (
+                          <a
+                            href={repositoryUrl}
+                            target="_blank"
+                            rel="noopener noreferrer"
+                            className="inline-flex items-center gap-1.5 text-ink-2 transition-colors hover:text-ink"
+                          >
+                            <GitHubIcon className="h-3.5 w-3.5" />
+                            GitHub
+                          </a>
+                        )}
                       </div>
-                    )}
-                    <span className="mt-4 inline-flex text-sm font-medium text-brand-green">
-                      {t("portfolio.detail.viewCase")} →
-                    </span>
-                  </div>
-                </Link>
-                {(project.url || repositoryUrl) && (
-                  <div className="flex flex-wrap items-center gap-4 border-t border-white/5 px-6 pb-6">
-                    {project.url && (
-                      <a
-                        href={project.url}
-                        target="_blank"
-                        rel="noopener noreferrer"
-                        className="inline-flex items-center gap-2 text-sm text-white/50 hover:text-brand-green"
-                      >
-                        {t("portfolio.viewProject")}
-                        <ExternalLink className="h-4 w-4" />
-                      </a>
-                    )}
-                    {repositoryUrl && (
-                      <a
-                        href={repositoryUrl}
-                        target="_blank"
-                        rel="noopener noreferrer"
-                        className="inline-flex items-center gap-2 text-sm text-white/50 hover:text-white"
-                      >
-                        GitHub
-                        <GitHubIcon className="h-4 w-4" />
-                      </a>
-                    )}
-                  </div>
-                )}
-              </Card>
-            );
-          })}
+                    </article>
+                  </li>
+                );
+              })}
+            </ul>
+          )}
         </div>
+      </section>
 
-        {projects.length === 0 && (
-          <p className="mt-16 text-center text-white/50">{t("portfolio.subtitle")}</p>
-        )}
-
-        <div className="mt-16">
+      <section className="section-y border-t border-line">
+        <div className="container-site">
           <ConversionCTA
             locale={loc}
             title={t("portfolio.listCta.title")}
@@ -145,7 +150,7 @@ export default async function PortfolioPage({
             primaryHref={`${basePath}/contact`}
           />
         </div>
-      </div>
-    </section>
+      </section>
+    </>
   );
 }

@@ -21,8 +21,8 @@ export function IconButton({
   onClick,
 }: IconButtonProps) {
   const classes = cn(
-    "flex h-10 w-10 items-center justify-center rounded-xl border border-white/10",
-    "text-white/70 transition-colors hover:border-brand-green/30 hover:bg-white/5 hover:text-brand-green",
+    "flex h-10 w-10 items-center justify-center rounded-control border border-line",
+    "text-ink-2 transition-colors hover:border-brand-green/30 hover:bg-white/5 hover:text-ink",
     "focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-brand-green/50",
     className
   );

@@ -2,9 +2,7 @@
 
 import Image from "next/image";
 import Link from "next/link";
-import { Clock } from "lucide-react";
-import { Badge } from "@/components/ui/Badge";
-import { Card } from "@/components/ui/Card";
+import { FacetFrame } from "@/components/ui/FacetFrame";
 import { cn, formatDate } from "@/lib/utils";
 
 export type BlogCardPost = {
@@ -45,77 +43,47 @@ export function BlogCard({
   const translation = post.translation;
   const readTime = translation?.readMinutes ?? 3;
 
+  const category = post.categories[0]
+    ? post.categories[0].category.translations[0]?.name || post.categories[0].category.slug
+    : null;
+
   return (
-    <Link href={`${basePath}/blog/${post.slug}`} className="group block h-full">
-      <Card
-        className={cn(
-          "h-full overflow-hidden p-0 transition-all duration-300 hover:border-brand-green/30 hover:shadow-lg hover:shadow-brand-green/5",
-          featured && "md:grid md:grid-cols-2 ring-1 ring-brand-green/25 shadow-lg shadow-brand-green/10"
-        )}
-      >
-        <div
+    <Link
+      href={`${basePath}/blog/${post.slug}`}
+      className={cn("group block h-full", featured && "md:grid md:grid-cols-12 md:items-center md:gap-10")}
+    >
+      <FacetFrame size={featured ? "lg" : "md"} className={cn(featured && "md:col-span-7")}>
+        <div className={cn("relative", featured ? "aspect-[16/9]" : "aspect-[16/10]")}>
+          <Image
+            src={post.image || "/images/blog-default.jpg"}
+            alt=""
+            fill
+            className="object-cover"
+            sizes={featured ? "(max-width: 768px) 100vw, 60vw" : "(max-width: 768px) 100vw, 33vw"}
+            loading={featured ? "eager" : "lazy"}
+            priority={featured}
+          />
+        </div>
+      </FacetFrame>
+      <div className={cn("mt-6", featured && "md:col-span-5 md:mt-0")}>
+        <p className="flex flex-wrap gap-x-4 gap-y-1 text-sm text-ink-3">
+          {category && <span className="text-accent-ink">{category}</span>}
+          {post.publishedAt && <time>{formatDate(post.publishedAt, locale)}</time>}
+          <span>
+            {readTime} {minReadLabel}
+          </span>
+        </p>
+        <h3
           className={cn(
-            "relative overflow-hidden bg-brand-card/50",
-            featured ? "min-h-[240px] md:min-h-[320px]" : "h-48"
+            "mt-3 text-ink group-hover:underline group-hover:underline-offset-4",
+            featured ? "text-subheading md:text-[1.75rem] md:leading-tight" : "text-lg font-medium"
           )}
         >
-          {post.image ? (
-            <>
-              <Image
-                src={post.image}
-                alt={translation?.title || post.slug}
-                fill
-                className={cn(
-                  "object-cover transition-transform duration-500 group-hover:scale-105",
-                  featured ? "object-center brightness-[0.92] saturate-[1.05]" : "object-center brightness-[0.88] saturate-[0.95]"
-                )}
-                sizes={featured ? "(max-width: 768px) 100vw, 50vw" : "(max-width: 768px) 100vw, 33vw"}
-                loading={featured ? "eager" : "lazy"}
-                priority={featured}
-              />
-              <div
-                className={cn(
-                  "pointer-events-none absolute inset-0 bg-gradient-to-t from-brand-dark/70 via-brand-dark/15 to-transparent",
-                  featured && "from-brand-dark/80 via-brand-dark/25"
-                )}
-                aria-hidden
-              />
-            </>
-          ) : (
-            <div className="absolute inset-0 bg-gradient-to-br from-brand-green/20 via-brand-purple/10 to-brand-dark" />
-          )}
-        </div>
-        <div className="flex flex-col p-6">
-          <div className="flex flex-wrap items-center gap-2 text-xs text-white/60">
-            {post.publishedAt && (
-              <time>{formatDate(post.publishedAt, locale)}</time>
-            )}
-            <span className="inline-flex items-center gap-1">
-              <Clock className="h-3 w-3" />
-              {readTime} {minReadLabel}
-            </span>
-          </div>
-          {post.categories[0] && (
-            <Badge variant="purple" className="mt-3 w-fit text-[10px]">
-              {post.categories[0].category.translations[0]?.name ||
-                post.categories[0].category.slug}
-            </Badge>
-          )}
-          <h3
-            className={`mt-2 font-semibold text-white transition-colors group-hover:text-brand-green ${
-              featured ? "text-xl md:text-2xl" : "text-lg"
-            }`}
-          >
-            {translation?.title || post.slug}
-          </h3>
-          <p className="mt-2 flex-1 text-sm leading-relaxed text-white/50 line-clamp-3">
-            {translation?.excerpt}
-          </p>
-          <span className="mt-4 inline-block text-sm font-medium text-brand-green">
-            {readMoreLabel} →
-          </span>
-        </div>
-      </Card>
+          {translation?.title || post.slug}
+        </h3>
+        {translation?.excerpt && <p className="mt-3 line-clamp-3 text-ink-2">{translation.excerpt}</p>}
+        <span className="sr-only">{readMoreLabel}</span>
+      </div>
     </Link>
   );
 }
