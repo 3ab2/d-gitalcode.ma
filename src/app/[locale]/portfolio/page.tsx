@@ -14,6 +14,12 @@ import { getPublishedProjects } from "@/lib/portfolio";
 import { ConversionCTA } from "@/components/conversion/ConversionCTA";
 import { getSiteSettings } from "@/lib/settings";
 import { buildGeneralContactMessage, buildWhatsAppUrl } from "@/lib/whatsapp";
+import {
+  AUTOPIN_COVER,
+  AUTOPIN_SLUG,
+  AUTOPIN_TECHNOLOGIES,
+  getAutoPinCase,
+} from "@/config/autopin-case";
 
 export async function generateMetadata({
   params,
@@ -44,6 +50,7 @@ export default async function PortfolioPage({
     getSiteSettings(),
   ]);
   const basePath = `/${locale}`;
+  const autopin = getAutoPinCase(loc);
   const whatsappUrl = buildWhatsAppUrl(
     buildGeneralContactMessage(locale),
     settings.whatsappNumber
@@ -59,7 +66,35 @@ export default async function PortfolioPage({
         />
 
         <div className="mt-16 grid grid-cols-1 gap-6 md:grid-cols-2 lg:grid-cols-3">
-          {projects.map((project) => {
+          <Card className="overflow-hidden p-0 transition hover:border-brand-green/20">
+            <Link href={`${basePath}/portfolio/${AUTOPIN_SLUG}`} className="block">
+              <div className="relative h-48">
+                <Image
+                  src={AUTOPIN_COVER}
+                  alt={autopin.title}
+                  fill
+                  sizes="(max-width: 768px) 100vw, (max-width: 1024px) 50vw, 33vw"
+                  className="object-cover object-left-top transition duration-500 hover:scale-105"
+                />
+              </div>
+              <div className="p-6">
+                <h2 className="text-lg font-semibold text-white hover:text-brand-green">
+                  {autopin.title}
+                </h2>
+                <p className="mt-1 text-sm text-brand-green">{autopin.attribution}</p>
+                <p className="mt-3 line-clamp-3 text-sm text-white/50">{autopin.cardDescription}</p>
+                <div className="mt-4 flex flex-wrap gap-2">
+                  {AUTOPIN_TECHNOLOGIES.slice(0, 4).map((tech) => (
+                    <Badge key={tech}>{tech}</Badge>
+                  ))}
+                </div>
+                <span className="mt-4 inline-flex text-sm font-medium text-brand-green">
+                  {t("portfolio.detail.viewCase")} →
+                </span>
+              </div>
+            </Link>
+          </Card>
+          {projects.filter((project) => project.slug !== AUTOPIN_SLUG).map((project) => {
             const translation = project.translations[0];
             const repositoryUrl = publicRepositoryUrl(project.githubUrl);
             return (

@@ -2,6 +2,7 @@ import type { MetadataRoute } from "next";
 import { prisma } from "@/lib/prisma";
 import { locales } from "@/lib/i18n/settings";
 import { buildSitemapLanguages, getSiteUrl } from "@/lib/seo/metadata";
+import { AUTOPIN_SLUG } from "@/config/autopin-case";
 
 const STATIC_ROUTES = [
   { path: "", priority: 1, changeFrequency: "weekly" as const },
@@ -15,6 +16,7 @@ const STATIC_ROUTES = [
   { path: "services/mobile-apps", priority: 0.8, changeFrequency: "monthly" as const },
   { path: "services/wordpress-plugins", priority: 0.8, changeFrequency: "monthly" as const },
   { path: "services/wordpress-templates", priority: 0.8, changeFrequency: "monthly" as const },
+  { path: `portfolio/${AUTOPIN_SLUG}`, priority: 0.75, changeFrequency: "monthly" as const },
 ];
 
 function sitemapEntry(
@@ -98,6 +100,7 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
     });
 
     for (const project of portfolioProjects) {
+      if (project.slug === AUTOPIN_SLUG) continue; // code-based page, listed above
       const path = `portfolio/${project.slug}`;
       const translatedLocales = new Set(project.translations.map((t) => t.locale));
 
