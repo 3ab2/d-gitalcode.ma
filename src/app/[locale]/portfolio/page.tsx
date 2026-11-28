@@ -13,6 +13,12 @@ import { getPublishedProjects } from "@/lib/portfolio";
 import { ConversionCTA } from "@/components/conversion/ConversionCTA";
 import { getSiteSettings } from "@/lib/settings";
 import { buildGeneralContactMessage, buildWhatsAppUrl } from "@/lib/whatsapp";
+import {
+  AUTOPIN_COVER,
+  AUTOPIN_SLUG,
+  AUTOPIN_TECHNOLOGIES,
+  getAutoPinCase,
+} from "@/config/autopin-case";
 
 export async function generateMetadata({
   params,
@@ -43,6 +49,9 @@ export default async function PortfolioPage({
     getSiteSettings(),
   ]);
   const basePath = `/${locale}`;
+  const autopin = getAutoPinCase(loc);
+  const autopinHref = `${basePath}/portfolio/${AUTOPIN_SLUG}`;
+  const otherProjects = projects.filter((project) => project.slug !== AUTOPIN_SLUG);
   const whatsappUrl = buildWhatsAppUrl(
     buildGeneralContactMessage(locale),
     settings.whatsappNumber
@@ -54,11 +63,43 @@ export default async function PortfolioPage({
 
       <section className="section-y">
         <div className="container-site">
-          {projects.length === 0 ? (
-            <p className="text-ink-2">{t("portfolio.subtitle")}</p>
-          ) : (
-            <ul className="grid gap-x-10 gap-y-20 md:grid-cols-2">
-              {projects.map((project) => {
+          <ul className="grid gap-x-10 gap-y-20 md:grid-cols-2">
+              <li>
+                <article>
+                  <Link href={autopinHref} className="group block" tabIndex={-1} aria-hidden>
+                    <FacetFrame size="md" className="transition-colors duration-200 group-hover:bg-white/30">
+                      <div className="relative aspect-[16/10]">
+                        <Image
+                          src={AUTOPIN_COVER}
+                          alt=""
+                          fill
+                          sizes="(max-width: 768px) 100vw, 50vw"
+                          className="object-cover object-left-top"
+                        />
+                      </div>
+                    </FacetFrame>
+                  </Link>
+                  <h2 className="mt-6 text-lg font-medium text-ink">
+                    <Link href={autopinHref} className="hover:underline hover:underline-offset-4">
+                      {autopin.title}
+                    </Link>
+                  </h2>
+                  <p className="mt-1 text-sm text-ink-3">{autopin.attribution}</p>
+                  <p className="mt-3 line-clamp-3 max-w-xl text-ink-2">{autopin.cardDescription}</p>
+                  <p className="mt-4 font-mono text-xs text-ink-3">
+                    {AUTOPIN_TECHNOLOGIES.slice(0, 5).join("  /  ")}
+                  </p>
+                  <div className="mt-6 flex flex-wrap items-center gap-x-6 gap-y-3 text-sm">
+                    <Link
+                      href={autopinHref}
+                      className="font-medium text-action underline decoration-action/40 underline-offset-4 hover:decoration-action"
+                    >
+                      {t("portfolio.detail.viewCase")}
+                    </Link>
+                  </div>
+                </article>
+              </li>
+              {otherProjects.map((project) => {
                 const translation = project.translations[0];
                 const title = translation?.title || project.slug;
                 const caseHref = `${basePath}/portfolio/${project.slug}`;
@@ -131,8 +172,7 @@ export default async function PortfolioPage({
                   </li>
                 );
               })}
-            </ul>
-          )}
+          </ul>
         </div>
       </section>
 
