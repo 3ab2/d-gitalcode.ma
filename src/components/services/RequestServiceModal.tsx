@@ -77,12 +77,12 @@ export function RequestServiceModal({
             initial={{ opacity: 0, scale: 0.95, y: 20 }}
             animate={{ opacity: 1, scale: 1, y: 0 }}
             exit={{ opacity: 0, scale: 0.95, y: 20 }}
-            className="relative w-full max-w-lg rounded-2xl border border-white/10 bg-brand-dark p-6 shadow-2xl"
+            className="relative w-full max-w-lg rounded-panel border border-line bg-brand-dark p-6 shadow-2xl"
             onClick={(e) => e.stopPropagation()}
           >
             <button
               onClick={onClose}
-              className="absolute top-4 end-4 p-2 text-white/50 hover:text-white"
+              className="absolute top-4 end-4 p-2 text-ink-3 hover:text-white"
             >
               <X className="h-5 w-5" />
             </button>
@@ -90,33 +90,33 @@ export function RequestServiceModal({
             <h3 className="text-xl font-bold text-white mb-2">
               {t("request.title")}
             </h3>
-            <p className="text-sm text-white/50 mb-6">{serviceName}</p>
+            <p className="text-sm text-ink-3 mb-6">{serviceName}</p>
 
             {mode === "choose" ? (
               <div className="space-y-4">
-                <p className="text-sm text-white/70">{t("request.choose")}</p>
+                <p className="text-sm text-ink-2">{t("request.choose")}</p>
                 <button
                   onClick={() => setMode("form")}
-                  className="flex w-full items-center gap-4 rounded-xl border border-white/10 p-4 hover:border-brand-green/30 hover:bg-white/5 transition-colors text-start"
+                  className="flex w-full items-center gap-4 rounded-control border border-line p-4 hover:border-brand-green/30 hover:bg-white/5 transition-colors text-start"
                 >
-                  <div className="flex h-12 w-12 items-center justify-center rounded-xl bg-brand-purple/10 text-brand-purple">
+                  <div className="flex h-12 w-12 items-center justify-center rounded-control bg-brand-purple/10 text-brand-purple">
                     <Mail className="h-6 w-6" />
                   </div>
                   <div>
                     <div className="font-medium text-white">{t("request.form")}</div>
-                    <div className="text-sm text-white/50">{t("request.formDesc")}</div>
+                    <div className="text-sm text-ink-3">{t("request.formDesc")}</div>
                   </div>
                 </button>
                 <button
                   onClick={handleWhatsAppClick}
-                  className="flex w-full items-center gap-4 rounded-xl border border-white/10 p-4 hover:border-[#25D366]/30 hover:bg-white/5 transition-colors text-start"
+                  className="flex w-full items-center gap-4 rounded-control border border-line p-4 hover:border-[#25D366]/30 hover:bg-white/5 transition-colors text-start"
                 >
-                  <div className="flex h-12 w-12 items-center justify-center rounded-xl bg-[#25D366]/10 text-[#25D366]">
+                  <div className="flex h-12 w-12 items-center justify-center rounded-control bg-[#25D366]/10 text-[#25D366]">
                     <MessageCircle className="h-6 w-6" />
                   </div>
                   <div>
                     <div className="font-medium text-white">{t("request.whatsapp")}</div>
-                    <div className="text-sm text-white/50">{t("request.whatsappDesc")}</div>
+                    <div className="text-sm text-ink-3">{t("request.whatsappDesc")}</div>
                   </div>
                 </button>
               </div>

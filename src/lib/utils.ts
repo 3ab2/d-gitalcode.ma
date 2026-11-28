@@ -1,5 +1,10 @@
 import { type ClassValue, clsx } from "clsx";
-import { twMerge } from "tailwind-merge";
+import { extendTailwindMerge } from "tailwind-merge";
+
+// Teach the merger the custom type scale from globals.css; otherwise it reads text-heading as a colour and drops it.
+const twMerge = extendTailwindMerge({
+  extend: { classGroups: { "font-size": [{ text: ["display", "title", "heading", "subheading", "lead"] }] } },
+});
 
 export function cn(...inputs: ClassValue[]) {
   return twMerge(clsx(inputs));

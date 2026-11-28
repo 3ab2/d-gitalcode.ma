@@ -38,9 +38,9 @@ export function TableOfContents({
   return (
     <nav
       aria-label={title}
-      className="rounded-2xl border border-white/10 bg-white/[0.03] p-4"
+      className="rounded-panel border border-line bg-surface p-4"
     >
-      <p className="text-xs font-semibold uppercase tracking-wider text-white/60">
+      <p className="text-xs font-semibold text-ink-3">
         {title}
       </p>
       <ul className="mt-3 space-y-2">
@@ -49,9 +49,9 @@ export function TableOfContents({
             <a
               href={`#${h.id}`}
               className={cn(
-                "block text-sm transition-colors hover:text-brand-green",
+                "block text-sm transition-colors hover:text-ink",
                 h.level === 3 && "pl-3",
-                activeId === h.id ? "text-brand-green" : "text-white/55"
+                activeId === h.id ? "text-action" : "text-ink-3"
               )}
             >
               {h.text}

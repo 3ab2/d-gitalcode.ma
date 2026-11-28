@@ -15,7 +15,8 @@ import {
 } from "@/lib/portfolio";
 import { getSiteSettings } from "@/lib/settings";
 import { buildServiceRequestMessage, buildWhatsAppUrl } from "@/lib/whatsapp";
-import { Badge } from "@/components/ui/Badge";
+import { buttonClasses } from "@/components/ui/Button";
+import { FacetFrame } from "@/components/ui/FacetFrame";
 import { ConversionCTA } from "@/components/conversion/ConversionCTA";
 import { PortfolioJsonLd } from "@/components/portfolio/PortfolioJsonLd";
 import { ReleaseFacts } from "@/components/portfolio/ReleaseFacts";
@@ -67,17 +68,11 @@ export async function generateMetadata({
   });
 }
 
-function DetailSection({
-  title,
-  children,
-}: {
-  title: string;
-  children: React.ReactNode;
-}) {
+function DetailSection({ title, children }: { title: string; children: React.ReactNode }) {
   return (
-    <section className="rounded-2xl border border-white/10 bg-white/[0.02] p-6 sm:p-8">
-      <h2 className="text-lg font-semibold text-white sm:text-xl">{title}</h2>
-      <div className="mt-4 text-sm leading-relaxed text-white/65 sm:text-base">{children}</div>
+    <section className="border-t border-line pt-10">
+      <h2 className="text-subheading text-ink">{title}</h2>
+      <div className="mt-4 max-w-2xl text-ink-2">{children}</div>
     </section>
   );
 }
@@ -127,79 +122,84 @@ export default async function PortfolioDetailPage({
         client={translation.client}
       />
 
-      <article className="pt-10 pb-20 md:pt-12">
-        <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
-          <Link
-            href={`${basePath}/portfolio`}
-            className="inline-flex min-h-11 items-center gap-2 text-sm text-white/50 transition-colors hover:text-brand-green"
-          >
-            <ArrowLeft className="rtl:rotate-180 h-4 w-4" />
-            {t("portfolio.detail.back")}
-          </Link>
-
-          <header className="mt-8 grid gap-10 lg:grid-cols-2 lg:items-center">
-            <div>
-              <Badge className="mb-4">
-                {t(`home.portfolio.filters.${category}`)}
-              </Badge>
-              <h1 className="text-3xl font-bold tracking-tight text-white sm:text-4xl lg:text-5xl">
-                {translation.title}
-              </h1>
-              {translation.client && (
-                <p className="mt-3 text-sm text-white/60">
-                  {t("portfolio.detail.client")}: {translation.client}
-                </p>
-              )}
-              {project.technologies.length > 0 && (
-                <div className="mt-6 flex flex-wrap gap-2">
-                  {project.technologies.map((tech) => (
-                    <Badge key={tech}>
-                      {tech}
-                    </Badge>
-                  ))}
-                </div>
-              )}
-              <div className="mt-8 flex flex-wrap gap-3">
+      <article>
+        <header className="border-b border-line">
+          <div className="container-site pt-10 pb-14 lg:pt-14 lg:pb-20">
+            <Link
+              href={`${basePath}/portfolio`}
+              className="inline-flex min-h-11 items-center gap-2 text-sm text-ink-3 transition-colors hover:text-ink"
+            >
+              <ArrowLeft aria-hidden className="h-4 w-4 rtl:rotate-180" />
+              {t("portfolio.detail.back")}
+            </Link>
+            <p className="mt-10 text-sm text-accent-ink">{t(`home.portfolio.filters.${category}`)}</p>
+            <h1 className="mt-3 max-w-[20ch] text-title text-ink">{translation.title}</h1>
+            {translation.client && (
+              <p className="mt-4 text-ink-2">
+                {t("portfolio.detail.client")}: {translation.client}
+              </p>
+            )}
+            {(project.url || repositoryUrl) && (
+              <div className="mt-9 flex flex-wrap gap-3">
                 {project.url && (
-                  <a
-                    href={project.url}
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    className="inline-flex min-h-11 items-center gap-2 rounded-xl border border-brand-green/30 bg-brand-green/10 px-5 py-2.5 text-sm font-medium text-brand-green transition hover:bg-brand-green/15"
-                  >
+                  <a href={project.url} target="_blank" rel="noopener noreferrer" className={buttonClasses("primary", "lg")}>
                     {t("portfolio.viewProject")}
-                    <ExternalLink className="h-4 w-4" />
+                    <ExternalLink aria-hidden className="h-4 w-4" />
                   </a>
                 )}
                 {repositoryUrl && (
-                  <a
-                    href={repositoryUrl}
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    className="inline-flex min-h-11 items-center gap-2 rounded-xl border border-white/10 px-5 py-2.5 text-sm text-white/70 transition hover:border-white/20 hover:text-white"
-                  >
-                    GitHub
+                  <a href={repositoryUrl} target="_blank" rel="noopener noreferrer" className={buttonClasses("outline", "lg")}>
                     <GitHubIcon className="h-4 w-4" />
+                    GitHub
                   </a>
                 )}
               </div>
-            </div>
+            )}
+          </div>
+        </header>
 
-            {coverImage && (
-              <div className="relative aspect-[16/10] overflow-hidden rounded-2xl border border-white/10 bg-brand-card shadow-2xl shadow-black/40">
+        {coverImage && (
+          <div className="container-site pt-14 lg:pt-20">
+            <FacetFrame size="lg">
+              <div className="relative aspect-[16/9]">
                 <Image
                   src={coverImage}
                   alt={translation.title}
                   fill
                   priority
-                  sizes="(max-width: 1024px) 100vw, 50vw"
-                  className="object-cover"
+                  sizes="(max-width: 1280px) 100vw, 1200px"
+                  className="object-cover object-top"
                 />
               </div>
-            )}
-          </header>
+            </FacetFrame>
+          </div>
+        )}
 
-          <div className="mt-16 space-y-6">
+        <div className="container-site section-y grid gap-14 lg:grid-cols-12 lg:gap-10">
+          <aside className="lg:col-span-4">
+            <dl className="space-y-6 lg:sticky lg:top-28">
+              {project.technologies.length > 0 && (
+                <div>
+                  <dt className="text-sm text-ink-3">{t("portfolio.detail.stack")}</dt>
+                  <dd className="mt-3 flex flex-wrap gap-2">
+                    {project.technologies.map((tech) => (
+                      <span key={tech} className="rounded-md border border-line px-2.5 py-1 font-mono text-xs text-ink-2">
+                        {tech}
+                      </span>
+                    ))}
+                  </dd>
+                </div>
+              )}
+              {translation.client && (
+                <div>
+                  <dt className="text-sm text-ink-3">{t("portfolio.detail.client")}</dt>
+                  <dd className="mt-1.5 text-ink">{translation.client}</dd>
+                </div>
+              )}
+            </dl>
+          </aside>
+
+          <div className="space-y-12 lg:col-span-8">
             {release && <ReleaseFacts release={release} locale={loc} t={t} />}
 
             <DetailSection title={t("portfolio.detail.overview")}>
@@ -220,29 +220,14 @@ export default async function PortfolioDetailPage({
 
             {features.length > 0 && (
               <DetailSection title={t("portfolio.detail.features")}>
-                <ul className="space-y-2">
+                <ul className="grid gap-x-8 gap-y-3 sm:grid-cols-2">
                   {features.map((feature) => (
-                    <li key={feature} className="flex items-start gap-2">
-                      <span className="mt-2 h-1.5 w-1.5 shrink-0 rounded-full bg-brand-green" />
+                    <li key={feature} className="flex items-baseline gap-3">
+                      <span aria-hidden className="facet h-1.5 w-1.5 shrink-0 translate-y-[-2px] bg-action [--facet:2px]" />
                       {feature}
                     </li>
                   ))}
                 </ul>
-              </DetailSection>
-            )}
-
-            {project.technologies.length > 0 && (
-              <DetailSection title={t("portfolio.detail.stack")}>
-                <div className="flex flex-wrap gap-2">
-                  {project.technologies.map((tech) => (
-                    <span
-                      key={tech}
-                      className="rounded-lg bg-white/5 px-3 py-1.5 text-sm text-white/70"
-                    >
-                      {tech}
-                    </span>
-                  ))}
-                </div>
               </DetailSection>
             )}
 
@@ -258,32 +243,35 @@ export default async function PortfolioDetailPage({
               </DetailSection>
             )}
           </div>
+        </div>
 
-          {gallery.length > 0 && (
-            <section className="mt-16">
-              <h2 className="text-xl font-semibold text-white sm:text-2xl">
-                {t("portfolio.detail.gallery")}
-              </h2>
-              <div className="mt-8 grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-3">
+        {gallery.length > 0 && (
+          <section className="border-t border-line section-y">
+            <div className="container-site">
+              <h2 className="text-heading text-ink">{t("portfolio.detail.gallery")}</h2>
+              <ul className="mt-12 grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
                 {gallery.map((src, index) => (
-                  <div
-                    key={`${src}-${index}`}
-                    className="relative aspect-[16/10] overflow-hidden rounded-xl border border-white/10 bg-brand-card"
-                  >
-                    <Image
-                      src={src}
-                      alt={`${translation.title} — ${index + 1}`}
-                      fill
-                      sizes="(max-width: 768px) 100vw, 33vw"
-                      className="object-cover"
-                    />
-                  </div>
+                  <li key={`${src}-${index}`}>
+                    <FacetFrame size="sm">
+                      <div className="relative aspect-[16/10]">
+                        <Image
+                          src={src}
+                          alt={`${translation.title}, ${index + 1}`}
+                          fill
+                          sizes="(max-width: 768px) 100vw, 33vw"
+                          className="object-cover"
+                        />
+                      </div>
+                    </FacetFrame>
+                  </li>
                 ))}
-              </div>
-            </section>
-          )}
+              </ul>
+            </div>
+          </section>
+        )}
 
-          <div className="mt-16">
+        <section className="section-y border-t border-line">
+          <div className="container-site">
             <ConversionCTA
               locale={loc}
               title={t("portfolio.detail.ctaTitle")}
@@ -296,7 +284,7 @@ export default async function PortfolioDetailPage({
               primaryHref={`${basePath}/contact`}
             />
           </div>
-        </div>
+        </section>
       </article>
     </>
   );

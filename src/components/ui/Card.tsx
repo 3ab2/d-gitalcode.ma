@@ -1,5 +1,3 @@
-"use client";
-
 import { cn } from "@/lib/utils";
 
 interface CardProps {
@@ -8,12 +6,13 @@ interface CardProps {
   hover?: boolean;
 }
 
-export function Card({ children, className, hover = true }: CardProps) {
+/** A plain surface panel. Use for grouped content; prefer open layouts with rules for lists. */
+export function Card({ children, className, hover = false }: CardProps) {
   return (
     <div
       className={cn(
-        "rounded-2xl border border-white/10 bg-white/[0.03] p-6",
-        hover && "transition-colors duration-300 hover:border-brand-green/20 hover:bg-white/[0.05]",
+        "rounded-panel border border-line bg-surface p-6",
+        hover && "transition-colors duration-200 hover:border-line-strong",
         className
       )}
     >

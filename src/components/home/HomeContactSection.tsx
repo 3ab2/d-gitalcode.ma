@@ -1,12 +1,10 @@
 "use client";
 
-import { Mail, MessageCircle } from "lucide-react";
 import { useTranslation } from "react-i18next";
 import { ContactLeadFormPanel } from "@/components/contact/ContactLeadFormPanel";
 import { ContactTrustSignals } from "@/components/contact/ContactTrustSignals";
 import { SocialLinks } from "@/components/social/SocialLinks";
-import { GlassCard } from "@/components/ui/GlassCard";
-import { Button } from "@/components/ui/Button";
+import { buttonClasses } from "@/components/ui/Button";
 import { buildGeneralContactMessage, buildWhatsAppUrl } from "@/lib/whatsapp";
 import { usePublicSettings } from "@/components/providers/PublicSettingsProvider";
 import { type ContactServiceOption } from "@/lib/contact-form-options";
@@ -24,75 +22,39 @@ export function HomeContactSection({
 }) {
   const { t } = useTranslation();
   const settings = usePublicSettings();
-  const whatsappUrl = buildWhatsAppUrl(
-    buildGeneralContactMessage(locale),
-    settings.whatsappNumber
-  );
+  const whatsappUrl = buildWhatsAppUrl(buildGeneralContactMessage(locale), settings.whatsappNumber);
 
   return (
-    <section id="contact" className="relative py-24 lg:py-32">
-      <div className="pointer-events-none absolute inset-0 bg-gradient-to-r from-brand-green/[0.06] via-brand-purple/[0.04] to-brand-green/[0.06]" />
-      <div className="relative mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
-        <div className="mx-auto max-w-3xl text-center">
-          <h2 className="text-3xl font-bold tracking-tight text-white md:text-4xl lg:text-5xl">
-            {t("home.contact.title")}
-          </h2>
-          <p className="mt-4 text-lg text-white/60">{t("home.contact.subtitle")}</p>
+    <section id="contact" className="section-y border-t border-line">
+      <div className="container-site grid gap-14 lg:grid-cols-12 lg:gap-10">
+        <div className="lg:col-span-5">
+          <h2 className="max-w-[14ch] text-heading text-ink">{t("home.contact.title")}</h2>
+          <p className="mt-5 max-w-md text-lead text-ink-2">{t("home.contact.subtitle")}</p>
+
+          <ContactTrustSignals className="mt-10" />
+
+          <div className="mt-10">
+            <h3 className="font-medium text-ink">{t("contact.whatsappTitle")}</h3>
+            <p className="mt-1.5 max-w-sm text-sm text-ink-2">{t("contact.whatsappDesc")}</p>
+            <div className="mt-5 flex flex-wrap items-center gap-x-6 gap-y-3">
+              <a href={whatsappUrl} target="_blank" rel="noopener noreferrer" className={buttonClasses("outline", "md")}>
+                {t("contact.whatsappBtn")}
+              </a>
+              <a
+                href={`mailto:${settings.contactEmail}`}
+                className="text-sm text-ink-2 underline decoration-line-strong underline-offset-4 transition-colors hover:text-ink"
+              >
+                {settings.contactEmail}
+              </a>
+            </div>
+          </div>
+
+          <SocialLinks links={socialLinks} className="mt-8" />
         </div>
 
-        <div className="mt-10">
-          <ContactTrustSignals />
-        </div>
-
-        <div className="mt-16 grid gap-8 lg:grid-cols-5">
-          <GlassCard className="lg:col-span-3">
-            <ContactLeadFormPanel
-              locale={locale}
-              sourcePage={`/${locale}#contact`}
-              serviceOptions={serviceOptions}
-            />
-          </GlassCard>
-
-          <div className="flex flex-col gap-6 lg:col-span-2">
-            <GlassCard>
-              <div className="flex items-start gap-4">
-                <div className="flex h-12 w-12 shrink-0 items-center justify-center rounded-xl bg-[#25D366]/15 text-[#25D366]">
-                  <MessageCircle className="h-6 w-6" />
-                </div>
-                <div>
-                  <h3 className="font-semibold text-white">{t("contact.whatsappTitle")}</h3>
-                  <p className="mt-1 text-sm text-white/50">{t("contact.whatsappDesc")}</p>
-                  <a href={whatsappUrl} target="_blank" rel="noopener noreferrer" className="mt-4 inline-block">
-                    <Button as="span" variant="whatsapp" size="sm">
-                      {t("contact.whatsappBtn")}
-                    </Button>
-                  </a>
-                </div>
-              </div>
-            </GlassCard>
-
-            <GlassCard>
-              <div className="flex items-start gap-4">
-                <div className="flex h-12 w-12 shrink-0 items-center justify-center rounded-xl bg-brand-purple/15 text-brand-purple">
-                  <Mail className="h-6 w-6" />
-                </div>
-                <div>
-                  <h3 className="font-semibold text-white">Email</h3>
-                  <a
-                    href={`mailto:${settings.contactEmail}`}
-                    className="mt-2 block text-sm text-brand-green hover:underline"
-                  >
-                    {settings.contactEmail}
-                  </a>
-                </div>
-              </div>
-            </GlassCard>
-
-            <GlassCard>
-              <h3 className="font-semibold text-white">{t("footer.followUs")}</h3>
-              <p className="mt-2 text-sm text-white/50">{t("contact.connectDesc")}</p>
-              <SocialLinks links={socialLinks} variant="buttons" className="mt-4" />
-            </GlassCard>
+        <div className="lg:col-span-7">
+          <div className="rounded-panel border border-line bg-surface p-6 sm:p-8 lg:p-10">
+            <ContactLeadFormPanel locale={locale} sourcePage={`/${locale}#contact`} serviceOptions={serviceOptions} />
           </div>
         </div>
       </div>

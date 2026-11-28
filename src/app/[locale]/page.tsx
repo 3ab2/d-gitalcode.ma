@@ -10,10 +10,9 @@ import { getSocialLinks } from "@/lib/social-links";
 import { inferPortfolioCategory, estimateReadTime } from "@/lib/portfolio-category";
 import { verifiedStats } from "@/config/verified-facts";
 import { Hero } from "@/components/home/Hero";
-import { AgencyMapSection } from "@/components/home/agency-map/AgencyMapSection";
-import { TrustSection } from "@/components/home/TrustSection";
 import { ServicesSection } from "@/components/home/ServicesSection";
 import { PortfolioSection } from "@/components/home/PortfolioSection";
+import { ProcessSection } from "@/components/home/ProcessSection";
 import { BlogPreviewSection } from "@/components/home/BlogPreviewSection";
 import { AboutPreviewSection } from "@/components/home/AboutPreviewSection";
 import { HomeContactSection } from "@/components/home/HomeContactSection";
@@ -119,13 +118,12 @@ export default async function HomePage({
   return (
     <>
       <SiteJsonLd locale={locale as Locale} />
-      <Hero locale={locale as Locale} stats={data.stats} />
-      <AgencyMapSection locale={locale as Locale} />
-      <TrustSection locale={locale as Locale} />
+      <Hero locale={locale as Locale} stats={data.stats} featured={data.projects[0]} />
       <ServicesSection locale={locale as Locale} services={data.services} />
-      <PortfolioSection locale={locale as Locale} projects={data.projects} />
-      <BlogPreviewSection locale={locale as Locale} posts={data.posts} />
+      <PortfolioSection locale={locale as Locale} projects={data.projects} skipFirst />
+      <ProcessSection locale={locale as Locale} />
       <AboutPreviewSection locale={locale as Locale} />
+      <BlogPreviewSection locale={locale as Locale} posts={data.posts} />
       <HomeContactSection
         locale={locale as Locale}
         socialLinks={data.socialLinks}

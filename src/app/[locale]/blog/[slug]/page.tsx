@@ -152,31 +152,29 @@ export default async function BlogPostPage({
         category={primaryCategory}
       />
 
-      <article className="pt-10 pb-16 md:pt-12">
-        <div className="mx-auto max-w-6xl px-4 sm:px-6 lg:px-8">
+      <article className="pt-10 pb-24 lg:pt-14 lg:pb-32">
+        <div className="container-site">
           <Link
             href={`${basePath}/blog`}
-            className="text-sm text-brand-green hover:underline"
+            className="inline-flex min-h-11 items-center text-sm text-ink-3 transition-colors hover:text-ink"
           >
-            ← {t("blog.title")}
+            {t("blog.title")}
           </Link>
 
-          <div className="mt-8 lg:grid lg:grid-cols-[minmax(0,1fr)_240px] lg:gap-10">
-            <div className="min-w-0">
+          <div className="mt-8 lg:grid lg:grid-cols-[minmax(0,1fr)_240px] lg:gap-16">
+            <div className="min-w-0 max-w-3xl">
               <header>
-                <div className="mb-4 flex flex-wrap gap-2">
+                <p className="mb-4 flex flex-wrap gap-x-4 gap-y-1 text-sm text-accent-ink">
                   {post.categories.map(({ category }) => (
-                    <Badge key={category.id} variant="purple">
-                      {category.translations[0]?.name || category.slug}
-                    </Badge>
+                    <span key={category.id}>{category.translations[0]?.name || category.slug}</span>
                   ))}
-                </div>
+                </p>
 
-                <h1 className="text-3xl font-bold tracking-tight text-white md:text-4xl lg:text-5xl">
+                <h1 className="text-title text-ink">
                   {translation?.title}
                 </h1>
 
-                <div className="mt-4 flex flex-wrap items-center gap-4 text-sm text-white/60">
+                <div className="mt-4 flex flex-wrap items-center gap-4 text-sm text-ink-3">
                   <span className="inline-flex items-center gap-1.5">
                     <User className="h-4 w-4" />
                     {AUTHOR}
@@ -200,7 +198,7 @@ export default async function BlogPostPage({
               </header>
 
               {cover.image && (
-                <div className="relative mt-8 h-64 overflow-hidden rounded-2xl md:h-96">
+                <div className="facet relative mt-10 aspect-[16/9] overflow-hidden [--facet:1.25rem]">
                   <Image
                     src={cover.image}
                     alt={cover.alt}
@@ -219,8 +217,8 @@ export default async function BlogPostPage({
               />
 
               {post.tags.length > 0 && (
-                <div className="mt-12 border-t border-white/10 pt-8">
-                  <h3 className="mb-3 text-sm font-medium text-white/50">
+                <div className="mt-12 border-t border-line pt-8">
+                  <h3 className="mb-3 text-sm font-medium text-ink-3">
                     {t("blog.tags")}
                   </h3>
                   <div className="flex flex-wrap gap-2">

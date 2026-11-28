@@ -111,6 +111,7 @@ export function buildPublicPageMetadata({
   const alternates = buildPageAlternates(path, locale);
   const canonical = alternates.canonical;
   const pageTitle = normalizePageTitle(title);
+  const images = openGraph?.images ?? [{ url: DEFAULT_OG_IMAGE, ...DEFAULT_OG_SIZE, alt: SITE_NAME }];
 
   return {
     // The layout template appends the brand; skip it when the title already has it.
@@ -129,18 +130,14 @@ export function buildPublicPageMetadata({
       description,
       url: canonical,
       ...openGraph,
-      images: openGraph?.images ?? [
-        {
-          url: DEFAULT_OG_IMAGE,
-          ...DEFAULT_OG_SIZE,
-          alt: SITE_NAME,
-        },
-      ],
+      images,
     },
+    // A page-level twitter object replaces the root one, so the image is repeated here.
     twitter: {
       card: "summary_large_image",
       title: pageTitle,
       description,
+      images,
       ...twitter,
     },
   };

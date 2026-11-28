@@ -7,7 +7,8 @@ import { locales, type Locale } from "@/lib/i18n/settings";
 import { buildPageAlternates, buildPublicPageMetadata, getSiteUrl } from "@/lib/seo/metadata";
 import { getSiteSettings } from "@/lib/settings";
 import { buildServiceRequestMessage, buildWhatsAppUrl } from "@/lib/whatsapp";
-import { Badge } from "@/components/ui/Badge";
+import { buttonClasses } from "@/components/ui/Button";
+import { FacetFrame } from "@/components/ui/FacetFrame";
 import { ConversionCTA } from "@/components/conversion/ConversionCTA";
 import { PortfolioJsonLd } from "@/components/portfolio/PortfolioJsonLd";
 import {
@@ -50,12 +51,35 @@ export async function generateMetadata({
   });
 }
 
-function Section({ title, children }: { title: string; children: React.ReactNode }) {
+function DetailSection({
+  title,
+  id,
+  children,
+}: {
+  title: React.ReactNode;
+  id?: string;
+  children: React.ReactNode;
+}) {
   return (
-    <section className="rounded-2xl border border-white/10 bg-white/[0.02] p-6 sm:p-8">
-      <h2 className="text-lg font-semibold text-white sm:text-xl">{title}</h2>
-      <div className="mt-4 text-sm leading-relaxed text-white/65 sm:text-base">{children}</div>
+    <section className="border-t border-line pt-10" aria-labelledby={id}>
+      <h2 id={id} className="text-subheading text-ink">
+        {title}
+      </h2>
+      <div className="mt-4 max-w-2xl text-ink-2">{children}</div>
     </section>
+  );
+}
+
+function ClaimList({ items, icon: Icon, iconClass }: { items: string[]; icon: typeof CheckCircle2; iconClass: string }) {
+  return (
+    <ul className="space-y-3">
+      {items.map((item) => (
+        <li key={item} className="flex items-start gap-3">
+          <Icon aria-hidden className={`mt-0.5 h-5 w-5 shrink-0 ${iconClass}`} />
+          <span>{item}</span>
+        </li>
+      ))}
+    </ul>
   );
 }
 
@@ -87,186 +111,175 @@ export default async function AutoPinCasePage({
         technologies={AUTOPIN_TECHNOLOGIES}
       />
 
-      <article className="pt-10 pb-20 md:pt-12">
-        <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
-          <Link
-            href={`${basePath}/portfolio`}
-            className="inline-flex min-h-11 items-center gap-2 text-sm text-white/50 transition-colors hover:text-brand-green"
-          >
-            <ArrowLeft className="h-4 w-4 rtl:rotate-180" />
-            {t("portfolio.detail.back")}
-          </Link>
-
-          <header className="mt-8 grid gap-10 lg:grid-cols-2 lg:items-center">
-            <div>
-              <Badge variant="purple" className="mb-4">
-                {c.statusLabel}
-              </Badge>
-              <h1 className="text-3xl font-bold tracking-tight text-white sm:text-4xl lg:text-5xl">
-                {c.title}
-              </h1>
-              <p className="mt-3 text-base font-medium text-brand-green" data-testid="autopin-attribution">
-                {c.attribution}
-              </p>
-              <p className="mt-4 text-base leading-relaxed text-white/70 sm:text-lg">{c.tagline}</p>
-              <div className="mt-6 flex flex-wrap gap-2">
-                {AUTOPIN_TECHNOLOGIES.map((tech) => (
-                  <Badge key={tech}>{tech}</Badge>
-                ))}
-              </div>
-              <div className="mt-8 flex flex-wrap gap-3">
-                <a
-                  href={AUTOPIN_PRIVACY_URL}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="inline-flex min-h-11 items-center gap-2 rounded-xl border border-brand-green/30 bg-brand-green/10 px-5 py-2.5 text-sm font-medium text-brand-green transition hover:bg-brand-green/15"
-                >
-                  {c.privacyLink}
-                  <ExternalLink className="h-4 w-4" />
-                </a>
-                <Link
-                  href={basePath}
-                  className="inline-flex min-h-11 items-center gap-2 rounded-xl border border-white/10 px-5 py-2.5 text-sm text-white/70 transition hover:border-white/20 hover:text-white"
-                >
-                  {c.agencyLink}
-                </Link>
-              </div>
+      <article>
+        <header className="border-b border-line">
+          <div className="container-site pt-10 pb-14 lg:pt-14 lg:pb-20">
+            <Link
+              href={`${basePath}/portfolio`}
+              className="inline-flex min-h-11 items-center gap-2 text-sm text-ink-3 transition-colors hover:text-ink"
+            >
+              <ArrowLeft aria-hidden className="h-4 w-4 rtl:rotate-180" />
+              {t("portfolio.detail.back")}
+            </Link>
+            <p className="mt-10 text-sm text-accent-ink">{c.statusLabel}</p>
+            <h1 className="mt-3 max-w-[20ch] text-title text-ink">{c.title}</h1>
+            <p className="mt-4 font-medium text-ink" data-testid="autopin-attribution">
+              {c.attribution}
+            </p>
+            <p className="mt-4 max-w-2xl text-lg text-ink-2">{c.tagline}</p>
+            <div className="mt-9 flex flex-wrap gap-3">
+              <a
+                href={AUTOPIN_PRIVACY_URL}
+                target="_blank"
+                rel="noopener noreferrer"
+                className={buttonClasses("primary", "lg")}
+              >
+                {c.privacyLink}
+                <ExternalLink aria-hidden className="h-4 w-4" />
+              </a>
+              <Link href={basePath} className={buttonClasses("outline", "lg")}>
+                {c.agencyLink}
+              </Link>
             </div>
+          </div>
+        </header>
 
-            <div className="overflow-hidden rounded-2xl border border-white/10 bg-brand-card shadow-2xl shadow-black/40">
-              <Image
-                src={AUTOPIN_COVER}
-                alt={c.screens.dashboard}
-                width={SHOT_WIDTH}
-                height={SHOT_HEIGHT}
-                priority
-                sizes="(max-width: 1024px) 100vw, 50vw"
-                className="h-auto w-full"
-              />
-            </div>
-          </header>
+        <div className="container-site pt-14 lg:pt-20">
+          <FacetFrame size="lg">
+            <Image
+              src={AUTOPIN_COVER}
+              alt={c.screens.dashboard}
+              width={SHOT_WIDTH}
+              height={SHOT_HEIGHT}
+              priority
+              sizes="(max-width: 1280px) 100vw, 1200px"
+              className="block h-auto w-full"
+            />
+          </FacetFrame>
+        </div>
 
-          <div className="mt-16 space-y-6">
+        <div className="container-site section-y grid gap-14 lg:grid-cols-12 lg:gap-10">
+          <aside className="lg:col-span-4">
+            <dl className="space-y-6 lg:sticky lg:top-28">
+              <div>
+                <dt className="text-sm text-ink-3">{t("portfolio.detail.stack")}</dt>
+                <dd className="mt-3 flex flex-wrap gap-2">
+                  {AUTOPIN_TECHNOLOGIES.map((tech) => (
+                    <span key={tech} className="rounded-md border border-line px-2.5 py-1 font-mono text-xs text-ink-2">
+                      {tech}
+                    </span>
+                  ))}
+                </dd>
+              </div>
+            </dl>
+          </aside>
+
+          <div className="space-y-12 lg:col-span-8">
             <section
-              className="rounded-2xl border border-brand-purple/30 bg-brand-purple/[0.06] p-6 sm:p-8"
+              className="facet border border-line bg-surface p-6 [--facet:1.25rem] sm:p-8"
               aria-labelledby="autopin-status"
             >
-              <h2 id="autopin-status" className="flex items-center gap-2 text-lg font-semibold text-white sm:text-xl">
-                <ShieldCheck className="h-5 w-5 shrink-0 text-[#b3a6fa]" />
+              <h2 id="autopin-status" className="flex items-center gap-2 text-subheading text-ink">
+                <ShieldCheck aria-hidden className="h-5 w-5 shrink-0 text-accent-ink" />
                 {c.statusLabel}
               </h2>
-              <p className="mt-4 text-sm leading-relaxed text-white/70 sm:text-base">{c.statusText}</p>
+              <p className="mt-4 max-w-2xl text-ink-2">{c.statusText}</p>
             </section>
 
-            <Section title={c.introTitle}>
+            <DetailSection title={c.introTitle}>
               <p>{c.intro}</p>
-            </Section>
+            </DetailSection>
 
-            <div className="grid gap-6 lg:grid-cols-2">
-              <Section title={c.problemTitle}>
-                <p>{c.problem}</p>
-              </Section>
-              <Section title={c.audienceTitle}>
-                <p>{c.audience}</p>
-              </Section>
-            </div>
+            <DetailSection title={c.problemTitle}>
+              <p>{c.problem}</p>
+            </DetailSection>
 
-            <Section title={c.verifiedTitle}>
-              <p className="text-white/50">{c.verifiedNote}</p>
-              <ul className="mt-4 space-y-3">
-                {c.verified.map((item) => (
-                  <li key={item} className="flex items-start gap-3">
-                    <CheckCircle2 className="mt-0.5 h-5 w-5 shrink-0 text-brand-green" />
-                    <span>{item}</span>
-                  </li>
-                ))}
-              </ul>
-            </Section>
+            <DetailSection title={c.audienceTitle}>
+              <p>{c.audience}</p>
+            </DetailSection>
 
-            <div className="grid gap-6 lg:grid-cols-2">
-              <Section title={c.partialTitle}>
-                <ul className="space-y-3">
-                  {c.partial.map((item) => (
-                    <li key={item} className="flex items-start gap-3">
-                      <CircleDashed className="mt-0.5 h-5 w-5 shrink-0 text-amber-300" />
-                      <span>{item}</span>
-                    </li>
-                  ))}
-                </ul>
-              </Section>
-              <Section title={c.notClaimedTitle}>
-                <ul className="space-y-3">
-                  {c.notClaimed.map((item) => (
-                    <li key={item} className="flex items-start gap-3">
-                      <MinusCircle className="mt-0.5 h-5 w-5 shrink-0 text-white/40" />
-                      <span>{item}</span>
-                    </li>
-                  ))}
-                </ul>
-              </Section>
-            </div>
+            <DetailSection title={c.verifiedTitle}>
+              <p className="mb-4 text-sm text-ink-3">{c.verifiedNote}</p>
+              <ClaimList items={c.verified} icon={CheckCircle2} iconClass="text-action" />
+            </DetailSection>
 
-            <Section title={c.architectureTitle}>
-              <dl className="grid gap-4 sm:grid-cols-2">
+            <DetailSection title={c.partialTitle}>
+              <ClaimList items={c.partial} icon={CircleDashed} iconClass="text-accent-ink" />
+            </DetailSection>
+
+            <DetailSection title={c.notClaimedTitle}>
+              <ClaimList items={c.notClaimed} icon={MinusCircle} iconClass="text-ink-3" />
+            </DetailSection>
+
+            <DetailSection title={c.architectureTitle}>
+              <dl className="grid gap-x-8 gap-y-6 sm:grid-cols-2">
                 {c.architecture.map((row) => (
-                  <div key={row.label} className="rounded-xl bg-white/[0.03] p-4">
-                    <dt className="text-sm font-semibold text-white">{row.label}</dt>
-                    <dd className="mt-1 text-sm text-white/60">{row.text}</dd>
+                  <div key={row.label}>
+                    <dt className="font-medium text-ink">{row.label}</dt>
+                    <dd className="mt-1 text-sm text-ink-2">{row.text}</dd>
                   </div>
                 ))}
               </dl>
-            </Section>
-          </div>
+            </DetailSection>
 
-          <section className="mt-16" aria-labelledby="autopin-screens">
-            <h2 id="autopin-screens" className="text-xl font-semibold text-white sm:text-2xl">
+            <DetailSection title={c.trustTitle} id="autopin-trust">
+              <ul className="space-y-2">
+                <li>
+                  {c.attribution} ·{" "}
+                  <Link
+                    href={basePath}
+                    className="text-action underline decoration-action/40 underline-offset-4 hover:decoration-action"
+                  >
+                    {c.agencyLink}
+                  </Link>
+                </li>
+                <li>
+                  <a
+                    href={AUTOPIN_PRIVACY_URL}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="inline-flex items-center gap-1.5 text-action underline decoration-action/40 underline-offset-4 hover:decoration-action"
+                  >
+                    {c.privacyLink}
+                    <ExternalLink aria-hidden className="h-3.5 w-3.5" />
+                  </a>
+                </li>
+                <li className="text-sm text-ink-3">{c.disclaimer}</li>
+              </ul>
+            </DetailSection>
+          </div>
+        </div>
+
+        <section className="border-t border-line section-y" aria-labelledby="autopin-screens">
+          <div className="container-site">
+            <h2 id="autopin-screens" className="text-heading text-ink">
               {c.screensTitle}
             </h2>
-            <p className="mt-2 text-sm text-white/50">{c.screensNote}</p>
-            <div className="mt-8 grid grid-cols-1 gap-6 md:grid-cols-2">
+            <p className="mt-3 max-w-2xl text-ink-3">{c.screensNote}</p>
+            <ul className="mt-12 grid gap-x-6 gap-y-10 md:grid-cols-2">
               {AUTOPIN_SCREENSHOTS.map((shot) => (
-                <figure key={shot.key} className="overflow-hidden rounded-xl border border-white/10 bg-brand-card">
-                  <Image
-                    src={shot.src}
-                    alt={c.screens[shot.key]}
-                    width={SHOT_WIDTH}
-                    height={SHOT_HEIGHT}
-                    sizes="(max-width: 768px) 100vw, 50vw"
-                    className="h-auto w-full"
-                  />
-                  <figcaption className="px-4 py-3 text-sm text-white/60">{c.screens[shot.key]}</figcaption>
-                </figure>
+                <li key={shot.key}>
+                  <figure>
+                    <FacetFrame size="sm">
+                      <Image
+                        src={shot.src}
+                        alt={c.screens[shot.key]}
+                        width={SHOT_WIDTH}
+                        height={SHOT_HEIGHT}
+                        sizes="(max-width: 768px) 100vw, 50vw"
+                        className="block h-auto w-full"
+                      />
+                    </FacetFrame>
+                    <figcaption className="mt-3 text-sm text-ink-3">{c.screens[shot.key]}</figcaption>
+                  </figure>
+                </li>
               ))}
-            </div>
-          </section>
-
-          <section className="mt-16 rounded-2xl border border-white/10 bg-white/[0.02] p-6 sm:p-8" aria-labelledby="autopin-trust">
-            <h2 id="autopin-trust" className="text-lg font-semibold text-white sm:text-xl">
-              {c.trustTitle}
-            </h2>
-            <ul className="mt-4 space-y-2 text-sm text-white/65 sm:text-base">
-              <li>
-                {c.attribution} ·{" "}
-                <Link href={basePath} className="text-brand-green underline-offset-4 hover:underline">
-                  {c.agencyLink}
-                </Link>
-              </li>
-              <li>
-                <a
-                  href={AUTOPIN_PRIVACY_URL}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="inline-flex items-center gap-1 text-brand-green underline-offset-4 hover:underline"
-                >
-                  {c.privacyLink}
-                  <ExternalLink className="h-3.5 w-3.5" />
-                </a>
-              </li>
-              <li className="text-white/50">{c.disclaimer}</li>
             </ul>
-          </section>
+          </div>
+        </section>
 
-          <div className="mt-16">
+        <section className="section-y border-t border-line">
+          <div className="container-site">
             <ConversionCTA
               locale={loc}
               title={t("portfolio.detail.ctaTitle")}
@@ -279,7 +292,7 @@ export default async function AutoPinCasePage({
               primaryHref={`${basePath}/contact`}
             />
           </div>
-        </div>
+        </section>
       </article>
     </>
   );

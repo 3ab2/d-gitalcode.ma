@@ -105,17 +105,17 @@ export function Header({ locale }: { locale: Locale }) {
       <nav
         id="mobile-navigation"
         aria-label={t("a11y.mainNavigation")}
-        className="site-mobile-nav fixed inset-x-0 overflow-y-auto overscroll-contain border-t border-white/10 bg-brand-dark lg:hidden"
+        className="site-mobile-nav fixed inset-x-0 overflow-y-auto overscroll-contain border-t border-line bg-bg lg:hidden"
         style={{ top: headerHeight, zIndex: 10102, maxHeight: `calc(100dvh - ${headerHeight}px)` }}
       >
-        <div className="space-y-1 px-4 py-4">
+        <div className="container-site pt-2 pb-8">
           {navLinks.map((link) =>
             link.children ? (
               <div key={link.label}>
                 <button
                   type="button"
                   onClick={() => setServicesOpen((open) => !open)}
-                  className="flex min-h-11 w-full cursor-pointer touch-manipulation items-center justify-between rounded-lg px-4 py-3 text-white/80 active:bg-white/5"
+                  className="flex min-h-14 w-full cursor-pointer touch-manipulation items-center justify-between border-b border-line py-3 text-lg text-ink"
                   aria-expanded={servicesOpen}
                 >
                   {link.label}
@@ -127,13 +127,13 @@ export function Header({ locale }: { locale: Locale }) {
                   />
                 </button>
                 {servicesOpen && (
-                  <div className="space-y-1 ps-4">
+                  <div className="border-b border-line py-2 ps-4">
                     {link.children.map((child) => (
                       <Link
                         key={child.href}
                         href={child.href}
                         onClick={handleMobileNavClick}
-                        className="block min-h-11 cursor-pointer touch-manipulation rounded-lg px-4 py-3 text-sm text-white/65 active:bg-white/5 active:text-brand-green"
+                        className="block min-h-11 cursor-pointer touch-manipulation py-2.5 text-base text-ink-2 active:text-ink"
                       >
                         {child.label}
                       </Link>
@@ -146,13 +146,13 @@ export function Header({ locale }: { locale: Locale }) {
                 key={link.href}
                 href={link.href!}
                 onClick={handleMobileNavClick}
-                className="block min-h-11 cursor-pointer touch-manipulation rounded-lg px-4 py-3 text-white/80 active:bg-white/5 active:text-white"
+                className="flex min-h-14 cursor-pointer touch-manipulation items-center border-b border-line py-3 text-lg text-ink"
               >
                 {link.label}
               </Link>
             )
           )}
-          <div className="flex gap-2 border-t border-white/10 pt-4">
+          <div className="mt-6 flex gap-2">
             {locales.map((l) => (
               <Link
                 key={l}
@@ -162,10 +162,10 @@ export function Header({ locale }: { locale: Locale }) {
                 aria-current={l === locale ? "true" : undefined}
                 onClick={handleMobileNavClick}
                 className={cn(
-                  "min-h-11 flex-1 cursor-pointer touch-manipulation rounded-lg border py-3 text-center text-xs",
+                  "min-h-11 flex-1 cursor-pointer touch-manipulation rounded-control border py-3 text-center text-sm",
                   l === locale
-                    ? "border-brand-green/30 bg-brand-green/10 text-brand-green"
-                    : "border-white/10 text-white/50"
+                    ? "border-line-strong bg-white/[0.06] text-ink"
+                    : "border-line text-ink-3"
                 )}
               >
                 {localeNames[l]}
@@ -177,7 +177,7 @@ export function Header({ locale }: { locale: Locale }) {
             onClick={handleMobileNavClick}
             className="mt-4 block touch-manipulation"
           >
-            <Button as="span" className="w-full">{t("nav.contact")}</Button>
+            <Button as="span" size="lg" className="w-full">{t("nav.contact")}</Button>
           </Link>
         </div>
       </nav>
@@ -189,12 +189,12 @@ export function Header({ locale }: { locale: Locale }) {
       {!isDesktop ? (
         <header
           ref={mobileBarRef}
-          className="site-header site-header-mobile site-header-bar site-chrome border-b border-white/[0.06] bg-brand-dark"
+          className="site-header site-header-mobile site-header-bar site-chrome border-b border-line bg-bg"
         >
-          <div className="mx-auto flex h-16 min-h-16 items-center justify-between px-4 sm:px-6 md:h-20 md:min-h-20">
+          <div className="container-site flex h-16 min-h-16 items-center justify-between">
             <Link
               href={basePath}
-              className="relative z-[1] flex h-14 shrink-0 items-center md:h-16"
+              className="relative z-[1] flex h-12 shrink-0 items-center"
               aria-label="D-GITALCODE"
             >
               <Logo size="md" priority />
@@ -219,16 +219,16 @@ export function Header({ locale }: { locale: Locale }) {
       ) : (
         <header
           ref={desktopBarRef}
-          className="site-header site-header-desktop site-header-bar site-chrome border-b border-white/[0.06] bg-brand-dark/95 backdrop-blur-xl"
+          className="site-header site-header-desktop site-header-bar site-chrome border-b border-line bg-bg/90 backdrop-blur-md"
         >
-          <div className="mx-auto flex h-[5.625rem] min-h-[5.625rem] max-w-7xl items-center justify-between gap-4 px-8">
+          <div className="container-site flex h-[4.5rem] min-h-[4.5rem] items-center justify-between gap-6">
             <Link href={basePath} className="flex shrink-0 items-center" aria-label="D-GITALCODE">
               <Logo size="md" priority />
             </Link>
 
             <nav
               aria-label={t("a11y.mainNavigation")}
-              className="flex flex-1 items-center justify-center gap-0.5"
+              className="flex flex-1 items-center justify-center gap-1"
             >
               {navLinks.map((link) =>
                 link.children ? (
@@ -246,10 +246,10 @@ export function Header({ locale }: { locale: Locale }) {
                       aria-expanded={servicesOpen}
                       aria-controls="services-menu"
                       onClick={() => setServicesOpen((open) => !open)}
-                      className="flex cursor-pointer items-center gap-1 px-3.5 py-2 text-sm font-medium text-white/65 transition-colors hover:text-white"
+                      className="flex cursor-pointer items-center gap-1 rounded-control px-3 py-2 text-sm font-medium text-ink-2 transition-colors hover:text-ink"
                     >
                       {link.label}
-                      <ChevronDown className="h-4 w-4" />
+                      <ChevronDown aria-hidden className="h-3.5 w-3.5 opacity-70" />
                     </button>
                     <div
                       id="services-menu"
@@ -258,12 +258,12 @@ export function Header({ locale }: { locale: Locale }) {
                         servicesOpen ? "visible opacity-100" : "invisible opacity-0"
                       )}
                     >
-                      <div className="min-w-[220px] rounded-xl border border-white/10 bg-brand-dark/95 p-2 shadow-xl backdrop-blur-xl">
+                      <div className="min-w-[240px] rounded-panel border border-line bg-surface p-1.5 shadow-overlay">
                         {link.children.map((child) => (
                           <Link
                             key={child.href}
                             href={child.href}
-                            className="block rounded-lg px-4 py-2.5 text-sm text-white/70 transition-colors hover:bg-white/5 hover:text-brand-green"
+                            className="block rounded-md px-3.5 py-2.5 text-sm text-ink-2 transition-colors hover:bg-white/[0.05] hover:text-ink"
                           >
                             {child.label}
                           </Link>
@@ -277,10 +277,10 @@ export function Header({ locale }: { locale: Locale }) {
                     href={link.href!}
                     aria-current={pathname === link.href ? "page" : undefined}
                     className={cn(
-                      "rounded-lg px-3.5 py-2 text-sm font-medium transition-colors",
+                      "rounded-control px-3 py-2 text-sm font-medium transition-colors",
                       pathname === link.href
-                        ? "text-brand-green"
-                        : "text-white/65 hover:text-white"
+                        ? "text-ink underline decoration-action decoration-2 underline-offset-[10px]"
+                        : "text-ink-2 hover:text-ink"
                     )}
                   >
                     {link.label}
@@ -290,7 +290,7 @@ export function Header({ locale }: { locale: Locale }) {
             </nav>
 
             <div className="flex shrink-0 items-center gap-3">
-              <div className="flex items-center gap-1 rounded-lg border border-white/10 p-1">
+              <div className="flex items-center rounded-control border border-line p-0.5">
                 {locales.map((l) => (
                   <Link
                     key={l}
@@ -299,10 +299,10 @@ export function Header({ locale }: { locale: Locale }) {
                     aria-label={localeNames[l]}
                     aria-current={l === locale ? "true" : undefined}
                     className={cn(
-                      "rounded-md px-2 py-1 text-xs transition-colors",
+                      "rounded-md px-2 py-1 text-xs font-medium transition-colors",
                       l === locale
-                        ? "bg-brand-green/20 text-brand-green"
-                        : "text-white/50 hover:text-white"
+                        ? "bg-white/[0.08] text-ink"
+                        : "text-ink-3 hover:text-ink"
                     )}
                   >
                     {l.toUpperCase()}

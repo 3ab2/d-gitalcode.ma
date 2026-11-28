@@ -18,8 +18,8 @@ export function RelatedArticles({
   if (posts.length === 0) return null;
 
   return (
-    <section className="mt-16 border-t border-white/10 pt-12">
-      <h2 className="text-xl font-semibold text-white">{title}</h2>
+    <section className="mt-16 border-t border-line pt-12">
+      <h2 className="text-subheading text-ink">{title}</h2>
       <div className="mt-6 grid grid-cols-1 gap-6 md:grid-cols-3">
         {posts.map((post) => (
           <BlogCard

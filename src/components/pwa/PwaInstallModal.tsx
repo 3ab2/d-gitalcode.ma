@@ -34,7 +34,7 @@ export function PwaInstallModal({
             animate={{ opacity: 1, y: 0, scale: 1 }}
             exit={{ opacity: 0, y: 16, scale: 0.98 }}
             transition={{ type: "spring", damping: 26, stiffness: 320 }}
-            className="relative w-full max-w-md overflow-hidden rounded-2xl border border-white/10 bg-brand-dark shadow-2xl shadow-black/50"
+            className="relative w-full max-w-md overflow-hidden rounded-panel border border-line bg-brand-dark shadow-2xl shadow-black/50"
             onClick={(e) => e.stopPropagation()}
           >
             <div className="absolute inset-x-0 top-0 h-24 bg-gradient-to-b from-brand-green/15 to-transparent" />
@@ -42,14 +42,14 @@ export function PwaInstallModal({
             <button
               type="button"
               onClick={onDismiss}
-              className="absolute right-3 top-3 z-10 flex h-8 w-8 items-center justify-center rounded-lg text-white/60 hover:bg-white/5 hover:text-white"
+              className="absolute right-3 top-3 z-10 flex h-8 w-8 items-center justify-center rounded-lg text-ink-3 hover:bg-white/5 hover:text-white"
               aria-label={t("pwa.maybeLater")}
             >
               <X className="h-4 w-4" />
             </button>
 
             <div className="relative px-6 pb-6 pt-8 text-center">
-              <div className="mx-auto mb-4 flex h-16 w-16 items-center justify-center rounded-2xl border border-brand-green/25 bg-brand-green/10 shadow-lg shadow-brand-green/10">
+              <div className="mx-auto mb-4 flex h-16 w-16 items-center justify-center rounded-panel border border-brand-green/25 bg-brand-green/10 shadow-lg shadow-brand-green/10">
                 <Image
                   src="/logo-mobile.png"
                   alt=""
@@ -65,7 +65,7 @@ export function PwaInstallModal({
               >
                 {t("pwa.modalTitle")}
               </h2>
-              <p className="mt-2 text-sm leading-relaxed text-white/55">
+              <p className="mt-2 text-sm leading-relaxed text-ink-3">
                 {t("pwa.modalMessage")}
               </p>
 
@@ -81,7 +81,7 @@ export function PwaInstallModal({
                 <Button
                   type="button"
                   variant="ghost"
-                  className="w-full border border-white/10 text-white/65 hover:text-white"
+                  className="w-full border border-line text-ink-2 hover:text-white"
                   onClick={onDismiss}
                 >
                   {t("pwa.maybeLater")}

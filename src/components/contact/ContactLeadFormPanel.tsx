@@ -24,7 +24,7 @@ export function ContactLeadFormPanel({
 
   return (
     <>
-      <p className="mb-6 text-sm text-white/60">{t("contact.promise")}</p>
+      <p className="mb-8 text-ink-2">{t("contact.promise")}</p>
       <ClientContactForm
         locale={locale}
         sourcePage={sourcePage}

@@ -2,11 +2,9 @@
 
 import Link from "next/link";
 import Image from "next/image";
-import { Clock, ArrowRight } from "lucide-react";
 import { useTranslation } from "react-i18next";
 import { SectionHeading } from "@/components/ui/SectionHeading";
-import { GlassCard } from "@/components/ui/GlassCard";
-import { Badge } from "@/components/ui/Badge";
+import { FacetFrame } from "@/components/ui/FacetFrame";
 import { formatDate } from "@/lib/utils";
 import { type Locale } from "@/lib/i18n/settings";
 
@@ -22,13 +20,19 @@ export interface BlogPreviewItem {
   featured: boolean;
 }
 
-export function BlogPreviewSection({
-  locale,
-  posts,
-}: {
-  locale: Locale;
-  posts: BlogPreviewItem[];
-}) {
+function Meta({ post, locale, minRead }: { post: BlogPreviewItem; locale: Locale; minRead: string }) {
+  return (
+    <p className="flex flex-wrap gap-x-4 gap-y-1 text-sm text-ink-3">
+      {post.categories[0] && <span className="text-accent-ink">{post.categories[0]}</span>}
+      {post.publishedAt && <time dateTime={new Date(post.publishedAt).toISOString()}>{formatDate(post.publishedAt, locale)}</time>}
+      <span>
+        {post.readTime} {minRead}
+      </span>
+    </p>
+  );
+}
+
+export function BlogPreviewSection({ locale, posts }: { locale: Locale; posts: BlogPreviewItem[] }) {
   const { t } = useTranslation();
   const basePath = `/${locale}`;
 
@@ -36,99 +40,58 @@ export function BlogPreviewSection({
 
   const featured = posts.find((p) => p.featured) || posts[0];
   const latest = posts.filter((p) => p.id !== featured.id).slice(0, 3);
+  const minRead = t("blog.minRead");
 
   return (
-    <section id="blog" className="relative py-24 lg:py-32">
-      <div className="pointer-events-none absolute inset-0 bg-gradient-to-b from-transparent via-brand-green/[0.02] to-transparent" />
-      <div className="relative mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
-        <SectionHeading title={t("home.blog.title")} subtitle={t("home.blog.subtitle")} />
-
-        <div className="mt-16 grid gap-6 lg:grid-cols-2">
-          <Link href={`${basePath}/blog/${featured.slug}`} className="group block">
-            <GlassCard className="h-full overflow-hidden p-0">
-              <div className="relative aspect-[16/9] bg-brand-card">
-                {featured.image && (
-                  <Image
-                    src={featured.image}
-                    alt={featured.title}
-                    fill
-                    sizes="(max-width: 1024px) 100vw, 50vw"
-                    className="object-cover transition-transform duration-500 group-hover:scale-105"
-                  />
-                )}
-                <div className="absolute inset-0 bg-gradient-to-t from-brand-dark via-brand-dark/20 to-transparent" />
-                <div className="absolute bottom-0 left-0 right-0 p-6 sm:p-8">
-                  <Badge variant="green" className="mb-3">
-                    {t("home.blog.featured")}
-                  </Badge>
-                  <h3 className="text-2xl font-bold text-white group-hover:text-brand-green transition-colors">
-                    {featured.title}
-                  </h3>
-                  {featured.excerpt && (
-                    <p className="mt-3 line-clamp-2 text-white/60">{featured.excerpt}</p>
-                  )}
-                  <div className="mt-4 flex flex-wrap items-center gap-4 text-xs text-white/60">
-                    {featured.publishedAt && (
-                      <time>{formatDate(featured.publishedAt, locale)}</time>
-                    )}
-                    <span className="flex items-center gap-1">
-                      <Clock className="h-3.5 w-3.5" />
-                      {featured.readTime} {t("blog.minRead")}
-                    </span>
-                  </div>
-                </div>
-              </div>
-            </GlassCard>
-          </Link>
-
-          <div className="flex flex-col gap-4">
-            {latest.map((post) => (
-              <Link key={post.id} href={`${basePath}/blog/${post.slug}`} className="group block">
-                <GlassCard className="flex gap-4 p-4 sm:p-5">
-                  {post.image && (
-                    <div className="relative hidden h-24 w-32 shrink-0 overflow-hidden rounded-xl sm:block">
-                      <Image
-                        src={post.image}
-                        alt={post.title}
-                        fill
-                        sizes="128px"
-                        className="object-cover"
-                      />
-                    </div>
-                  )}
-                  <div className="min-w-0 flex-1">
-                    {post.categories[0] && (
-                      <span className="text-xs font-medium text-brand-green">
-                        {post.categories[0]}
-                      </span>
-                    )}
-                    <h4 className="mt-1 font-semibold text-white group-hover:text-brand-green transition-colors line-clamp-2">
-                      {post.title}
-                    </h4>
-                    <div className="mt-2 flex items-center gap-3 text-xs text-white/60">
-                      {post.publishedAt && (
-                        <time>{formatDate(post.publishedAt, locale)}</time>
-                      )}
-                      <span className="flex items-center gap-1">
-                        <Clock className="h-3 w-3" />
-                        {post.readTime} {t("blog.minRead")}
-                      </span>
-                    </div>
-                  </div>
-                  <ArrowRight className="rtl:rotate-180 h-5 w-5 shrink-0 self-center text-white/60 group-hover:text-brand-green" />
-                </GlassCard>
-              </Link>
-            ))}
-          </div>
-        </div>
-
-        <div className="mt-10 text-center">
+    <section id="blog" className="section-y border-t border-line">
+      <div className="container-site">
+        <SectionHeading title={t("home.blog.title")} subtitle={t("home.blog.subtitle")}>
           <Link
             href={`${basePath}/blog`}
-            className="inline-flex min-h-11 items-center text-sm font-medium text-brand-green hover:underline"
+            className="mt-5 inline-block text-sm font-medium text-action underline decoration-action/40 underline-offset-4 hover:decoration-action"
           >
-            {t("home.blog.viewAll")} →
+            {t("home.blog.viewAll")}
           </Link>
+        </SectionHeading>
+
+        <div className="mt-14 grid gap-12 lg:mt-20 lg:grid-cols-12 lg:gap-10">
+          <article className="lg:col-span-7">
+            <Link href={`${basePath}/blog/${featured.slug}`} className="group block">
+              <FacetFrame size="md">
+                <div className="relative aspect-[16/9]">
+                  <Image
+                    src={featured.image || "/images/blog-default.jpg"}
+                    alt=""
+                    fill
+                    sizes="(max-width: 1024px) 100vw, 55vw"
+                    className="object-cover"
+                  />
+                </div>
+              </FacetFrame>
+              <div className="mt-6">
+                <Meta post={featured} locale={locale} minRead={minRead} />
+                <h3 className="mt-3 text-subheading text-ink group-hover:underline group-hover:underline-offset-4">
+                  {featured.title}
+                </h3>
+                {featured.excerpt && <p className="mt-3 line-clamp-2 max-w-2xl text-ink-2">{featured.excerpt}</p>}
+              </div>
+            </Link>
+          </article>
+
+          {latest.length > 0 && (
+            <ul className="divide-y divide-line border-y border-line lg:col-span-5">
+              {latest.map((post) => (
+                <li key={post.id}>
+                  <Link href={`${basePath}/blog/${post.slug}`} className="group block py-7">
+                    <Meta post={post} locale={locale} minRead={minRead} />
+                    <h3 className="mt-2 text-lg font-medium text-ink group-hover:underline group-hover:underline-offset-4">
+                      {post.title}
+                    </h3>
+                  </Link>
+                </li>
+              ))}
+            </ul>
+          )}
         </div>
       </div>
     </section>

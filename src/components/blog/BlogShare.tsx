@@ -42,12 +42,12 @@ export function BlogShare({
 
   return (
     <div className="flex flex-wrap items-center gap-2">
-      <span className="text-xs font-medium text-white/60">{label}</span>
+      <span className="text-xs font-medium text-ink-3">{label}</span>
       <a
         href={`https://twitter.com/intent/tweet?url=${encoded}&text=${encodedTitle}`}
         target="_blank"
         rel="noopener noreferrer"
-        className="flex h-9 w-9 items-center justify-center rounded-lg border border-white/10 text-white/50 hover:border-brand-green/30 hover:text-brand-green"
+        className="flex h-9 w-9 items-center justify-center rounded-lg border border-line text-ink-3 hover:border-brand-green/30 hover:text-ink"
         aria-label="Share on X"
       >
         <XIcon className="h-4 w-4" />
@@ -56,7 +56,7 @@ export function BlogShare({
         href={`https://www.linkedin.com/sharing/share-offsite/?url=${encoded}`}
         target="_blank"
         rel="noopener noreferrer"
-        className="flex h-9 w-9 items-center justify-center rounded-lg border border-white/10 text-white/50 hover:border-brand-green/30 hover:text-brand-green"
+        className="flex h-9 w-9 items-center justify-center rounded-lg border border-line text-ink-3 hover:border-brand-green/30 hover:text-ink"
         aria-label="Share on LinkedIn"
       >
         <LinkedInIcon className="h-4 w-4" />
@@ -64,7 +64,7 @@ export function BlogShare({
       <button
         type="button"
         onClick={() => void share()}
-        className="flex h-9 items-center gap-1.5 rounded-lg border border-white/10 px-3 text-xs text-white/50 hover:border-brand-green/30 hover:text-brand-green"
+        className="flex h-9 items-center gap-1.5 rounded-lg border border-line px-3 text-xs text-ink-3 hover:border-brand-green/30 hover:text-ink"
       >
         <Link2 className="h-3.5 w-3.5" />
         {copied ? "✓" : "Link"}

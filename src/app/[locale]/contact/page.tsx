@@ -1,14 +1,12 @@
 import type { Metadata } from "next";
 import { getTranslation } from "@/lib/i18n/server";
 import { type Locale } from "@/lib/i18n/settings";
-import { SectionHeading } from "@/components/ui/SectionHeading";
-import { Card } from "@/components/ui/Card";
+import { PageHero } from "@/components/ui/PageHero";
 import { ContactLeadFormPanel } from "@/components/contact/ContactLeadFormPanel";
 import { ContactTrustSignals } from "@/components/contact/ContactTrustSignals";
 import { buildGeneralContactMessage, buildWhatsAppUrl } from "@/lib/whatsapp";
-import { MessageCircle } from "lucide-react";
-import { Button } from "@/components/ui/Button";
-import { SocialConnect } from "@/components/social/SocialConnect";
+import { buttonClasses } from "@/components/ui/Button";
+import { SocialLinks } from "@/components/social/SocialLinks";
 import { getSocialLinks } from "@/lib/social-links";
 import { getSiteSettings } from "@/lib/settings";
 import { getAllServices } from "@/lib/services";
@@ -51,62 +49,54 @@ export default async function ContactPage({
   const serviceOptions = toContactServiceOptions(services);
 
   return (
-    <section className="pt-10 pb-16 md:pt-12">
-      <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
-        <SectionHeading
-          as="h1"
-          title={t("contact.title")}
-          subtitle={t("contact.headline")}
-        />
+    <>
+      <PageHero title={t("contact.title")} lead={t("contact.headline")} />
 
-        <div className="mt-10">
-          <ContactTrustSignals />
-        </div>
-
-        <div className="mt-16 grid grid-cols-1 lg:grid-cols-2 gap-8">
-          <Card>
-            <ContactLeadFormPanel
-              locale={loc}
-              sourcePage={`/${loc}/contact`}
-              serviceOptions={serviceOptions}
-            />
-          </Card>
-
-          <Card className="flex flex-col justify-center items-center text-center">
-            <div className="flex h-16 w-16 items-center justify-center rounded-2xl bg-[#25D366]/10 text-[#25D366] mb-6">
-              <MessageCircle className="h-8 w-8" />
+      <section className="section-y">
+        <div className="container-site grid gap-14 lg:grid-cols-12 lg:gap-10">
+          <div className="lg:col-span-7">
+            <div className="rounded-panel border border-line bg-surface p-6 sm:p-8 lg:p-10">
+              <ContactLeadFormPanel locale={loc} sourcePage={`/${loc}/contact`} serviceOptions={serviceOptions} />
             </div>
-            <h2 className="text-xl font-semibold text-white">
-              {t("contact.whatsappTitle")}
-            </h2>
-            <p className="mt-2 text-white/50">{t("contact.whatsappDesc")}</p>
-            <a
-              href={`mailto:${settings.contactEmail}`}
-              className="mt-4 block text-sm text-brand-green hover:underline"
-            >
-              {settings.contactEmail}
-            </a>
-            {settings.phone && (
-              <p className="mt-2 text-sm text-white/50">{settings.phone}</p>
-            )}
-            {settings.address && (
-              <p className="mt-1 text-sm text-white/50">{settings.address}</p>
-            )}
+          </div>
+
+          <aside className="lg:col-span-4 lg:col-start-9">
+            <h2 className="text-subheading text-ink">{t("contact.whatsappTitle")}</h2>
+            <p className="mt-3 text-ink-2">{t("contact.whatsappDesc")}</p>
             <a
               href={whatsappUrl}
               target="_blank"
               rel="noopener noreferrer"
-              className="mt-6"
+              className={buttonClasses("primary", "lg", "mt-6 w-full sm:w-auto")}
             >
-              <Button as="span" variant="whatsapp" size="lg">
-                {t("contact.whatsappBtn")}
-              </Button>
+              {t("contact.whatsappBtn")}
             </a>
-          </Card>
-        </div>
 
-        <SocialConnect links={socialLinks} />
-      </div>
-    </section>
+            <ul className="mt-10 space-y-3 border-t border-line pt-8 text-ink-2">
+              <li>
+                <a
+                  href={`mailto:${settings.contactEmail}`}
+                  className="underline decoration-line-strong underline-offset-4 transition-colors hover:text-ink"
+                >
+                  {settings.contactEmail}
+                </a>
+              </li>
+              {settings.phone && (
+                <li>
+                  <a href={`tel:${settings.phone.replace(/[^\d+]/g, "")}`} dir="ltr" className="transition-colors hover:text-ink">
+                    {settings.phone}
+                  </a>
+                </li>
+              )}
+              {settings.address && <li>{settings.address}</li>}
+            </ul>
+
+            <ContactTrustSignals className="mt-10" />
+
+            <SocialLinks links={socialLinks} className="mt-10" />
+          </aside>
+        </div>
+      </section>
+    </>
   );
 }

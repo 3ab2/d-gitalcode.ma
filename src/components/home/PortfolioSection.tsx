@@ -1,14 +1,11 @@
 "use client";
 
-import { useState, useMemo } from "react";
 import Link from "next/link";
 import Image from "next/image";
-import { ExternalLink } from "lucide-react";
 import { useTranslation } from "react-i18next";
 import { SectionHeading } from "@/components/ui/SectionHeading";
-import { GlassCard } from "@/components/ui/GlassCard";
-import { Badge } from "@/components/ui/Badge";
-import { cn } from "@/lib/utils";
+import { FacetFrame } from "@/components/ui/FacetFrame";
+import { buttonClasses } from "@/components/ui/Button";
 import { type PortfolioCategory } from "@/lib/portfolio-category";
 import { type Locale } from "@/lib/i18n/settings";
 
@@ -23,125 +20,74 @@ export interface PortfolioItem {
   category: Exclude<PortfolioCategory, "all">;
 }
 
-const filters: PortfolioCategory[] = ["all", "websites", "mobile", "wordpress", "other"];
+/** One project: image, title, summary, stack. The whole card opens the case page. */
+export function ProjectCard({
+  project,
+  basePath,
+}: {
+  project: Pick<PortfolioItem, "slug" | "title" | "description" | "image"> & { technologies?: string[] };
+  basePath: string;
+}) {
+  return (
+    <Link href={`${basePath}/portfolio/${project.slug}`} className="group block">
+      <FacetFrame size="md" className="transition-colors duration-200 group-hover:bg-white/30">
+        <div className="relative aspect-[16/10]">
+          {project.image ? (
+            <Image
+              src={project.image}
+              alt={project.title}
+              fill
+              sizes="(max-width: 768px) 100vw, 50vw"
+              className="object-cover object-top"
+            />
+          ) : (
+            <div className="flex h-full items-center justify-center px-6 text-center text-ink-3">{project.title}</div>
+          )}
+        </div>
+      </FacetFrame>
+      <h3 className="mt-5 text-lg font-medium text-ink group-hover:underline group-hover:underline-offset-4">
+        {project.title}
+      </h3>
+      {project.description && <p className="mt-2 line-clamp-2 max-w-xl text-ink-2">{project.description}</p>}
+      {project.technologies && project.technologies.length > 0 && (
+        <p className="mt-3 font-mono text-xs text-ink-3">{project.technologies.slice(0, 4).join("  /  ")}</p>
+      )}
+    </Link>
+  );
+}
 
 export function PortfolioSection({
   locale,
   projects,
+  skipFirst = false,
 }: {
   locale: Locale;
   projects: PortfolioItem[];
+  /** The hero already shows the first project. */
+  skipFirst?: boolean;
 }) {
   const { t } = useTranslation();
   const basePath = `/${locale}`;
-  const [activeFilter, setActiveFilter] = useState<PortfolioCategory>("all");
+  const shown = skipFirst && projects.length > 2 ? projects.slice(1, 5) : projects.slice(0, 4);
 
-  const filtered = useMemo(
-    () =>
-      activeFilter === "all"
-        ? projects
-        : projects.filter((p) => p.category === activeFilter),
-    [projects, activeFilter]
-  );
-
-  if (projects.length === 0) return null;
+  if (shown.length === 0) return null;
 
   return (
-    <section id="portfolio" className="relative py-24 lg:py-32">
-      <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
-        <SectionHeading
-          title={t("home.portfolio.title")}
-          subtitle={t("home.portfolio.subtitle")}
-        />
+    <section id="portfolio" className="section-y border-t border-line">
+      <div className="container-site">
+        <SectionHeading title={t("home.portfolio.title")} subtitle={t("home.portfolio.subtitle")} />
 
-        <div className="mt-10 flex flex-wrap justify-center gap-2">
-          {filters.map((filter) => (
-            <button
-              key={filter}
-              type="button"
-              onClick={() => setActiveFilter(filter)}
-              className={cn(
-                "min-h-11 cursor-pointer touch-manipulation rounded-full border px-5 py-2 text-sm font-medium transition-colors",
-                activeFilter === filter
-                  ? "border-brand-green/40 bg-brand-green/15 text-brand-green"
-                  : "border-white/10 text-white/60 hover:border-white/20 hover:text-white"
-              )}
-            >
-              {t(`home.portfolio.filters.${filter}`)}
-            </button>
+        <ul className="mt-14 grid gap-x-10 gap-y-16 md:grid-cols-2 lg:mt-20">
+          {shown.map((project) => (
+            <li key={project.id}>
+              <ProjectCard project={project} basePath={basePath} />
+            </li>
           ))}
-        </div>
+        </ul>
 
-        <div className="mt-12 grid grid-cols-1 gap-6 md:grid-cols-2 lg:grid-cols-3">
-          {filtered.map((project) => (
-            <GlassCard key={project.id} className="group overflow-hidden p-0">
-              <div className="relative aspect-[16/10] overflow-hidden bg-brand-card">
-                {project.image ? (
-                  <Image
-                    src={project.image}
-                    alt={project.title}
-                    fill
-                    sizes="(max-width: 768px) 100vw, 33vw"
-                    className="object-cover transition-transform duration-500 group-hover:scale-105"
-                  />
-                ) : (
-                  <div className="flex h-full items-center justify-center bg-gradient-to-br from-brand-green/10 to-brand-purple/10 text-white/60">
-                    D-GITALCODE
-                  </div>
-                )}
-                <div className="absolute inset-0 bg-gradient-to-t from-brand-dark/90 via-transparent to-transparent" />
-                <div className="absolute bottom-4 left-4 right-4">
-                  <Badge className="mb-2">
-                    {t(`home.portfolio.filters.${project.category}`)}
-                  </Badge>
-                  <h3 className="text-lg font-semibold text-white">{project.title}</h3>
-                </div>
-              </div>
-
-              <div className="p-6">
-                <p className="line-clamp-2 text-sm text-white/55">{project.description}</p>
-                {project.technologies.length > 0 && (
-                  <div className="mt-4 flex flex-wrap gap-2">
-                    {project.technologies.slice(0, 4).map((tech) => (
-                      <span
-                        key={tech}
-                        className="rounded-md bg-white/5 px-2 py-1 text-xs text-white/50"
-                      >
-                        {tech}
-                      </span>
-                    ))}
-                  </div>
-                )}
-                <div className="mt-6 flex flex-wrap gap-3">
-                  {project.url && (
-                    <a
-                      href={project.url}
-                      target="_blank"
-                      rel="noopener noreferrer"
-                      className="inline-flex min-h-11 touch-manipulation items-center gap-2 text-sm font-medium text-brand-green hover:underline"
-                    >
-                      {t("portfolio.viewProject")}
-                      <ExternalLink className="h-4 w-4" />
-                    </a>
-                  )}
-                  <Link
-                    href={`${basePath}/portfolio/${project.slug}`}
-                    className="inline-flex min-h-11 items-center text-sm text-white/50 hover:text-white"
-                  >
-                    {t("home.portfolio.details")} →
-                  </Link>
-                </div>
-              </div>
-            </GlassCard>
-          ))}
-        </div>
-
-        <div className="mt-12 text-center">
-          <Link
-            href={`${basePath}/portfolio`}
-            className="inline-flex min-h-11 items-center text-sm font-medium text-brand-green hover:underline"
-          >
-            {t("home.portfolio.viewAll")} →
+        <div className="mt-16">
+          <Link href={`${basePath}/portfolio`} className={buttonClasses("outline", "md")}>
+            {t("home.portfolio.viewAll")}
           </Link>
         </div>
       </div>

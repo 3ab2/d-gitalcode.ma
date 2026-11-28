@@ -38,10 +38,10 @@ export function ConversionFloat({ locale }: { locale: Locale }) {
       target="_blank"
       rel="noopener noreferrer"
       onClick={handleWhatsAppClick}
-      className="fixed bottom-6 end-6 z-40 flex h-14 w-14 touch-manipulation items-center justify-center rounded-full bg-[#25D366] text-brand-dark shadow-lg shadow-[#25D366]/30 transition-shadow hover:shadow-[#25D366]/50 active:scale-95"
+      className="fixed bottom-5 end-5 z-40 flex h-12 w-12 touch-manipulation items-center justify-center rounded-full bg-action text-on-action shadow-overlay transition-colors hover:bg-action-hover sm:bottom-6 sm:end-6"
       aria-label={t("floatCta.whatsapp")}
     >
-      <MessageCircle className="h-7 w-7" aria-hidden />
+      <MessageCircle className="h-6 w-6" aria-hidden />
     </a>
   );
 }

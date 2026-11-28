@@ -445,7 +445,7 @@
       "responseTimeDesc": "عروض أسعار ومتابعة سريعة لكل طلب.",
       "expertise": "خبرة full-stack",
       "expertiseDesc": "ويب وجوال وووردبريس — فريق خبير مخصص.",
-      "confidential": "100% سري",
+      "confidential": "سرية البيانات",
       "confidentialDesc": "بياناتك لا تُشارك أبداً مع أطراف ثالثة."
     },
     "microcopy": {
@@ -652,7 +652,8 @@
     "skipToContent": "انتقل إلى المحتوى",
     "openMenu": "فتح القائمة",
     "closeMenu": "إغلاق القائمة",
-    "mainNavigation": "التنقل الرئيسي"
+    "mainNavigation": "التنقل الرئيسي",
+    "language": "اللغة"
   },
   "pageError": {
     "title": "حدث خطأ ما",

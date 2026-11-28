@@ -1,213 +1,99 @@
-"use client";
-
-import dynamic from "next/dynamic";
 import Link from "next/link";
-import { useEffect, useState } from "react";
-import { motion } from "framer-motion";
-import { useTranslation } from "react-i18next";
-import { ArrowRight, CheckCircle2, Sparkles } from "lucide-react";
-import { Button } from "@/components/ui/Button";
-import { CodeRainCanvas } from "@/components/home/hero/CodeRainCanvas";
-import { HeroIntroControls } from "@/components/home/hero/HeroIntroControls";
-import { useHeroIntro } from "@/components/home/hero/useHeroIntro";
+import Image from "next/image";
+import { getTranslation } from "@/lib/i18n/server";
 import { type Locale } from "@/lib/i18n/settings";
-
-const HeroParticles = dynamic(
-  () =>
-    import("@/components/home/hero/HeroParticles").then((mod) => mod.HeroParticles),
-  { ssr: false }
-);
-
-const HeroBrandPulse = dynamic(
-  () =>
-    import("@/components/home/hero/HeroBrandPulse").then((mod) => mod.HeroBrandPulse),
-  {
-    ssr: false,
-    loading: () => (
-      <span className="inline-flex h-10 w-10 shrink-0 rounded-full bg-brand-green/15 ring-1 ring-brand-green/30" />
-    ),
-  }
-);
+import { buttonClasses } from "@/components/ui/Button";
+import { FacetFrame } from "@/components/ui/FacetFrame";
+import type { PortfolioItem } from "@/components/home/PortfolioSection";
 
 interface HeroProps {
   locale: Locale;
   stats: { key: string; value: string; label: string }[];
+  /** The first published project, shown as proof next to the promise. */
+  featured?: PortfolioItem;
 }
 
-const easeOut = [0.22, 1, 0.36, 1] as const;
+const step = (n: number) => ({ "--rise-step": n }) as React.CSSProperties;
 
-export function Hero({ locale, stats }: HeroProps) {
-  const { t } = useTranslation();
+export async function Hero({ locale, stats, featured }: HeroProps) {
+  const { t } = await getTranslation(locale);
   const basePath = `/${locale}`;
-  const trustItems = t("hero.trust", { returnObjects: true }) as string[];
-
-  const {
-    hydrated,
-    skipped,
-    introComplete,
-    animateIntro,
-    reducedMotion: prefersReducedMotion,
-    skipIntro,
-  } = useHeroIntro();
-
-  const [parallax, setParallax] = useState({ x: 0, y: 0 });
-
-  useEffect(() => {
-    if (prefersReducedMotion) return;
-
-    const onMove = (event: MouseEvent) => {
-      const x = (event.clientX / window.innerWidth - 0.5) * 2;
-      const y = (event.clientY / window.innerHeight - 0.5) * 2;
-      setParallax({ x, y });
-    };
-
-    window.addEventListener("mousemove", onMove, { passive: true });
-    return () => window.removeEventListener("mousemove", onMove);
-  }, [prefersReducedMotion]);
-
-  const showEffects = hydrated && !prefersReducedMotion;
-  const motionReady = introComplete || skipped || prefersReducedMotion;
-
-  const containerVariants = {
-    hidden: {},
-    visible: {
-      transition: {
-        staggerChildren: motionReady ? 0 : 0.1,
-        delayChildren: motionReady ? 0 : 0.55,
-      },
-    },
-  };
-
-  const itemVariants = {
-    hidden: {
-      opacity: 1,
-      y: motionReady ? 0 : 32,
-    },
-    visible: {
-      opacity: 1,
-      y: 0,
-      transition: { duration: motionReady ? 0 : 0.8, ease: easeOut },
-    },
-  };
+  const trustItems = t("hero.trust", { returnObjects: true }) as unknown;
 
   return (
-    <section className="hero-section hero-cinematic premium-grid">
-      <div className="hero-cinematic-backdrop" aria-hidden>
-        {showEffects && (
-          <>
-            <CodeRainCanvas active parallaxX={parallax.x} parallaxY={parallax.y} />
-            <HeroParticles active />
-          </>
-        )}
-        <div className="hero-cinematic-overlay" />
-        <div className="hero-ambient">
-          <div className="hero-ambient-glow -left-32 top-0 h-[30rem] w-[30rem] bg-brand-green/15 sm:-left-40 sm:h-[34rem] sm:w-[34rem]" />
-          <div className="hero-ambient-glow -right-32 bottom-0 h-[24rem] w-[24rem] bg-brand-purple/12 sm:-right-40 sm:h-[28rem] sm:w-[28rem]" />
-        </div>
-      </div>
-
-      <HeroIntroControls showSkip={hydrated && animateIntro} onSkip={skipIntro} />
-
-      <div className="hero-content relative mx-auto flex w-full max-w-7xl flex-col justify-between px-4 py-8 sm:px-6 sm:py-10 lg:px-8 lg:py-12">
-        <motion.div
-          className="flex flex-1 flex-col justify-center pt-8 sm:pt-10 lg:max-w-4xl lg:pt-0"
-          variants={containerVariants}
-          initial={motionReady ? "visible" : "hidden"}
-          animate="visible"
-        >
-          <motion.div
-            variants={itemVariants}
-            className="mb-6 inline-flex w-fit items-center gap-2 rounded-full border border-brand-green/20 bg-brand-green/[0.07] px-4 py-1.5 text-sm font-medium text-brand-green"
-          >
-            <Sparkles className="h-4 w-4" />
-            {t("hero.badge")}
-          </motion.div>
-
-          <motion.h1
-            variants={itemVariants}
-            className="hero-headline flex max-w-5xl items-center gap-4 text-[clamp(2.5rem,8vw,5.5rem)] font-bold leading-[0.95] tracking-[-0.03em] text-white"
-          >
-            <HeroBrandPulse active={showEffects} />
-            <span>{t("hero.brand")}</span>
-          </motion.h1>
-
-          <motion.p
-            variants={itemVariants}
-            className="mt-5 max-w-2xl text-lg leading-relaxed text-white/80 sm:text-xl lg:text-2xl lg:leading-snug"
-          >
+    <section className="border-b border-line">
+      <div className="container-site grid gap-14 pt-12 pb-16 sm:pt-16 lg:grid-cols-12 lg:items-center lg:gap-12 lg:pt-24 lg:pb-28">
+        <div className="lg:col-span-7">
+          <h1 className="rise max-w-[18ch] text-display text-ink" style={step(0)}>
             {t("hero.headline")}
-          </motion.p>
-
-          <motion.p
-            variants={itemVariants}
-            className="mt-4 max-w-xl text-sm leading-relaxed text-white/50 sm:text-base"
-          >
+          </h1>
+          <p className="rise mt-7 max-w-[34rem] text-lead text-ink-2" style={step(1)}>
             {t("hero.subtitle")}
-          </motion.p>
+          </p>
 
-          <motion.ul
-            variants={itemVariants}
-            className="mt-8 flex flex-col gap-3 sm:flex-row sm:flex-wrap"
-          >
-            {Array.isArray(trustItems) &&
-              trustItems.map((item) => (
-                <li
-                  key={item}
-                  className="flex items-center gap-2 text-sm text-white/70"
-                >
-                  <CheckCircle2 className="h-4 w-4 shrink-0 text-brand-green" />
+          <div className="rise mt-10 flex flex-col gap-3 sm:flex-row" style={step(2)}>
+            <Link href={`${basePath}/contact`} className={buttonClasses("primary", "lg")}>
+              {t("hero.cta")}
+            </Link>
+            <Link href={`${basePath}/portfolio`} className={buttonClasses("outline", "lg")}>
+              {t("hero.ctaSecondary")}
+            </Link>
+          </div>
+
+          {Array.isArray(trustItems) && (
+            <ul className="rise mt-10 flex flex-wrap gap-x-7 gap-y-3 text-sm text-ink-2" style={step(3)}>
+              {(trustItems as string[]).map((item) => (
+                <li key={item} className="flex items-center gap-2.5">
+                  <span aria-hidden className="facet h-2 w-2 bg-action [--facet:3px]" />
                   {item}
                 </li>
               ))}
-          </motion.ul>
+            </ul>
+          )}
 
-          <motion.div
-            variants={itemVariants}
-            className="mt-10 flex flex-col gap-3 sm:flex-row sm:flex-wrap sm:gap-4"
-          >
-            <Link href={`${basePath}/contact`} className="w-full sm:w-auto">
-              <Button as="span" size="lg" className="hero-cta-glow min-h-12 w-full px-8 sm:w-auto">
-                {t("hero.cta")}
-                <ArrowRight className="rtl:rotate-180 h-5 w-5" />
-              </Button>
-            </Link>
-            <Link href={`${basePath}/services`} className="w-full sm:w-auto">
-              <Button as="span" variant="outline" size="lg" className="min-h-12 w-full px-8 sm:w-auto">
-                {t("hero.ctaServices")}
-              </Button>
-            </Link>
-            <Link href={`${basePath}/portfolio`} className="w-full sm:w-auto">
-              <Button as="span" variant="ghost" size="lg" className="min-h-12 w-full px-8 sm:w-auto">
-                {t("hero.ctaSecondary")}
-              </Button>
-            </Link>
-          </motion.div>
-        </motion.div>
+          {stats.length > 0 && (
+            <dl className="mt-14 grid grid-cols-2 gap-6 border-t border-line pt-8 sm:grid-cols-4">
+              {stats.map((stat) => (
+                <div key={stat.key}>
+                  <dt className="text-sm text-ink-3">{t(`hero.stats.${stat.key}`)}</dt>
+                  <dd className="mt-1 text-2xl font-semibold text-ink">{stat.value}</dd>
+                </div>
+              ))}
+            </dl>
+          )}
+        </div>
 
-        {stats.length > 0 && (
-        <motion.div
-          className="hero-stats-row mt-10 border-t border-white/[0.08] pt-8 lg:mt-12"
-          initial={prefersReducedMotion || motionReady ? false : { opacity: 1, y: 20 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{
-            delay: prefersReducedMotion || motionReady ? 0 : 1,
-            duration: 0.7,
-            ease: easeOut,
-          }}
-        >
-          <div className="grid grid-cols-2 gap-x-6 gap-y-6 md:grid-cols-4">
-            {stats.map((stat) => (
-              <div key={stat.key} className="hero-stat-item">
-                <div className="text-2xl font-bold text-brand-green sm:text-3xl lg:text-4xl">
-                  {stat.value}
+        {featured && (
+          <figure className="rise lg:col-span-5" style={step(2)}>
+            <Link href={`${basePath}/portfolio/${featured.slug}`} className="group block">
+              <FacetFrame size="lg" className="transition-colors duration-200 group-hover:bg-white/30">
+                <div className="relative aspect-[16/10]">
+                  {featured.image ? (
+                    <Image
+                      src={featured.image}
+                      alt={featured.title}
+                      fill
+                      priority
+                      sizes="(max-width: 1024px) 100vw, 40vw"
+                      className="object-cover object-top"
+                    />
+                  ) : (
+                    <div className="flex h-full items-center justify-center text-ink-3">{featured.title}</div>
+                  )}
                 </div>
-                <div className="mt-1.5 text-xs text-white/55 sm:text-sm">
-                  {t(`hero.stats.${stat.key}` as "hero.stats.projects")}
-                </div>
-              </div>
-            ))}
-          </div>
-        </motion.div>
+              </FacetFrame>
+              <figcaption className="mt-5 flex items-baseline justify-between gap-4">
+                <span className="text-base font-medium text-ink group-hover:underline group-hover:underline-offset-4">
+                  {featured.title}
+                </span>
+                {featured.technologies.length > 0 && (
+                  <span className="hidden shrink-0 font-mono text-xs text-ink-3 sm:inline">
+                    {featured.technologies.slice(0, 2).join(" + ")}
+                  </span>
+                )}
+              </figcaption>
+            </Link>
+          </figure>
         )}
       </div>
     </section>

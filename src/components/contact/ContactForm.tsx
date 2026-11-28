@@ -4,7 +4,7 @@ import { useCallback, useEffect, useRef, useState } from "react";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useTranslation } from "react-i18next";
-import { Input } from "@/components/ui/Input";
+import { Input, fieldClassName, labelClassName } from "@/components/ui/Input";
 import { Textarea } from "@/components/ui/Textarea";
 import { Button } from "@/components/ui/Button";
 import { cn } from "@/lib/utils";
@@ -31,8 +31,7 @@ interface ContactFormProps {
   onSuccess?: () => void;
 }
 
-const selectClassName =
-  "min-h-11 w-full appearance-none rounded-xl border border-white/10 bg-white/5 px-4 py-3 text-base text-white transition-colors focus:border-brand-green/50 focus:outline-none focus:ring-2 focus:ring-brand-green/20";
+const selectClassName = cn(fieldClassName, "min-h-12 cursor-pointer");
 
 export function ContactForm({
   locale,
@@ -114,7 +113,7 @@ export function ContactForm({
       autoComplete="off"
       data-lpignore="true"
     >
-      <p className="text-sm text-white/60">{t("contact.microcopy.formIntro")}</p>
+      <p className="text-sm text-ink-2">{t("contact.microcopy.formIntro")}</p>
 
       <Input
         id="name"
@@ -133,12 +132,12 @@ export function ContactForm({
 
       {serviceOptions.length > 0 && !serviceName && (
         <div className="space-y-2">
-          <label htmlFor="serviceInterest" className="block text-sm font-medium text-white/80">
+          <label htmlFor="serviceInterest" className={labelClassName}>
             {t("contact.serviceInterest")}
           </label>
           <select
             id="serviceInterest"
-            className={cn(selectClassName, errors.serviceInterest && "border-red-500/50")}
+            className={cn(selectClassName, errors.serviceInterest && "border-red-400/70")}
             {...register("serviceInterest")}
           >
             <option value="">{t("contact.serviceInterestPlaceholder")}</option>
@@ -152,7 +151,7 @@ export function ContactForm({
       )}
 
       <div className="space-y-2">
-        <label htmlFor="budgetRange" className="block text-sm font-medium text-white/80">
+        <label htmlFor="budgetRange" className={labelClassName}>
           {t("contact.budgetRange")}
         </label>
         <select id="budgetRange" className={selectClassName} {...register("budgetRange")}>
@@ -173,7 +172,7 @@ export function ContactForm({
         {...register("message")}
       />
 
-      <p className="text-xs text-white/60">{t("contact.microcopy.privacyNote")}</p>
+      <p className="text-sm text-ink-3">{t("contact.microcopy.privacyNote")}</p>
 
       <div className="sr-only" aria-hidden="true">
         <label htmlFor="website-honeypot">Leave blank</label>
@@ -186,13 +185,13 @@ export function ContactForm({
       </div>
 
       {status === "success" && (
-        <p className="text-brand-green text-sm">{t("contact.success")}</p>
+        <p role="status" className="text-sm text-action">{t("contact.success")}</p>
       )}
       {status === "error" && (
-        <p className="text-red-400 text-sm">{t("contact.error")}</p>
+        <p role="alert" className="text-sm text-red-300">{t("contact.error")}</p>
       )}
 
-      <Button type="submit" isLoading={status === "loading"} className="w-full">
+      <Button type="submit" size="lg" isLoading={status === "loading"} className="w-full">
         {status === "loading" ? t("contact.sending") : t("contact.send")}
       </Button>
     </form>

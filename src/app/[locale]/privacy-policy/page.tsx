@@ -42,10 +42,10 @@ function Section({
 }) {
   return (
     <section id={id} className="scroll-mt-28">
-      <h2 className="text-xl font-semibold tracking-tight text-white md:text-2xl">
+      <h2 className="text-subheading text-ink">
         {title}
       </h2>
-      <div className="mt-4 space-y-4 text-[15px] leading-relaxed text-white/70 md:text-base">
+      <div className="mt-4 space-y-4 text-[15px] leading-relaxed text-ink-2 md:text-base">
         {children}
       </div>
     </section>
@@ -61,23 +61,23 @@ export default async function PrivacyPolicyPage({
 
   return (
     <article className="pb-20 pt-10 md:pb-28 md:pt-14">
-      <div className="mx-auto max-w-3xl px-4 sm:px-6 lg:px-8">
-        <header className="border-b border-white/[0.08] pb-8">
-          <p className="text-sm font-medium text-brand-green">D-GITALCODE — AutoPin</p>
-          <h1 className="mt-3 text-3xl font-bold tracking-tight text-white md:text-4xl">
+      <div className="mx-auto w-full max-w-3xl px-[clamp(1.25rem,4vw,2.5rem)]">
+        <header className="border-b border-line pb-8">
+          <p className="text-sm font-medium text-action">D-GITALCODE — AutoPin</p>
+          <h1 className="mt-3 text-title text-ink">
             Politique de confidentialité
           </h1>
-          <p className="mt-4 text-sm text-white/50">
+          <p className="mt-4 text-sm text-ink-3">
             Dernière mise à jour : {LAST_UPDATED}
           </p>
         </header>
 
         <div className="mt-10 space-y-10">
-          <div className="space-y-4 text-[15px] leading-relaxed text-white/70 md:text-base">
+          <div className="space-y-4 text-[15px] leading-relaxed text-ink-2 md:text-base">
             <p>
               D-GITALCODE (« nous », « notre » ou « nos ») respecte votre vie privée et
               s&apos;engage à protéger les informations personnelles traitées dans le
-              cadre de ses services et de son application <strong className="font-semibold text-white/90">AutoPin</strong>.
+              cadre de ses services et de son application <strong className="font-semibold text-ink-2">AutoPin</strong>.
             </p>
             <p>
               Cette Politique de confidentialité explique quelles informations peuvent
@@ -88,12 +88,12 @@ export default async function PrivacyPolicyPage({
 
           <Section id="presentation" title="1. Présentation">
             <p>
-              <strong className="font-semibold text-white/90">D-GITALCODE</strong>{" "}
+              <strong className="font-semibold text-ink-2">D-GITALCODE</strong>{" "}
               développe des solutions numériques pour accompagner ses clients et
               utilisateurs.
             </p>
             <p>
-              <strong className="font-semibold text-white/90">AutoPin</strong>
+              <strong className="font-semibold text-ink-2">AutoPin</strong>
               {" "}
               est un outil d&apos;automatisation développé par D-GITALCODE permettant à
               son utilisateur autorisé de publier des images et des vidéos sur Pinterest
@@ -103,7 +103,7 @@ export default async function PrivacyPolicyPage({
               Site web :{" "}
               <a
                 href={PRIVACY_WEBSITE}
-                className="text-brand-green underline-offset-2 hover:underline"
+                className="text-action underline-offset-2 hover:underline"
                 target="_blank"
                 rel="noopener noreferrer"
               >
@@ -115,7 +115,7 @@ export default async function PrivacyPolicyPage({
           <Section id="informations" title="2. Informations traitées">
             <p>Selon l&apos;utilisation d&apos;AutoPin, les informations suivantes peuvent être traitées :</p>
 
-            <h3 className="pt-2 text-base font-semibold text-white/90 md:text-lg">
+            <h3 className="pt-2 text-base font-semibold text-ink-2 md:text-lg">
               Informations de compte Pinterest
             </h3>
             <p>
@@ -123,22 +123,22 @@ export default async function PrivacyPolicyPage({
               peut recevoir, via l&apos;autorisation OAuth de Pinterest, les informations
               nécessaires à son fonctionnement, notamment :
             </p>
-            <ul className="list-disc space-y-2 pl-5 marker:text-brand-green">
+            <ul className="list-disc space-y-2 pl-5 marker:text-action">
               <li>les informations de compte Pinterest requises pour l&apos;autorisation OAuth ;</li>
               <li>les identifiants de compte Pinterest nécessaires à l&apos;application ;</li>
               <li>les tableaux (Boards) requis pour la publication ;</li>
               <li>les informations relatives aux Épingles nécessaires au fonctionnement de l&apos;application.</li>
             </ul>
-            <p className="rounded-xl border border-white/[0.08] bg-white/[0.03] px-4 py-3 text-white/85">
+            <p className="rounded-control border border-line bg-surface px-4 py-3 text-ink-2">
               AutoPin ne reçoit jamais et ne stocke jamais le mot de passe Pinterest de
               l&apos;utilisateur.
             </p>
 
-            <h3 className="pt-2 text-base font-semibold text-white/90 md:text-lg">
+            <h3 className="pt-2 text-base font-semibold text-ink-2 md:text-lg">
               Contenus et métadonnées
             </h3>
             <p>AutoPin peut également traiter :</p>
-            <ul className="list-disc space-y-2 pl-5 marker:text-brand-green">
+            <ul className="list-disc space-y-2 pl-5 marker:text-action">
               <li>des images ;</li>
               <li>des vidéos ;</li>
               <li>des titres ;</li>
@@ -151,7 +151,7 @@ export default async function PrivacyPolicyPage({
 
           <Section id="utilisation" title="3. Utilisation des données">
             <p>Les données sont utilisées uniquement pour :</p>
-            <ul className="list-disc space-y-2 pl-5 marker:text-brand-green">
+            <ul className="list-disc space-y-2 pl-5 marker:text-action">
               <li>authentifier le compte Pinterest ;</li>
               <li>publier du contenu ;</li>
               <li>sélectionner les tableaux de destination ;</li>
@@ -159,7 +159,7 @@ export default async function PrivacyPolicyPage({
               <li>vérifier le statut des publications ;</li>
               <li>assurer la maintenance et le dépannage de l&apos;application.</li>
             </ul>
-            <p className="rounded-xl border border-white/[0.08] bg-white/[0.03] px-4 py-3 text-white/85">
+            <p className="rounded-control border border-line bg-surface px-4 py-3 text-ink-2">
               D-GITALCODE ne vend pas les informations personnelles.
             </p>
           </Section>
@@ -186,14 +186,14 @@ export default async function PrivacyPolicyPage({
               rester sur l&apos;ordinateur de l&apos;utilisateur.
             </p>
             <p>L&apos;application peut utiliser des dossiers tels que :</p>
-            <pre className="overflow-x-auto rounded-xl border border-white/[0.08] bg-black/40 px-4 py-3 font-mono text-sm text-white/80">
+            <pre className="overflow-x-auto rounded-control border border-line bg-black/40 px-4 py-3 font-mono text-sm text-ink-2">
               {`input/\narchive/\nfailed/`}
             </pre>
             <p>
               Après une publication réussie, un fichier multimédia peut être déplacé
-              de <code className="rounded bg-white/[0.06] px-1.5 py-0.5 font-mono text-sm text-white/85">input/</code>{" "}
+              de <code className="rounded bg-white/[0.06] px-1.5 py-0.5 font-mono text-sm text-ink-2">input/</code>{" "}
               vers{" "}
-              <code className="rounded bg-white/[0.06] px-1.5 py-0.5 font-mono text-sm text-white/85">archive/</code>.
+              <code className="rounded bg-white/[0.06] px-1.5 py-0.5 font-mono text-sm text-ink-2">archive/</code>.
             </p>
             <p>
               Une publication en échec ne doit pas être considérée comme une
@@ -247,7 +247,7 @@ export default async function PrivacyPolicyPage({
 
           <Section id="droits" title="9. Droits des utilisateurs">
             <p>Selon les lois applicables, vous pouvez notamment demander :</p>
-            <ul className="list-disc space-y-2 pl-5 marker:text-brand-green">
+            <ul className="list-disc space-y-2 pl-5 marker:text-action">
               <li>l&apos;accès aux informations vous concernant ;</li>
               <li>la correction d&apos;informations inexactes ;</li>
               <li>la suppression de certaines informations ;</li>
@@ -258,7 +258,7 @@ export default async function PrivacyPolicyPage({
               Pour toute demande relative à la confidentialité, contactez-nous à :{" "}
               <a
                 href={`mailto:${PRIVACY_EMAIL}`}
-                className="text-brand-green underline-offset-2 hover:underline"
+                className="text-action underline-offset-2 hover:underline"
               >
                 {PRIVACY_EMAIL}
               </a>
@@ -286,14 +286,14 @@ export default async function PrivacyPolicyPage({
           </Section>
 
           <Section id="contact" title="12. Contact">
-            <div className="rounded-2xl border border-white/[0.08] bg-white/[0.03] px-5 py-6">
+            <div className="rounded-panel border border-line bg-surface px-5 py-6">
               <p className="font-semibold text-white">D-GITALCODE</p>
-              <p className="mt-1 font-medium text-white/90">AutoPin</p>
+              <p className="mt-1 font-medium text-ink-2">AutoPin</p>
               <p className="mt-4">
                 Email :{" "}
                 <a
                   href={`mailto:${PRIVACY_EMAIL}`}
-                  className="text-brand-green underline-offset-2 hover:underline"
+                  className="text-action underline-offset-2 hover:underline"
                 >
                   {PRIVACY_EMAIL}
                 </a>
@@ -302,7 +302,7 @@ export default async function PrivacyPolicyPage({
                 Site web :{" "}
                 <a
                   href={PRIVACY_WEBSITE}
-                  className="text-brand-green underline-offset-2 hover:underline"
+                  className="text-action underline-offset-2 hover:underline"
                   target="_blank"
                   rel="noopener noreferrer"
                 >
@@ -310,7 +310,7 @@ export default async function PrivacyPolicyPage({
                 </a>
               </p>
             </div>
-            <p className="pt-2 text-sm text-white/50">
+            <p className="pt-2 text-sm text-ink-3">
               Cette Politique de confidentialité s&apos;applique à l&apos;utilisation
               d&apos;AutoPin et aux fonctionnalités associées fournies par D-GITALCODE.
             </p>

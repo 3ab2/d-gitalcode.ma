@@ -3,6 +3,7 @@
 import Link from "next/link";
 import { useParams } from "next/navigation";
 import { useTranslation } from "react-i18next";
+import { buttonClasses } from "@/components/ui/Button";
 import { defaultLocale, isValidLocale } from "@/lib/i18n/settings";
 
 /** not-found files receive no params, so the language comes from the URL. */
@@ -12,15 +13,17 @@ export default function NotFound() {
   const home = locale && isValidLocale(locale) ? locale : defaultLocale;
 
   return (
-    <div className="flex min-h-[60vh] flex-col items-center justify-center px-4 text-center">
-      <p className="text-6xl font-bold text-brand-green">404</p>
-      <h1 className="mt-4 text-xl text-white/80">{t("notFound.title")}</h1>
-      <Link
-        href={`/${home}`}
-        className="mt-8 inline-flex min-h-11 items-center text-brand-green underline underline-offset-4"
-      >
-        {t("notFound.back")}
-      </Link>
-    </div>
+    <section className="container-site flex min-h-[60vh] flex-col justify-center py-24">
+      <p className="font-mono text-sm text-accent-ink">404</p>
+      <h1 className="mt-4 max-w-[18ch] text-title text-ink">{t("notFound.title")}</h1>
+      <div className="mt-10 flex flex-wrap gap-3">
+        <Link href={`/${home}`} className={buttonClasses("primary", "lg")}>
+          {t("notFound.back")}
+        </Link>
+        <Link href={`/${home}/contact`} className={buttonClasses("outline", "lg")}>
+          {t("nav.contact")}
+        </Link>
+      </div>
+    </section>
   );
 }

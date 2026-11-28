@@ -18,16 +18,16 @@ function StepCard({
   detail: string;
 }) {
   return (
-    <li className="flex items-start gap-3 rounded-2xl border border-white/10 bg-white/[0.04] p-3 text-left">
-      <span className="flex h-8 w-8 shrink-0 items-center justify-center rounded-xl bg-brand-green/15 text-xs font-bold text-brand-green">
+    <li className="flex items-start gap-3 rounded-panel border border-line bg-white/[0.04] p-3 text-left">
+      <span className="flex h-8 w-8 shrink-0 items-center justify-center rounded-control bg-brand-green/15 text-xs font-bold text-action">
         {step}
       </span>
-      <span className="flex h-10 w-10 shrink-0 items-center justify-center rounded-xl border border-white/10 bg-[#1c1c1e] shadow-inner">
+      <span className="flex h-10 w-10 shrink-0 items-center justify-center rounded-control border border-line bg-[#1c1c1e] shadow-inner">
         <Icon className="h-5 w-5 text-[#0a84ff]" strokeWidth={2} />
       </span>
       <span className="min-w-0 pt-0.5">
         <span className="block text-sm font-medium text-white">{label}</span>
-        <span className="mt-0.5 block text-xs leading-relaxed text-white/60">
+        <span className="mt-0.5 block text-xs leading-relaxed text-ink-3">
           {detail}
         </span>
       </span>
@@ -63,7 +63,7 @@ export function PwaInstallIosModal({
             animate={{ opacity: 1, y: 0 }}
             exit={{ opacity: 0, y: 24 }}
             transition={{ type: "spring", damping: 28, stiffness: 340 }}
-            className="relative w-full max-w-md overflow-hidden rounded-3xl border border-white/10 bg-[#1c1c1e] shadow-2xl shadow-black/60"
+            className="relative w-full max-w-md overflow-hidden rounded-panel border border-line bg-[#1c1c1e] shadow-2xl shadow-black/60"
             onClick={(e) => e.stopPropagation()}
           >
             <div className="absolute inset-x-0 top-0 h-28 bg-gradient-to-b from-[#0a84ff]/20 to-transparent" />
@@ -71,20 +71,20 @@ export function PwaInstallIosModal({
             <button
               type="button"
               onClick={onDismiss}
-              className="absolute right-3 top-3 z-10 flex h-8 w-8 items-center justify-center rounded-full bg-white/10 text-white/70"
+              className="absolute right-3 top-3 z-10 flex h-8 w-8 items-center justify-center rounded-full bg-white/10 text-ink-2"
               aria-label={t("pwa.maybeLater")}
             >
               <X className="h-4 w-4" />
             </button>
 
             <div className="relative px-5 pb-5 pt-7">
-              <div className="mx-auto mb-4 flex h-[4.5rem] w-[4.5rem] items-center justify-center rounded-[1.35rem] border border-white/10 bg-black/30 shadow-lg">
+              <div className="mx-auto mb-4 flex h-[4.5rem] w-[4.5rem] items-center justify-center rounded-[1.35rem] border border-line bg-black/30 shadow-lg">
                 <Image
                   src="/logo-mobile.png"
                   alt=""
                   width={56}
                   height={56}
-                  className="h-14 w-14 rounded-2xl object-contain"
+                  className="h-14 w-14 rounded-panel object-contain"
                 />
               </div>
 
@@ -94,7 +94,7 @@ export function PwaInstallIosModal({
               >
                 {t("pwa.iosModalTitle")}
               </h2>
-              <p className="mt-2 text-center text-sm leading-relaxed text-white/55">
+              <p className="mt-2 text-center text-sm leading-relaxed text-ink-3">
                 {t("pwa.iosModalIntro")}
               </p>
 
@@ -122,7 +122,7 @@ export function PwaInstallIosModal({
               <div className="mt-5 flex flex-col gap-2">
                 <Button
                   type="button"
-                  className="w-full rounded-2xl bg-[#0a84ff] text-white hover:bg-[#0a84ff]/90"
+                  className="w-full rounded-panel bg-[#0a84ff] text-white hover:bg-[#0a84ff]/90"
                   onClick={onGotIt}
                 >
                   {t("pwa.gotIt")}
@@ -130,7 +130,7 @@ export function PwaInstallIosModal({
                 <Button
                   type="button"
                   variant="ghost"
-                  className="w-full rounded-2xl border border-white/10 text-white/65 hover:text-white"
+                  className="w-full rounded-panel border border-line text-ink-2 hover:text-white"
                   onClick={onDismiss}
                 >
                   {t("pwa.maybeLater")}

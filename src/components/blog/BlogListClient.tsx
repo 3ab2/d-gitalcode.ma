@@ -53,19 +53,20 @@ export function BlogListClient({
   );
 
   return (
-    <div className="mt-12 space-y-10">
+    <div className="space-y-12">
       <div className="flex flex-col gap-4 lg:flex-row lg:items-center lg:justify-between">
         <div className="relative max-w-md flex-1">
-          <Search className="absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-white/60" />
+          <Search aria-hidden className="pointer-events-none absolute start-3.5 top-1/2 h-4 w-4 -translate-y-1/2 text-ink-3" />
           <input
             type="search"
             value={query}
             onChange={(e) => setQuery(e.target.value)}
             placeholder={labels.search}
-            className="w-full rounded-xl border border-white/10 bg-white/[0.03] py-2.5 pl-10 pr-4 text-sm text-white placeholder:text-white/55 focus:border-brand-green/40 focus:outline-none"
+            aria-label={labels.search}
+            className="h-11 w-full rounded-control border border-line-strong bg-bg ps-10 pe-4 text-[0.9375rem] text-ink placeholder:text-ink-3 focus:border-action focus:outline-none focus:ring-2 focus:ring-action/25"
           />
         </div>
-        <p className="text-sm text-white/60">
+        <p className="text-sm text-ink-3" aria-live="polite">
           {filtered.length} {labels.articles}
         </p>
       </div>
@@ -75,11 +76,12 @@ export function BlogListClient({
           <button
             type="button"
             onClick={() => setActiveTag(null)}
+            aria-pressed={!activeTag}
             className={cn(
-              "rounded-full border px-3 py-1 text-xs transition-colors",
+              "min-h-9 rounded-md border px-3 py-1.5 text-sm transition-colors",
               !activeTag
-                ? "border-brand-green/40 bg-brand-green/10 text-brand-green"
-                : "border-white/10 text-white/50 hover:text-white"
+                ? "border-white/40 bg-white/[0.08] text-ink"
+                : "border-line text-ink-2 hover:border-line-strong hover:text-ink"
             )}
           >
             {labels.allTags}
@@ -89,11 +91,12 @@ export function BlogListClient({
               key={tag}
               type="button"
               onClick={() => setActiveTag(tag === activeTag ? null : tag)}
+              aria-pressed={activeTag === tag}
               className={cn(
-                "rounded-full border px-3 py-1 text-xs transition-colors",
+                "min-h-9 rounded-md border px-3 py-1.5 text-sm transition-colors",
                 activeTag === tag
-                  ? "border-brand-green/40 bg-brand-green/10 text-brand-green"
-                  : "border-white/10 text-white/50 hover:text-white"
+                  ? "border-white/40 bg-white/[0.08] text-ink"
+                  : "border-line text-ink-2 hover:border-line-strong hover:text-ink"
               )}
             >
               {tag}
@@ -104,7 +107,7 @@ export function BlogListClient({
 
       {featured && (
         <div>
-          <p className="mb-4 text-xs font-semibold uppercase tracking-wider text-brand-green">
+          <p className="mb-5 text-sm text-accent-ink">
             {labels.featured}
           </p>
           <BlogCard
@@ -119,7 +122,7 @@ export function BlogListClient({
       )}
 
       {gridPosts.length > 0 && (
-        <div className="grid grid-cols-1 gap-6 md:grid-cols-2 lg:grid-cols-3">
+        <div className="grid grid-cols-1 gap-x-8 gap-y-14 md:grid-cols-2 lg:grid-cols-3">
           {gridPosts.map((post) => (
             <BlogCard
               key={post.id}
@@ -134,7 +137,7 @@ export function BlogListClient({
       )}
 
       {filtered.length === 0 && (
-        <p className="py-16 text-center text-white/60">{labels.empty}</p>
+        <p className="py-16 text-ink-2">{labels.empty}</p>
       )}
     </div>
   );
